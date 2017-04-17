@@ -30,7 +30,8 @@ module.exports = {
     alias: {
       'vue$': 'vue/dist/vue.esm.js',
       '@': resolve('src'),
-      'semantic': resolve('semantic/dist')
+      'semantic': resolve('semantic/dist'),
+      'semantic-calendar': resolve('semantic-ui-calendar/dist')
     }
   },
   module: {

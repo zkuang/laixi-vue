@@ -23,7 +23,7 @@
     </div>
     <div v-else class="comment">
       <div class="discussion-item-avatar">
-        <img :src="avatar" class="circle avatar"/>
+        <img :src="avatar" class="ui avatar image"/>
       </div>
       <div class="discussion-item-content">
         <p><span class="username">{{authorName}}</span> <span class="time-span">{{createdDate}}</span></p>
@@ -38,7 +38,7 @@
       <button class="ui button">
         <i class="reply icon"></i>
       </button>
-      <button class="ui button has-popup" >
+      <button :class="{hidden: notCreatedByMe}" class="ui button has-popup" >
         <i class="content icon"></i>
       </button>
     </div>
@@ -52,8 +52,9 @@
     color: gray;
   }
 
-  .discussion-item > div {
+  .discussion-item > div:first-child {
     display: inline-block;
+    width: 90%;
   }
 
   .discussion-item > .ui.buttons {
@@ -84,7 +85,7 @@
 
   .discussion-item > div.task-log .time-span,  .discussion-item > div.doc-log .time-span {
     color: gray;
-    font-size: 1.4rem;
+    font-size: 1.2rem;
     margin-left: 5rem;
   }
 
@@ -101,6 +102,10 @@
     font-weight: bold;
   }
 
+  .discussion-item span {
+    white-space: pre;
+  }
+
   .discussion-item > div > span.discussion-item-avatar {
     font-size: 1.08em;
   }
@@ -109,20 +114,18 @@
     margin: 0 .5rem 0 2rem;
   }
 
-  .discussion-item-avatar .circle.avatar {
+  .discussion-item .discussion-item-avatar .ui.avatar.image {
     width: 3.5rem;
     height: 3.5rem;
-    border-radius: 50%;
     margin-left: .8rem;
-    /*float: left;*/
   }
 
-  .discussion-item-avatar {
+  .discussion-item .discussion-item-avatar {
     display: inline-block;
     position: absolute;
   }
 
-  .discussion-item-content {
+  .discussion-item .discussion-item-content {
     display: inline-block;
     margin-left: 5.5rem;
   }
@@ -162,14 +165,23 @@
     margin-bottom: 0;
   }
 
-  .discussion-item .quote {
-
+  .right.floated.ui.icon.buttons .button{
+    margin-top: .5em;
   }
 
   .ui.button.in-popup {
-    background: transparent !important;
+    background: transparent;
     display: block;
     padding: .5em 0 .5em .5em;
+  }
+
+  .ui.button.hidden {
+    visibility: hidden;
+  }
+
+  .ui.button.in-popup:hover {
+    background: transparent;
+    color: red;
   }
 
   .ui.button.in-popup i.icon {
@@ -262,6 +274,11 @@
           }
         }
         return quote
+      },
+      notCreatedByMe () {
+        const currentUser = this.$store.getters.getCurrentUser
+        if (!currentUser) return true
+        else return currentUser.id !== this.item.author
       }
     }
   }

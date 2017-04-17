@@ -20,6 +20,9 @@ const getters = {
   tasks: state => {
     return state.document.tasks
   },
+  users: state => {
+    return state.document.users
+  },
   getUserNameById: state => id => {
     return state.document.users.find(user => {
       return user.id === id

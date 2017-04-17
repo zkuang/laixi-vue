@@ -1,6 +1,6 @@
 <template>
-  <section class="discussion-items">
-    <ul>
+  <section class="ui grid discussion-items">
+    <ul class="thirteen wide column">
       <discussion-item v-for="item in items" key="item.id" :item="item"></discussion-item>
     </ul>
   </section>
@@ -14,7 +14,7 @@
   .discussion-items > ul > li {
     line-height: 3rem;
     list-style: none;
-    margin-bottom: 2rem;
+    margin-bottom: 1rem;
   }
 </style>
 
