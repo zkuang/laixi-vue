@@ -1,0 +1,34 @@
+<template>
+  <section class="discussion-items">
+    <ul>
+      <discussion-item v-for="item in items" key="item.id" :item="item"></discussion-item>
+    </ul>
+  </section>
+</template>
+
+<style>
+  .discussion-items > ul {
+    padding-left: 0;
+  }
+
+  .discussion-items > ul > li {
+    line-height: 3rem;
+    list-style: none;
+    margin-bottom: 2rem;
+  }
+</style>
+
+<script>
+  import DiscussionItem from './DiscussionItem'
+  export default {
+    name: 'DiscussionItems',
+    components: {
+      'discussion-item': DiscussionItem
+    },
+    computed: {
+      items () {
+        return this.$store.state.document.discussions
+      }
+    }
+  }
+</script>
