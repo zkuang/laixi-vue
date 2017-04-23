@@ -4,6 +4,8 @@
       <a :href="document.project.uri" class="section">{{document.project.name}}</a>
       <div class="divider"> / </div>
       <div class="section">{{document.title}}</div>
+      <div v-if="task.id" class="divider"> / </div>
+      <div v-if="task.id" class="section"> {{task.breadCrumb}} </div>
     </div>
     <router-view></router-view>
   </div>
@@ -16,7 +18,8 @@
     name: 'app',
     computed: {
       ...mapGetters([
-        'document'
+        'document',
+        'task'
       ])
     }
   }

@@ -6,13 +6,39 @@
 
 import { DISCUSSION_ADD_DOC, DISCUSSION_UPD_DOC, DISCUSSION_ADD_TASK, DISCUSSION_DONE_TASK, DISCUSSION_ROP_TASK, DISCUSSION_COMMENT } from '../common'
 
+export const Task = {
+  getTaskByIdInDocument (did, tid) {
+    return new Promise((resolve) => {
+      resolve({
+        id: 1,
+        title: '增加和狗的关系。',
+        author: 'zxygentoo',
+        createdDate: '4月2日',
+        done: false,
+        dueDate: '4月21日',
+        detail: '一段任务描述，可选内容。\n比如更详细的表述任务的细节。',
+        discussions: [
+          {id: 9, type: DISCUSSION_ADD_TASK, author: 2, createdDate: '2016-04-02  18:01', assignee: 1, content: '增加和狗的关系', ref: 4, task: 4},
+          {id: 10, type: DISCUSSION_COMMENT, author: 1, createdDate: '2016-04-02  18:01', content: '我操。。。和狗的关系怎么写。。。', ref: 9, task: 4},
+          {id: 11, type: DISCUSSION_COMMENT, author: 2, createdDate: '2016-04-02  18:01', content: '有什么难写的，照抄《忠狗八公》。', ref: 10, task: 4},
+          {id: 12, type: DISCUSSION_DONE_TASK, author: 1, createdDate: '2016-04-02  18:01', ref: 4, content: '增加和狗的关系', task: 4},
+          {id: 13, type: DISCUSSION_COMMENT, author: 2, createdDate: '2016-04-02  18:01', content: '教你照抄你就一字不落的照抄啊。。。起码改改人名地名吧。', ref: 12, task: 4},
+          {id: 14, type: DISCUSSION_ROP_TASK, author: 2, createdDate: '2016-04-02  18:01', ref: 4, task: 4},
+          {id: 15, type: DISCUSSION_DONE_TASK, author: 1, createdDate: '2016-04-02  18:01', ref: 4, task: 4}
+        ]
+      })
+    })
+  }
+}
+
 export const Document = {
   getDocumentById (id) {
     return new Promise((resolve) => {
       resolve({
+        id: 1,
         users: [
-          {id: 1, username: 'zxygentoo', avatar: '../../static/zxy_avatar.png', current: true},
-          {id: 2, username: '走走', avatar: '../../static/zz_avatar.jpg'}
+          {id: 1, username: 'zxygentoo', avatar: '/../static/zxy_avatar.png', current: true},
+          {id: 2, username: '走走', avatar: '/../static/zz_avatar.jpg'}
         ],
         project: {
           name: '萨利机长',
@@ -29,17 +55,17 @@ export const Document = {
           {id: 2, type: DISCUSSION_COMMENT, author: 1, createdDate: '2016-04-02  18:01', content: '这是一条评论。\n评论可以很多行。。。'},
           {id: 3, type: DISCUSSION_UPD_DOC, author: 1, createdDate: '2016-04-02  18:01'},
           {id: 4, type: DISCUSSION_COMMENT, author: 1, createdDate: '2016-04-02  18:01', content: '这是一条对评论的回复\n回复可以很多行，啦啦啦啦。。。。', ref: 2},
-          {id: 5, type: DISCUSSION_ADD_TASK, author: 2, createdDate: '2016-04-02  18:01', assignee: 1, ref: 1},
+          {id: 5, type: DISCUSSION_ADD_TASK, author: 2, createdDate: '2016-04-02  18:01', assignee: 1, ref: 1, task: 1},
           {id: 6, type: DISCUSSION_COMMENT, author: 1, createdDate: '2016-04-02  18:01', content: '这又是一条评论。'},
-          {id: 7, type: DISCUSSION_ADD_TASK, author: 2, createdDate: '2016-04-02  18:01', assignee: 1, content: '增加和二舅的关系', ref: 2},
-          {id: 8, type: DISCUSSION_ADD_TASK, author: 2, createdDate: '2016-04-02  18:01', assignee: 1, content: '增加和三姨的关系', ref: 3},
-          {id: 9, type: DISCUSSION_ADD_TASK, author: 2, createdDate: '2016-04-02  18:01', assignee: 1, content: '增加和狗的关系', ref: 4},
-          {id: 10, type: DISCUSSION_COMMENT, author: 1, createdDate: '2016-04-02  18:01', content: '我操。。。和狗的关系怎么写。。。', ref: 9},
-          {id: 11, type: DISCUSSION_COMMENT, author: 2, createdDate: '2016-04-02  18:01', content: '有什么难写的，照抄《忠狗八公》。', ref: 10},
-          {id: 12, type: DISCUSSION_DONE_TASK, author: 1, createdDate: '2016-04-02  18:01', ref: 4, content: '增加和狗的关系'},
-          {id: 13, type: DISCUSSION_COMMENT, author: 2, createdDate: '2016-04-02  18:01', content: '教你照抄你就一字不落的照抄啊。。。起码改改人名地名吧。', ref: 12},
-          {id: 14, type: DISCUSSION_ROP_TASK, author: 2, createdDate: '2016-04-02  18:01', ref: 4},
-          {id: 15, type: DISCUSSION_DONE_TASK, author: 1, createdDate: '2016-04-02  18:01', ref: 4}
+          {id: 7, type: DISCUSSION_ADD_TASK, author: 2, createdDate: '2016-04-02  18:01', assignee: 1, content: '增加和二舅的关系', ref: 2, task: 2},
+          {id: 8, type: DISCUSSION_ADD_TASK, author: 2, createdDate: '2016-04-02  18:01', assignee: 1, content: '增加和三姨的关系', ref: 3, task: 3},
+          {id: 9, type: DISCUSSION_ADD_TASK, author: 2, createdDate: '2016-04-02  18:01', assignee: 1, content: '增加和狗的关系', ref: 4, task: 4},
+          {id: 10, type: DISCUSSION_COMMENT, author: 1, createdDate: '2016-04-02  18:01', content: '我操。。。和狗的关系怎么写。。。', ref: 9, task: 4},
+          {id: 11, type: DISCUSSION_COMMENT, author: 2, createdDate: '2016-04-02  18:01', content: '有什么难写的，照抄《忠狗八公》。', ref: 10, task: 4},
+          {id: 12, type: DISCUSSION_DONE_TASK, author: 1, createdDate: '2016-04-02  18:01', ref: 4, content: '增加和狗的关系', task: 4},
+          {id: 13, type: DISCUSSION_COMMENT, author: 2, createdDate: '2016-04-02  18:01', content: '教你照抄你就一字不落的照抄啊。。。起码改改人名地名吧。', ref: 12, task: 4},
+          {id: 14, type: DISCUSSION_ROP_TASK, author: 2, createdDate: '2016-04-02  18:01', ref: 4, task: 4},
+          {id: 15, type: DISCUSSION_DONE_TASK, author: 1, createdDate: '2016-04-02  18:01', ref: 4, task: 4}
         ],
         title: '人物设定： 萨利机长',
         content: `告天起裡太館百為圖等進上上來！

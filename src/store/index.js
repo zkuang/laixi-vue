@@ -1,6 +1,6 @@
 import Vuex from 'vuex'
 import Vue from 'vue'
-import { Document } from '@/api'
+import { Document, Task } from '@/api'
 
 Vue.use(Vuex)
 
@@ -11,6 +11,13 @@ const getters = {
       doc.content = doc.content.replace(/(?:\r\n|\r|\n)/g, '<br />')
     }
     return doc
+  },
+  task: state => {
+    let task = Object.assign({}, state.task)
+    if (task.title) {
+      task.breadCrumb = `任务： ${task.title}`
+    }
+    return task
   },
   getTaskById: state => id => {
     return state.document.tasks.find(task => {
@@ -66,18 +73,27 @@ const store = new Vuex.Store({
       tasks: [],
       title: undefined,
       content: undefined
-    }
+    },
+    task: {}
   },
   actions: {
     getDocumentById ({commit}, id) {
       Document.getDocumentById(id).then(doc => {
         commit('setDocument', doc)
       })
+    },
+    getTaskByIdInDocument ({commit}, params) {
+      Task.getTaskByIdInDocument(params).then(task => {
+        commit('setTask', task)
+      })
     }
   },
   mutations: {
     setDocument (state, doc) {
       state.document = doc
+    },
+    setTask (state, task) {
+      state.task = task
     }
   },
   getters

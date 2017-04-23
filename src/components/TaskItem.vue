@@ -13,7 +13,7 @@
     <div class="task-content">
       <span>
         <span>{{author}}</span>
-        <span>{{createdDate}}</span>
+        <span>{{dueDate}}</span>
       </span>
     </div>
   </li>

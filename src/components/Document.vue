@@ -21,7 +21,7 @@
   </section>
 </template>
 
-<style scoped>
+<style>
   .document-description > h2 {
     font-weight: normal;
     font-size: 1.65em;
