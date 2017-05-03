@@ -1,90 +1,93 @@
 <template>
-<section class="ui stackable two column grid">
-  <div class="thirteen wide column task-description section">
-    <input type="checkbox">
-    <span class="task-title">{{task.title}}</span>
-    <div class="task-content">
+  <section class="ui stackable two column grid">
+    <div class="thirteen wide column task-description section">
+      <input type="checkbox">
+      <span class="task-title">{{task.title}}</span>
+      <div class="task-content">
       <span>
-          <span>{{task.author}}</span>
-      <span>{{task.dueDate}}</span>
+          <span>{{task.assignee.nickname}}</span>
+      <span>{{dueDate}}</span>
       </span>
-    </div>
-    <div class="task-detail">
-      <div v-if="task.detail" v-html="task.detail.replace(/(?:\r\n|\r|\n)/g, '<br />')">
+      </div>
+      <div class="task-detail">
+        <div v-if="task.description" v-html="task.description.replace(/(?:\r\n|\r|\n)/g, '<br />')">
 
+        </div>
       </div>
     </div>
-  </div>
-  <div class="three wide column ui secondary vertical menu buttons">
-    <div class="item">
-      <div class="ui positive basic button">编辑</div>
+    <div class="three wide column ui secondary vertical menu buttons">
+      <div class="item">
+        <div class="ui positive basic button">编辑</div>
+      </div>
+      <div class="item">
+        <div class="ui negative basic button">删除</div>
+      </div>
     </div>
-    <div class="item">
-      <div class="ui negative basic button">删除</div>
-    </div>
-  </div>
-</section>
+  </section>
 </template>
 
 <style>
-.task-description {
-  line-height: 2em;
-  vertical-align: text-top;
-}
+  .task-description {
+    line-height: 2em;
+    vertical-align: text-top;
+  }
 
-.task-description span.task-title {
-  display: inline-block;
-  font-size: 1.5em;
-}
+  .task-description span.task-title {
+    display: inline-block;
+    font-size: 1.5em;
+  }
 
-.task-description .task-detail {
-  margin-top: 1rem;
-  margin-left: 4rem;
-  min-height: 3.8rem;
-  font-size: 1.2em;
-}
+  .task-description .task-detail {
+    margin-top: 1rem;
+    margin-left: 4rem;
+    min-height: 3.8rem;
+    font-size: 1.2em;
+  }
 
-.task-description .task-content {
-  display: inline-block;
-  font-size: 1.2em;
-}
+  .task-description .task-content {
+    display: inline-block;
+    font-size: 1.2em;
+  }
 
-.task-description input {
-  margin-right: 1.2rem;
-  margin-left: 1.2rem;
-  font-size: 4em;
-}
+  .task-description input {
+    margin-right: 1.2rem;
+    margin-left: 1.2rem;
+    font-size: 4em;
+  }
 
-.task-description .task-content>span {
-  display: inline-block;
-  margin-left: .4rem;
-  background: #e8e8e8;
-  border-radius: 1rem;
-  line-height: 1.8rem;
-  font-size: .9em;
-  text-align: center;
-  vertical-align: middle;
-  padding-left: 1.2em;
-  padding-right: 1.2em;
-  margin-top: -.5em;
-}
+  .task-description .task-content > span {
+    display: inline-block;
+    margin-left: .4rem;
+    background: #e8e8e8;
+    border-radius: 1rem;
+    line-height: 1.8rem;
+    font-size: .9em;
+    text-align: center;
+    vertical-align: middle;
+    padding-left: 1.2em;
+    padding-right: 1.2em;
+    margin-top: -.5em;
+  }
 
-.task-description span>span {
-  margin-top: auto;
-  margin-bottom: auto;
-}
+  .task-description span > span {
+    margin-top: auto;
+    margin-bottom: auto;
+  }
 
-.task-description span>span:first-child {
-  margin-right: .52rem;
-}
+  .task-description span > span:first-child {
+    margin-right: .52rem;
+  }
 </style>
 
 <script>
-export default {
-  name: 'Task',
-  props: ['task'],
-  computed: {
-
+  import {DateTime} from '../utils'
+  export default {
+    name: 'Task',
+    props: ['task'],
+    computed: {
+      dueDate() {
+        return DateTime.DateMonth(this.task.deadline)
+      }
+    }
   }
-}
 </script>

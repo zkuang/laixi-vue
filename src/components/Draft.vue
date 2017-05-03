@@ -1,8 +1,8 @@
 <template>
   <section class="ui stackable two column grid">
     <div class="thirteen wide column document-description section">
-      <h2>{{document.title}}</h2>
-      <p v-html="document.content"></p>
+      <h2>{{draft.title}}</h2>
+      <p v-html="draft.content"></p>
     </div>
     <div class="three wide column ui secondary vertical menu buttons">
       <div class="item">
@@ -48,7 +48,7 @@
 
 <script>
   export default {
-    name: 'document',
-    props: ['document']
+    name: 'draft',
+    props: ['draft']
   }
 </script>

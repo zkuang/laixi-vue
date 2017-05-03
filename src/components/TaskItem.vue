@@ -8,11 +8,11 @@
         <i class="trash outline icon"></i>
       </button>
     </div>
-    <input type="checkbox" :checked="done">
+    <input type="checkbox" :checked="checked">
     <label>{{title}}</label>
     <div class="task-content">
       <span>
-        <span>{{author}}</span>
+        <span>{{assignee.nickname}}</span>
         <span>{{dueDate}}</span>
       </span>
     </div>
@@ -87,11 +87,18 @@
 </style>
 
 <script>
+  import {DateTime} from '../utils'
+
   export default {
     name: 'TaskItem',
     props: ['taskId'],
     data () {
       return this.$store.getters.getTaskById(this.taskId)
+    },
+    computed: {
+      dueDate () {
+        return DateTime.DateMonth(this.$store.getters.getTaskById(this.taskId).created)
+      }
     },
     methods: {
       active () {

@@ -4,79 +4,403 @@
 
 // import agent from 'superagent'
 
-import { DISCUSSION_ADD_DOC, DISCUSSION_UPD_DOC, DISCUSSION_ADD_TASK, DISCUSSION_DONE_TASK, DISCUSSION_ROP_TASK, DISCUSSION_COMMENT } from '../common'
-
-export const Task = {
-  getTaskByIdInDocument (did, tid) {
-    return new Promise((resolve) => {
-      resolve({
-        id: 1,
-        title: '增加和狗的关系。',
-        author: 'zxygentoo',
-        createdDate: '4月2日',
-        done: false,
-        dueDate: '4月21日',
-        detail: '一段任务描述，可选内容。\n比如更详细的表述任务的细节。',
-        discussions: [
-          {id: 9, type: DISCUSSION_ADD_TASK, author: 2, createdDate: '2016-04-02  18:01', assignee: 1, content: '增加和狗的关系', ref: 4, task: 4},
-          {id: 10, type: DISCUSSION_COMMENT, author: 1, createdDate: '2016-04-02  18:01', content: '我操。。。和狗的关系怎么写。。。', ref: 9, task: 4},
-          {id: 11, type: DISCUSSION_COMMENT, author: 2, createdDate: '2016-04-02  18:01', content: '有什么难写的，照抄《忠狗八公》。', ref: 10, task: 4},
-          {id: 12, type: DISCUSSION_DONE_TASK, author: 1, createdDate: '2016-04-02  18:01', ref: 4, content: '增加和狗的关系', task: 4},
-          {id: 13, type: DISCUSSION_COMMENT, author: 2, createdDate: '2016-04-02  18:01', content: '教你照抄你就一字不落的照抄啊。。。起码改改人名地名吧。', ref: 12, task: 4},
-          {id: 14, type: DISCUSSION_ROP_TASK, author: 2, createdDate: '2016-04-02  18:01', ref: 4, task: 4},
-          {id: 15, type: DISCUSSION_DONE_TASK, author: 1, createdDate: '2016-04-02  18:01', ref: 4, task: 4}
-        ]
-      })
-    })
+let users = [
+  {
+    id: '39c2cbd982d447acb2ef7334924def51',
+    nickname: 'zxygentoo',
+    headimgurl: '/../static/zxy_avatar.png',
+    type: 'writer'
+  },
+  {
+    id: '39c2cbd982d447acb2ef7334924def50',
+    nickname: '走走',
+    headimgurl: '/../static/zz_avatar.jpg',
+    type: 'producer'
   }
+]
+
+let currentUser = users[0]
+
+let project = {
+  id: '38d622955372466ba04c1ee18141daf0',
+  name: '萨利机长',
+  created: '2015-08-26T08:30:32.313554',
+  description: '项目描述，可以很长。。。',
+  public: true
 }
 
-export const Document = {
-  getDocumentById (id) {
-    return new Promise((resolve) => {
-      resolve({
-        id: 1,
-        users: [
-          {id: 1, username: 'zxygentoo', avatar: '/../static/zxy_avatar.png', current: true},
-          {id: 2, username: '走走', avatar: '/../static/zz_avatar.jpg'}
-        ],
-        project: {
-          name: '萨利机长',
-          uri: 'http://localhost:8080/project/someid'
-        },
-        tasks: [
-          {id: 1, title: '增加家庭关系部分。', author: 'zxygentoo', createdDate: '4月2日', done: false, dueDate: '4月21日'},
-          {id: 2, title: '增加和二舅的关系。', author: 'zxygentoo', createdDate: '4月2日', done: false, dueDate: '4月21日'},
-          {id: 3, title: '增加和三姨的关系。', author: 'zxygentoo', createdDate: '4月2日', done: false, dueDate: '4月21日'},
-          {id: 4, title: '增加和狗的关系。', author: 'zxygentoo', createdDate: '4月2日', done: false, dueDate: '4月21日'}
-        ],
-        discussions: [
-          {id: 1, type: DISCUSSION_ADD_DOC, author: 1, createdDate: '2016-04-02  18:01'},
-          {id: 2, type: DISCUSSION_COMMENT, author: 1, createdDate: '2016-04-02  18:01', content: '这是一条评论。\n评论可以很多行。。。'},
-          {id: 3, type: DISCUSSION_UPD_DOC, author: 1, createdDate: '2016-04-02  18:01'},
-          {id: 4, type: DISCUSSION_COMMENT, author: 1, createdDate: '2016-04-02  18:01', content: '这是一条对评论的回复\n回复可以很多行，啦啦啦啦。。。。', ref: 2},
-          {id: 5, type: DISCUSSION_ADD_TASK, author: 2, createdDate: '2016-04-02  18:01', assignee: 1, ref: 1, task: 1},
-          {id: 6, type: DISCUSSION_COMMENT, author: 1, createdDate: '2016-04-02  18:01', content: '这又是一条评论。'},
-          {id: 7, type: DISCUSSION_ADD_TASK, author: 2, createdDate: '2016-04-02  18:01', assignee: 1, content: '增加和二舅的关系', ref: 2, task: 2},
-          {id: 8, type: DISCUSSION_ADD_TASK, author: 2, createdDate: '2016-04-02  18:01', assignee: 1, content: '增加和三姨的关系', ref: 3, task: 3},
-          {id: 9, type: DISCUSSION_ADD_TASK, author: 2, createdDate: '2016-04-02  18:01', assignee: 1, content: '增加和狗的关系', ref: 4, task: 4},
-          {id: 10, type: DISCUSSION_COMMENT, author: 1, createdDate: '2016-04-02  18:01', content: '我操。。。和狗的关系怎么写。。。', ref: 9, task: 4},
-          {id: 11, type: DISCUSSION_COMMENT, author: 2, createdDate: '2016-04-02  18:01', content: '有什么难写的，照抄《忠狗八公》。', ref: 10, task: 4},
-          {id: 12, type: DISCUSSION_DONE_TASK, author: 1, createdDate: '2016-04-02  18:01', ref: 4, content: '增加和狗的关系', task: 4},
-          {id: 13, type: DISCUSSION_COMMENT, author: 2, createdDate: '2016-04-02  18:01', content: '教你照抄你就一字不落的照抄啊。。。起码改改人名地名吧。', ref: 12, task: 4},
-          {id: 14, type: DISCUSSION_ROP_TASK, author: 2, createdDate: '2016-04-02  18:01', ref: 4, task: 4},
-          {id: 15, type: DISCUSSION_DONE_TASK, author: 1, createdDate: '2016-04-02  18:01', ref: 4, task: 4}
-        ],
-        title: '人物设定： 萨利机长',
-        content: `告天起裡太館百為圖等進上上來！
+let draft = {
+  id: 'a49ebddc88a14283b5671adcb1dc6259',
+  project_id: '38d622955372466ba04c1ee18141daf0',
+  title: '人物设定： 萨利机长',
+  type: 'plaintext',
+  content: `告天起裡太館百為圖等進上上來！
         
           新統大如收山性們在原術球活細天：地月放水發正己身後象別查草，定山所不年了童強名長也間響的他議朋庭的今知，計那異他告讀長如結面投外發現表作。
           
           力本面你。高達理定機要怕區驗。眾許落很人道山，情意優多容水因些，量西不會另點熱力你建，照座後機了會才記案細林！
           集力在中消了升影料……大市公謝我，廣人上成，象最存。
           事趣小不，化選一聲，風快來以令市放氣斷樓議國院社人早更速已中險星源不選送美時高德王考他女優性，
-          高給能路後子研力不成息語導想出水生男如解問要陽人率股不小喜？`
+          高給能路後子研力不成息語導想出水生男如解問要陽人率股不小喜？`,
+  created: '2015-08-20T08:30:32.313554',
+  creator: users[0],
+  updated: '2015-08-21T08:30:32.313554',
+  updator: users[0],
+  removed: false
+}
+
+let tasks = [
+  {
+    id: 'a49ebddc88a14283b5671adcb1dc6259',
+    draft_id: 'a49ebddc88a14283b5671adcb1dc6259',
+    title: '增加家庭关系部分',
+    description: '任务详细描述……',
+    created: '2015-08-21T08:30:32.313554',
+    creator: users[1],
+    assignee: users[0],
+    deadline: '2015-08-21T08:30:32.313554',
+    checked: false,
+    checked_at: undefined
+  },
+  {
+    id: 'a49ebddc88a14283b5671adcb1dc625a',
+    draft_id: 'a49ebddc88a14283b5671adcb1dc6259',
+    title: '增加和二舅的关系',
+    description: '任务详细描述……',
+    created: '2015-08-21T08:30:32.313554',
+    creator: users[1],
+    assignee: users[0],
+    deadline: '2015-08-21T08:30:32.313554',
+    checked: false,
+    checked_at: undefined
+  },
+  {
+    id: 'a49ebddc88a14283b5671adcb1dc625c',
+    draft_id: 'a49ebddc88a14283b5671adcb1dc6259',
+    title: '增加和三姨的关系',
+    description: '任务详细描述……',
+    created: '2015-08-21T08:30:32.313554',
+    creator: users[1],
+    assignee: users[0],
+    deadline: '2015-08-21T08:30:32.313554',
+    checked: false,
+    checked_at: undefined
+  },
+  {
+    id: 'a49ebddc88a14283b5671adcb1dc625d',
+    draft_id: 'a49ebddc88a14283b5671adcb1dc6259',
+    title: '增加和狗关系部分',
+    description: '任务详细描述……',
+    created: '2015-08-21T08:30:32.313554',
+    creator: users[1],
+    assignee: users[0],
+    deadline: '2015-08-21T08:30:32.313554',
+    checked: false,
+    checked_at: undefined
+  }
+]
+
+let posts = [
+  {
+    id: 'a49ebddc88a14283b5671adcb1dc6258',
+    draft_id: 'a49ebddc88a14283b5671adcb1dc6259',
+    type: 'draft-created',
+    created: '2015-08-21T08:30:32.313554',
+    user: users[0]
+  },
+  {
+    id: 'a49ebddc88a14283b5671adcb1dc6259',
+    draft_id: 'a49ebddc88a14283b5671adcb1dc6259',
+    type: 'critique',
+    created: '2015-08-21T08:30:32.313554',
+    user: users[0],
+    content: '这是一条评论。\n评论可以很多行。。。'
+  },
+  {
+    id: 'a49ebddc88a14283b5671adcb1dc6259',
+    draft_id: 'a49ebddc88a14283b5671adcb1dc625a',
+    type: 'critique',
+    created: '2015-08-21T08:30:32.313554',
+    user: users[0],
+    content: '> 这是一条评论。\n > 评论可以很多行。。。\n[@zxygentoo](http://localhost:8080)\n\n这是一条对评论的回复\n回复可以很多行，啦啦啦啦。。。。'
+  },
+  {
+    id: 'a49ebddc88a14283b5671adcb1dc625b',
+    draft_id: 'a49ebddc88a14283b5671adcb1dc6259',
+    type: 'draft-edited',
+    created: '2015-08-21T08:30:32.313554',
+    user: users[0]
+  },
+  {
+    id: 'a49ebddc88a14283b5671adcb1dc625c',
+    draft_id: 'a49ebddc88a14283b5671adcb1dc6259',
+    type: 'task-created',
+    created: '2015-08-21T08:30:32.313554',
+    user: users[1],
+    task: tasks[0]
+  },
+  {
+    id: 'a49ebddc88a14283b5671adcb1dc625d',
+    draft_id: 'a49ebddc88a14283b5671adcb1dc625a',
+    type: 'critique',
+    created: '2015-08-21T08:30:32.313554',
+    user: users[0],
+    content: '这又是一条评论。'
+  },
+  {
+    id: 'a49ebddc88a14283b5671adcb1dc625e',
+    draft_id: 'a49ebddc88a14283b5671adcb1dc6259',
+    type: 'task-created',
+    created: '2015-08-21T08:30:32.313554',
+    user: users[1],
+    task: tasks[1]
+  },
+  {
+    id: 'a49ebddc88a14283b5671adcb1dc625f',
+    draft_id: 'a49ebddc88a14283b5671adcb1dc6259',
+    type: 'task-created',
+    create: '2015-08-21T08:30:32.313554',
+    user: users[1],
+    task: tasks[2]
+  },
+  {
+    id: 'a49ebddc88a14283b5671adcb1dc6260',
+    draft_id: 'a49ebddc88a14283b5671adcb1dc6259',
+    type: 'task-created',
+    created: '2015-08-21T08:30:32.313554',
+    user: users[1],
+    task: tasks[3]
+  }, {
+    id: 'a49ebddc88a14283b5671adcb1dc6261',
+    draft_id: 'a49ebddc88a14283b5671adcb1dc6259',
+    type: 'critique',
+    create: '2015-08-21T08:30:32.313554',
+    user: users[0],
+    task: tasks[3],
+    content: '我操。。。和狗的关系怎么写。。。'
+  },
+  {
+    id: 'a49ebddc88a14283b5671adcb1dc6262',
+    draft_id: 'a49ebddc88a14283b5671adcb1dc6259',
+    type: 'critique',
+    created: '2015-08-21T08:30:32.313554',
+    user: users[1],
+    task: tasks[3],
+    content: '> 我操。。。和狗的关系怎么写。。。\n [@zxygentoo](http://localhost:8080) \n\n有什么难写的，照抄《忠狗八公》。'
+  },
+  {
+    id: 'a49ebddc88a14283b5671adcb1dc6263',
+    draft_id: 'a49ebddc88a14283b5671adcb1dc6259',
+    type: 'task-checked',
+    created: '2015-08-21T08:30:32.313554',
+    user: users[0],
+    task: tasks[3]
+  },
+  {
+    id: 'a49ebddc88a14283b5671adcb1dc6264',
+    draft_id: 'a49ebddc88a14283b5671adcb1dc6259',
+    type: 'critique',
+    created: '2015-08-21T08:30:32.313554',
+    user: users[1],
+    task: tasks[3],
+    content: '教你照抄你就一字不落的照抄啊。。。起码改改人名地名吧。'
+  },
+  {
+    id: 'a49ebddc88a14283b5671adcb1dc6265',
+    draft_id: 'a49ebddc88a14283b5671adcb1dc6259',
+    type: 'task-unchecked',
+    created: '2015-08-21T08:30:32.313554',
+    user: users[1],
+    task: tasks[3]
+  },
+  {
+    id: 'a49ebddc88a14283b5671adcb1dc6266',
+    draft_id: 'a49ebddc88a14283b5671adcb1dc6259',
+    type: 'task-checked',
+    created: '2015-08-21T08:30:32.313554',
+    user: users[0],
+    task: tasks[3]
+  }
+]
+
+export const Users = {
+  getMembersByProjectId (projectId) {
+    return new Promise(resolve => {
+      resolve({members: users})
+    })
+  }
+}
+
+export const Projects = {
+  getById (id) {
+    return new Promise(resolve => {
+      resolve({project: project})
+    })
+  }
+}
+
+export const Drafts = {
+  getById (id) {
+    return new Promise(resolve => {
+      resolve({drafts: draft})
+    })
+  },
+  updateById (id, title, content) {
+    return new Promise(resolve => {
+      draft.title = title
+      draft.content = content
+      resolve({drafts: draft})
+    })
+  },
+  deleteById (id) {
+    return new Promise(resolve => {
+      draft.removed = true
+      resolve()
+    })
+  }
+}
+
+export const Posts = {
+  getPostsByDraftId (draftId) {
+    return new Promise(resolve => {
+      resolve({
+        posts: posts,
+        pagination: {
+          has_next: false,
+          has_prev: false,
+          total: 14
+        }
       })
+    })
+  },
+  addPostsToDraft (draftId, content, taskId) {
+    return new Promise(resolve => {
+      let post = {
+        id: `eac35a689bca4e40b96aea1b23ae19${Math.random() * 100}`,
+        draft_id: 'eac35a689bca4e40b96aea1b23ae198a',
+        type: 'critique',
+        created: '2015-08-21T08:30:32.313554',
+        user: currentUser,
+        content: content,
+        task: tasks.find(task => {
+          return task.id === taskId
+        })
+      }
+      posts.push(post)
+      resolve({post: post})
+    })
+  },
+  getPostsByTaskId (taskId) {
+    return new Promise(resolve => {
+      resolve({
+        posts: posts.filter(post => {
+          return post.task && post.task.id === taskId
+        })
+      })
+    })
+  },
+  getById (id) {
+    return new Promise(resolve => {
+      resolve(posts.find(post => {
+        return post.id === id
+      }))
+    })
+  },
+  updateById (id, content) {
+    return new Promise(resolve => {
+      let post = posts.find(post => {
+        return post.id === id
+      })
+      post.content = content
+      resolve({post: post})
+    })
+  },
+  deleteById (id) {
+    return new Promise(resolve => {
+      posts = posts.filter(post => {
+        return post.id !== id
+      })
+      resolve()
+    })
+  }
+}
+
+export const Tasks = {
+  getTasksByDraftId (draftId) {
+    return new Promise(resolve => {
+      resolve({
+        tasks: tasks.filter(task => {
+          return task.draft_id === draftId
+        })
+      })
+    })
+  },
+  addTaskToDraft (draftId, {title, assigneeId, deadline, description}) {
+    return new Promise(resolve => {
+      let task = {
+        id: `aec35a689bca4e40b96aea1b23ae19${Math.random() * 100}`,
+        draft_id: draftId,
+        title: title,
+        created: '2015-08-21T08:30:32.313554',
+        creator: currentUser,
+        assignee: users.find(user => {
+          return user.id === assigneeId
+        }),
+        description: description,
+        deadline: deadline,
+        checked: false,
+        checked_at: undefined
+      }
+      tasks.push(task)
+      resolve({task: task})
+    })
+  },
+  getById (id) {
+    return new Promise(resolve => {
+      resolve({task: tasks.find(task => {
+        return task.id === id
+      })})
+    })
+  },
+  updateById (id, {title, assigneeId, deadline, description}) {
+    return new Promise(resolve => {
+      let task = tasks.find(task => {
+        return task.id === id
+      })
+      task.title = title
+      task.assignee = users.find(user => {
+        return user.id === assigneeId
+      })
+      task.description = description
+      resolve({task: task})
+    })
+  },
+  deleteById (id) {
+    return new Promise(resolve => {
+      tasks = tasks.filter(task => {
+        return task.id !== id
+      })
+      resolve()
+    })
+  },
+  checkById (id) {
+    return new Promise(resolve => {
+      let task = tasks.find(task => {
+        return task.id === id
+      })
+      task.checked = true
+      task.checked_at = (new Date()).toISOString()
+      resolve()
+    })
+  },
+  uncheckById (id) {
+    return new Promise(resolve => {
+      let task = tasks.find(task => {
+        return task.id === id
+      })
+      task.checked = false
+      task.checked_at = undefined
+      resolve()
     })
   }
 }

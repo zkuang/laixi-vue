@@ -1,99 +1,98 @@
 import Vuex from 'vuex'
 import Vue from 'vue'
-import { Document, Task } from '@/api'
+import { Drafts, Projects, Tasks, Posts, Users } from '@/api'
 
 Vue.use(Vuex)
 
 const getters = {
-  document: state => {
-    let doc = Object.assign({}, state.document)
-    if (doc.content) {
-      doc.content = doc.content.replace(/(?:\r\n|\r|\n)/g, '<br />')
+  draft: state => {
+    let draft = Object.assign({}, state.draft)
+    if (draft.content) {
+      draft.content = draft.content.replace(/(?:\r\n|\r|\n)/g, '<br />')
     }
-    return doc
+    return draft
   },
-  task: state => {
-    let task = Object.assign({}, state.task)
-    if (task.title) {
-      task.breadCrumb = `任务： ${task.title}`
-    }
-    return task
-  },
+  project: state => state.project,
+  tasks: state => state.tasks,
+  task: state => { console.log(state.task); return state.task },
   getTaskById: state => id => {
-    return state.document.tasks.find(task => {
+    return state.tasks.find(task => {
       return task.id === id
     })
   },
-  tasks: state => {
-    return state.document.tasks
-  },
-  users: state => {
-    return state.document.users
-  },
-  getUserNameById: state => id => {
-    return state.document.users.find(user => {
-      return user.id === id
-    }).username
-  },
-  getTaskTitleById: state => id => {
-    return state.document.tasks.find(task => {
-      return task.id === id
-    }).title
-  },
-  getTaskDueDateById: state => id => {
-    return state.document.tasks.find(task => {
-      return task.id === id
-    }).dueDate
-  },
-  getUserAvatarById: state => id => {
-    return state.document.users.find(user => {
-      return user.id === id
-    }).avatar
-  },
-  getReferenceById: state => id => {
-    return state.document.discussions.find(discussion => {
-      return discussion.id === id
-    })
-  },
-  getCurrentUser: state => {
-    return state.document.users.find(user => {
-      return user.current
-    })
-  }
+  posts: state => state.posts,
+  users: state => state.users,
+  getCurrentUser: state => state.currentUser
 }
 
 const store = new Vuex.Store({
   state: {
-    document: {
-      users: [],
-      project: {
-        name: undefined,
-        uri: undefined
-      },
-      tasks: [],
-      title: undefined,
-      content: undefined
-    },
-    task: {}
+    users: [],
+    project: {},
+    draft: {},
+    tasks: [],
+    posts: [],
+    task: { assignee: {} },
+    currentUser: undefined
   },
   actions: {
-    getDocumentById ({commit}, id) {
-      Document.getDocumentById(id).then(doc => {
-        commit('setDocument', doc)
+    getDraftById ({commit}, draftId) {
+      Drafts.getById(draftId).then(res => {
+        commit('setDraft', res.drafts)
       })
     },
-    getTaskByIdInDocument ({commit}, params) {
-      Task.getTaskByIdInDocument(params).then(task => {
-        commit('setTask', task)
+    getProjectById ({commit}, projectId) {
+      Projects.getById(projectId).then(res => {
+        commit('setProject', res.project)
+      })
+    },
+    getProjectMembers ({commit}, projectId) {
+      Users.getMembersByProjectId(projectId).then(res => {
+        commit('setUsers', res.members)
+      })
+    },
+    getTaskById ({commit}, taskId) {
+      Tasks.getById(taskId).then(res => {
+        commit('setTask', res.task)
+      })
+    },
+    getDraftTasks ({commit}, draftId) {
+      Tasks.getTasksByDraftId(draftId).then(res => {
+        commit('setTasks', res.tasks)
+      })
+    },
+    getDraftPosts ({commit}, draftId) {
+      Posts.getPostsByDraftId(draftId).then(res => {
+        commit('setPosts', res.posts)
+      })
+    },
+    getTaskPosts ({commit}, taskId) {
+      Posts.getPostsByTaskId(taskId).then(res => {
+        commit('setPosts', res.posts)
       })
     }
   },
   mutations: {
-    setDocument (state, doc) {
-      state.document = doc
+    setDraft (state, draft) {
+      state.draft = draft
+    },
+    setProject (state, project) {
+      state.project = project
+    },
+    setTasks (state, tasks) {
+      state.tasks = tasks
+    },
+    setPosts (state, posts) {
+      state.posts = posts
+    },
+    setCurrentUser (state, user) {
+      state.currentUser = user
     },
     setTask (state, task) {
       state.task = task
+    },
+    setUsers (state, users) {
+      state.users = users
     }
   },
   getters

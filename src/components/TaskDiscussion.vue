@@ -1,8 +1,8 @@
 <template>
   <div class="task-discussion">
-    <task :task="task" :document="document" class="task"></task>
-    <discussion-items :items="discussions" class="discussion-items"></discussion-items>
-    <!--<discussion-editor :user="getCurrentUser" class="discussion-editor"></discussion-editor>-->
+    <task :task="task" class="task"></task>
+    <discussion-items :items="posts" class="discussion-items" @reply="onReply"></discussion-items>
+    <discussion-editor ref="editor" :user="getCurrentUser" class="discussion-editor"></discussion-editor>
   </div>
 </template>
 
@@ -20,27 +20,29 @@
   import { mapGetters } from 'vuex'
   import Task from './Task'
   import DiscussionItems from './DiscussionItems'
+  import DiscussionEditor from './DiscussionEditor'
 
   export default {
     name: 'TaskDiscussion',
     components: {
       task: Task,
-      'discussion-items': DiscussionItems
+      'discussion-items': DiscussionItems,
+      'discussion-editor': DiscussionEditor
     },
     beforeMount () {
-      this.$store.dispatch('getDocumentById', this.$route.params.did)
-      const params = {did: this.$route.params.did, tid: this.$route.params.tid}
-      this.$store.dispatch('getTaskByIdInDocument', params)
+      this.$store.dispatch('getTaskPosts', this.$route.params.tid)
+    },
+    methods: {
+      onReply(item) {
+        this.$refs.editor.updateContent(item)
+      }
     },
     computed: {
       ...mapGetters([
-        'document',
         'task',
-        'getCurrentUser'
-      ]),
-      discussions () {
-        return this.task.discussions
-      }
+        'getCurrentUser',
+        'posts'
+      ])
     }
   }
 </script>

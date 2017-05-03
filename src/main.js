@@ -7,6 +7,7 @@ import 'semantic/semantic.js'
 import 'semantic/semantic.css'
 import './style.css'
 import store from './store'
+
 Vue.config.productionTip = false
 
 /* eslint-disable no-new */

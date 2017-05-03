@@ -1,7 +1,7 @@
 <template>
 <section class="ui grid discussion-items">
   <ul class="thirteen wide column">
-    <discussion-item v-for="item in items" key="item.id" :item="item"></discussion-item>
+    <discussion-item v-for="item in items" key="item.id" :item="item" @reply="onReply"></discussion-item>
   </ul>
 </section>
 </template>
@@ -25,6 +25,11 @@ export default {
   props: ['items'],
   components: {
     'discussion-item': DiscussionItem
+  },
+  methods: {
+    onReply(item) {
+      this.$emit('reply', item)
+    }
   }
 }
 </script>

@@ -1,11 +1,13 @@
 <template>
   <section class="ui grid discussion-editor">
-    <div class="ten wide column">
+    <div class="twelve wide column">
       <div class="discussion-item-avatar">
-        <img v-if="user" :src="user.avatar" class="ui avatar image"/>
+        <img v-if="user" :src="user.headimgurl" class="ui avatar image"/>
       </div>
       <div class="editor-wrapper">
-        <div contenteditable="true">
+        <div class="fake-textarea">发表评论或者创建任务</div>
+        <div class="real-textarea">
+          <textarea name="discussion-editor" id="discussion-editor" rows="10" cols="120"></textarea>
         </div>
 
         <div class="editor-actions">
@@ -41,7 +43,6 @@
 </template>
 
 <style>
-
   .discussion-editor .editor-actions {
     width: 100%;
     margin-top: 2rem;
@@ -97,15 +98,47 @@
     border-width: 0;
     border-left-width: .4rem;
   }
+
+  .discussion-editor .fake-textarea {
+    min-height: 1em;
+    margin-top: 2px;
+    padding: 10px 15px;
+    border: 1px solid #ccc;
+    color: #999;
+    font-size: 14px;
+    cursor: text;
+    border-radius: 5px;
+  }
+
+  .discussion-editor .real-textarea {
+    display: none;
+  }
+
+  .cke_reset {
+    border-radius: 5px !important;
+  }
+
+  .cke_top {
+    color: #d1d1d1;
+    padding-top: 4px;
+    padding-bottom: 0 !important;
+    border-top-left-radius: 5px !important;
+    border-top-right-radius: 5px !important;
+  }
+
+  a.cke_button {
+    margin-right: .5em !important;
+  }
 </style>
 
 <script>
   import 'semantic-calendar/calendar'
   import 'semantic-calendar/calendar.css'
+
   export default {
     name: 'DiscussionEditor',
     props: ['user'],
-    mounted () {
+    mounted() {
       $('.task-options').popup({
         lastResort: 'right center',
         position: 'right center',
@@ -114,10 +147,51 @@
       $('#due-date-picker').calendar({
         type: 'date'
       })
+      CKEDITOR.replace('discussion-editor')
+      $('.fake-textarea').click((event) => {
+        $(event.target).hide()
+        $('.real-textarea').show()
+        $('.cke_top').hide()
+      })
     },
     computed: {
-      users () {
+      users() {
         return this.$store.getters.users
+      }
+    },
+    methods: {
+      updateContent(item) {
+        const author = this.$store.getters.getUserNameById(item.author)
+        let quote
+        if (item.type === 'draft-created' || item.type === 'draft-edited') {
+          quote = `<blockquote>
+          <span>文档</span>
+          <p>@${author}</p>
+          </blockquote>`
+        } else if (item.type === 'task-created' || item.type === 'task-edited' ||
+          item.type === 'task-checked' || item.type === 'task-unchecked') {
+          quote = `<blockquote>
+          <span>任务</span>
+          <a class="task-link">${this.$store.getters.getTaskTitleById(item.ref)}</a>
+          <span class="due-date">${this.$store.getters.getTaskDueDateById(item.ref)}</span>
+          <p>@${author}</p>
+          </blockquote>`
+        } else if (item.content) {
+          quote = `<blockquote>
+          <span>${item.content.replace(/(?:\r\n|\r|\n)/g, '<br />')}</span>
+          <p>@${author}</p>
+          </blockquote>`
+        } else {
+          quote = `<blockquote>
+          <p>@${author}</p>
+          </blockquote>`
+        }
+        quote += '<p></p>'
+
+        CKEDITOR.instances['discussion-editor'].setData(quote)
+        $('.fake-textarea').hide()
+        $('.real-textarea').show()
+        $('.cke_top').hide()
       }
     }
   }

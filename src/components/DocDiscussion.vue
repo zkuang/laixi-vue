@@ -1,14 +1,14 @@
 <template>
 <div class="doc-discussion">
-  <document :document="document" class="document"></document>
+  <draft :draft="draft" class="document"></draft>
   <task-items class="task-items"></task-items>
-  <discussion-items :items="discussions" class="discussion-items"></discussion-items>
-  <discussion-editor :user="getCurrentUser" class="discussion-editor"></discussion-editor>
+  <discussion-items :items="posts" class="discussion-items" @reply="onReply"></discussion-items>
+  <discussion-editor ref="editor" :user="getCurrentUser" class="discussion-editor"></discussion-editor>
 </div>
 </template>
 
 <script>
-import Document from './Document'
+import Draft from './Draft'
 import TaskItems from './TaskItems'
 import DiscussionItems from './DiscussionItems'
 import DiscussionEditor from './DiscussionEditor'
@@ -19,22 +19,27 @@ import {
 export default {
   name: 'DocDiscussion',
   components: {
-    document: Document,
+    draft: Draft,
     'task-items': TaskItems,
     'discussion-items': DiscussionItems,
     'discussion-editor': DiscussionEditor
   },
   beforeMount() {
-    this.$store.dispatch('getDocumentById', this.$route.params.id)
+    this.$store.dispatch('getDraftTasks', this.$route.params.id).then(() => {
+      return this.$store.dispatch('getDraftPosts', this.$route.params.id)
+    })
+  },
+  methods: {
+    onReply(item) {
+      this.$refs.editor.updateContent(item)
+    }
   },
   computed: {
     ...mapGetters([
-      'document',
-      'getCurrentUser'
-    ]),
-    discussions() {
-      return this.$store.state.document.discussions
-    }
+      'draft',
+      'getCurrentUser',
+      'posts'
+    ])
   }
 }
 </script>

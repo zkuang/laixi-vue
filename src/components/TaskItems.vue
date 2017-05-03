@@ -53,7 +53,8 @@
     },
     computed: {
       ...mapGetters([
-        'tasks'
+        'tasks',
+        'draft'
       ])
     }
   }
