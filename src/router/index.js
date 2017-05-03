@@ -9,7 +9,7 @@ export default new Router({
   mode: 'history',
   routes: [
     {
-      path: '/documents/:id',
+      path: '/documents/:did',
       name: 'DocDiscussion',
       component: DocDiscussion
     },

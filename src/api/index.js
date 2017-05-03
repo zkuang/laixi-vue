@@ -122,7 +122,7 @@ let posts = [
     type: 'critique',
     created: '2015-08-21T08:30:32.313554',
     user: users[0],
-    content: '> 这是一条评论。\n > 评论可以很多行。。。\n[@zxygentoo](http://localhost:8080)\n\n这是一条对评论的回复\n回复可以很多行，啦啦啦啦。。。。'
+    content: '> 这是一条评论。\n> 评论可以很多行。。。\n> [@zxygentoo](http://localhost:8080)\n\n这是一条对评论的回复\n回复可以很多行，啦啦啦啦。。。。'
   },
   {
     id: 'a49ebddc88a14283b5671adcb1dc625b',
@@ -186,7 +186,7 @@ let posts = [
     created: '2015-08-21T08:30:32.313554',
     user: users[1],
     task: tasks[3],
-    content: '> 我操。。。和狗的关系怎么写。。。\n [@zxygentoo](http://localhost:8080) \n\n有什么难写的，照抄《忠狗八公》。'
+    content: '> 我操。。。和狗的关系怎么写。。。\n> [@zxygentoo](http://localhost:8080) \n\n有什么难写的，照抄《忠狗八公》。'
   },
   {
     id: 'a49ebddc88a14283b5671adcb1dc6263',
@@ -276,8 +276,8 @@ export const Posts = {
   addPostsToDraft (draftId, content, taskId) {
     return new Promise(resolve => {
       let post = {
-        id: `eac35a689bca4e40b96aea1b23ae19${Math.random() * 100}`,
-        draft_id: 'eac35a689bca4e40b96aea1b23ae198a',
+        id: `aaaaaa689bca4e40b96aea1b23ae19${Math.random() * 100}`,
+        draft_id: draftId,
         type: 'critique',
         created: '2015-08-21T08:30:32.313554',
         user: currentUser,
@@ -286,7 +286,8 @@ export const Posts = {
           return task.id === taskId
         })
       }
-      posts.push(post)
+      console.log(post)
+      console.log(taskId)
       resolve({post: post})
     })
   },
@@ -351,7 +352,6 @@ export const Tasks = {
         checked: false,
         checked_at: undefined
       }
-      tasks.push(task)
       resolve({task: task})
     })
   },

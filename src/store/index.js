@@ -70,6 +70,11 @@ const store = new Vuex.Store({
       Posts.getPostsByTaskId(taskId).then(res => {
         commit('setPosts', res.posts)
       })
+    },
+    addPostToDraft ({commit}, {draftId, content, taskId}) {
+      Posts.addPostsToDraft(draftId, content, taskId).then(res => {
+        commit('addPosts', res.post)
+      })
     }
   },
   mutations: {
@@ -84,6 +89,9 @@ const store = new Vuex.Store({
     },
     setPosts (state, posts) {
       state.posts = posts
+    },
+    addPosts (state, post) {
+      state.posts.push(post)
     },
     setCurrentUser (state, user) {
       state.currentUser = user

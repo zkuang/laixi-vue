@@ -108,11 +108,14 @@
   position: relative;
 }
 
-.discussion-item .emphasized-date {
+.emphasized-date {
   background: #e2e2e2;
+  border-radius: 1em;
+}
+
+.discussion-item .emphasized-date {
   font-size: 1rem;
   padding: .4rem 1.2rem .2rem 1.2rem;
-  border-radius: 1em;
   color: #3D3E3F;
   margin-left: .5em;
 }

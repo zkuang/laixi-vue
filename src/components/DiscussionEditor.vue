@@ -34,7 +34,7 @@
           </form>
           <div class="editor-buttons">
             <button class="ui secondary basic button">取消</button>
-            <button class="ui teal basic button">发布</button>
+            <button class="ui teal basic button" @click="publish">发布</button>
           </div>
         </div>
       </div>
@@ -134,6 +134,8 @@
 <script>
   import 'semantic-calendar/calendar'
   import 'semantic-calendar/calendar.css'
+  import {DateTime} from '../utils'
+  import toMD from 'to-markdown'
 
   export default {
     name: 'DiscussionEditor',
@@ -161,37 +163,40 @@
     },
     methods: {
       updateContent(item) {
-        const author = this.$store.getters.getUserNameById(item.author)
-        let quote
+        const author = item.user
+        let quote = ''
         if (item.type === 'draft-created' || item.type === 'draft-edited') {
-          quote = `<blockquote>
-          <span>文档</span>
-          <p>@${author}</p>
-          </blockquote>`
-        } else if (item.type === 'task-created' || item.type === 'task-edited' ||
-          item.type === 'task-checked' || item.type === 'task-unchecked') {
-          quote = `<blockquote>
-          <span>任务</span>
-          <a class="task-link">${this.$store.getters.getTaskTitleById(item.ref)}</a>
-          <span class="due-date">${this.$store.getters.getTaskDueDateById(item.ref)}</span>
-          <p>@${author}</p>
-          </blockquote>`
-        } else if (item.content) {
-          quote = `<blockquote>
-          <span>${item.content.replace(/(?:\r\n|\r|\n)/g, '<br />')}</span>
-          <p>@${author}</p>
-          </blockquote>`
+          quote += `<span>文档</span>
+                    <p>@${author.nickname}</p>`
         } else {
-          quote = `<blockquote>
-          <p>@${author}</p>
-          </blockquote>`
+          if (item.task) {
+            quote += `<span>任务</span>&nbsp;&nbsp;<a href="http://localhost:8080/documents/${item.task.draft_id}/tasks/${item.task.id}" class="task-link">${item.task.title}</a>&nbsp;&nbsp;&nbsp;&nbsp;<span class="emphasized-date">${DateTime.DateMonth(item.task.deadline)}</span>`
+          }
+          if (item.content) {
+            let content = item.content.replace(/(^> .*$)/gm, '').trim()
+            console.log(content)
+            quote += `<p>${content.replace(/(?:\r\n|\r|\n)/g, '<br />')}</p>`
+          }
+          quote += `<p><a href="http://localhost:8080/users/${author.id}">@${author.nickname}</a></p>`
         }
-        quote += '<p></p>'
-
+        quote = '<blockquote>' + quote + '</blockquote><p></p>'
         CKEDITOR.instances['discussion-editor'].setData(quote)
         $('.fake-textarea').hide()
         $('.real-textarea').show()
         $('.cke_top').hide()
+      },
+      publish() {
+        let data = toMD(CKEDITOR.instances['discussion-editor'].getData())
+        const regex = />.*\(http:\/\/.*\/documents\/.*\/tasks\/(.*)\).*$/gm
+        const draftId = this.$route.params.did
+        let match = regex.exec(data)
+        let taskId
+        if (match !== null) {
+          taskId = match[1]
+          data = data.replace(regex, '').trim()
+        }
+        this.$store.dispatch('addPostToDraft', {draftId, content: data, taskId})
+        CKEDITOR.instances['discussion-editor'].setData('')
       }
     }
   }
