@@ -1,0 +1,22 @@
+.draft-description > h2 {
+  font-weight: normal;
+  font-size: 1.65em;
+  margin-bottom: 1.15em;
+}
+.draft-description > p {
+  font-size: 1.2em;
+  text-align: justify;
+}
+.draft-description {
+  padding-bottom: 2em;
+}
+.ui.secondary.vertical.menu.buttons {
+  margin-top: 0;
+}
+.ui.secondary.vertical.menu.buttons .item {
+  padding: 0.78571429em 1.35em;
+  margin-bottom: 0;
+}
+.ui.secondary.vertical.menu.buttons .item .button {
+  padding: 0.75071429em 1.25em;
+}

@@ -1,33 +1,14 @@
 <template>
   <div id="app">
-    <div class="ui breadcrumb">
-      <a href="http://localhost:8080" class="section">{{project.name}}</a>
-      <div class="divider"> / </div>
-      <div class="section">{{draft.title}}</div>
-      <div v-if="task.id" class="divider"> / </div>
-      <div v-if="task.id" class="section"> {{taskBreadCrumb}} </div>
-    </div>
     <router-view></router-view>
   </div>
 </template>
 
 <script>
-
-  import {mapGetters} from 'vuex'
   export default {
     name: 'app',
-    computed: {
-      ...mapGetters([
-        'draft',
-        'project',
-        'task'
-      ]),
-      taskBreadCrumb() {
-        return `任务：${this.$store.getters.task.title}`
-      }
-    },
     beforeCreate() {
-      this.$store.dispatch('getDraftById', 'eac35a689bca4e40b96aea1b23ae198a')
+      this.$store.dispatch('getDraftById', this.$route.params.did)
         .then(() => {
           return this.$store.dispatch('getProjectById', '38d622955372466ba04c1ee18141daf0')
         })
@@ -59,5 +40,6 @@
 
   #app .ui.breadcrumb {
     font-size: 1.12em;
+    margin-bottom: 1.8em;
   }
 </style>

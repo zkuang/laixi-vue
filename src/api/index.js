@@ -241,20 +241,21 @@ export const Projects = {
 
 export const Drafts = {
   getById (id) {
-    return new Promise(resolve => {
-      resolve({drafts: draft})
+    return new Promise((resolve, reject) => {
+      if (draft.id === id) {
+        resolve({drafts: draft})
+      } else {
+        reject('no such draft')
+      }
     })
   },
-  updateById (id, title, content) {
+  updateById (id, draft) {
     return new Promise(resolve => {
-      draft.title = title
-      draft.content = content
       resolve({drafts: draft})
     })
   },
   deleteById (id) {
     return new Promise(resolve => {
-      draft.removed = true
       resolve()
     })
   }
@@ -263,12 +264,15 @@ export const Drafts = {
 export const Posts = {
   getPostsByDraftId (draftId) {
     return new Promise(resolve => {
+      let p = posts.filter(post => {
+        return post.draft_id === draftId
+      })
       resolve({
-        posts: posts,
+        posts: p,
         pagination: {
           has_next: false,
           has_prev: false,
-          total: 14
+          total: p.length
         }
       })
     })
@@ -286,8 +290,6 @@ export const Posts = {
           return task.id === taskId
         })
       }
-      console.log(post)
-      console.log(taskId)
       resolve({post: post})
     })
   },

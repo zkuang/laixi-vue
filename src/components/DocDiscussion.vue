@@ -1,57 +1,57 @@
 <template>
-<div class="doc-discussion">
-  <draft :draft="draft" class="document"></draft>
-  <task-items class="task-items"></task-items>
-  <discussion-items :items="posts" class="discussion-items" @reply="onReply"></discussion-items>
-  <discussion-editor ref="editor" :user="getCurrentUser" class="discussion-editor"></discussion-editor>
-</div>
+  <div class="doc-discussion">
+    <div v-if="draft.removed" class="ui red message"><i class="large trash icon"></i>当前文文档在垃圾箱，处于锁定状态，不可修改。如需修改，可将文档先移出垃圾箱。</div>
+    <breadcrumb></breadcrumb>
+    <draft :draft="draft" class="document"></draft>
+    <task-items class="task-items"></task-items>
+    <discussion-items :items="posts" class="discussion-items" @reply="onReply"></discussion-items>
+    <discussion-editor ref="editor" :user="getCurrentUser" class="discussion-editor"></discussion-editor>
+  </div>
 </template>
 
 <script>
-import Draft from './Draft'
-import TaskItems from './TaskItems'
-import DiscussionItems from './DiscussionItems'
-import DiscussionEditor from './DiscussionEditor'
-import {
-  mapGetters
-} from 'vuex'
+  import Draft from './Draft'
+  import TaskItems from './TaskItems'
+  import DiscussionItems from './DiscussionItems'
+  import DiscussionEditor from './DiscussionEditor'
+  import BreadCrumb from './BreadCrumb'
+  import {
+    mapGetters
+  } from 'vuex'
 
-export default {
-  name: 'DocDiscussion',
-  components: {
-    draft: Draft,
-    'task-items': TaskItems,
-    'discussion-items': DiscussionItems,
-    'discussion-editor': DiscussionEditor
-  },
-  beforeMount() {
-    this.$store.dispatch('getDraftTasks', this.$route.params.id).then(() => {
-      return this.$store.dispatch('getDraftPosts', this.$route.params.id)
-    })
-  },
-  methods: {
-    onReply(item) {
-      this.$refs.editor.updateContent(item)
+  export default {
+    name: 'DocDiscussion',
+    components: {
+      draft: Draft,
+      'task-items': TaskItems,
+      'discussion-items': DiscussionItems,
+      'discussion-editor': DiscussionEditor,
+      'breadcrumb': BreadCrumb
+    },
+    beforeMount() {
+      this.$store.dispatch('getDraftTasks', this.$route.params.did).then(() => {
+        return this.$store.dispatch('getDraftPosts', this.$route.params.did)
+      })
+    },
+    methods: {
+      onReply(item) {
+        this.$refs.editor.updateContent(item)
+      }
+    },
+    computed: {
+      ...mapGetters([
+        'draft',
+        'getCurrentUser',
+        'posts'
+      ])
     }
-  },
-  computed: {
-    ...mapGetters([
-      'draft',
-      'getCurrentUser',
-      'posts'
-    ])
   }
-}
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style>
-.doc-discussion {
-  padding-top: 1.8em;
-}
-
-.task-items {
-  margin-top: 2em;
-  margin-left: -50px;
-}
+  .task-items {
+    margin-top: 2em;
+    margin-left: -50px;
+  }
 </style>

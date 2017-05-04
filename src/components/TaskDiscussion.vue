@@ -1,5 +1,6 @@
 <template>
   <div class="task-discussion">
+    <breadcrumb></breadcrumb>
     <task :task="task" class="task"></task>
     <discussion-items :items="posts" class="discussion-items" @reply="onReply"></discussion-items>
     <discussion-editor ref="editor" :user="getCurrentUser" class="discussion-editor"></discussion-editor>
@@ -21,13 +22,15 @@
   import Task from './Task'
   import DiscussionItems from './DiscussionItems'
   import DiscussionEditor from './DiscussionEditor'
+  import BreadCrumb from './BreadCrumb'
 
   export default {
     name: 'TaskDiscussion',
     components: {
       task: Task,
       'discussion-items': DiscussionItems,
-      'discussion-editor': DiscussionEditor
+      'discussion-editor': DiscussionEditor,
+      'breadcrumb': BreadCrumb
     },
     beforeMount () {
       this.$store.dispatch('getTaskPosts', this.$route.params.tid)

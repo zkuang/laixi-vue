@@ -14,7 +14,7 @@ const getters = {
   },
   project: state => state.project,
   tasks: state => state.tasks,
-  task: state => { console.log(state.task); return state.task },
+  task: state => state.task,
   getTaskById: state => id => {
     return state.tasks.find(task => {
       return task.id === id
@@ -38,6 +38,11 @@ const store = new Vuex.Store({
   actions: {
     getDraftById ({commit}, draftId) {
       Drafts.getById(draftId).then(res => {
+        commit('setDraft', res.drafts)
+      })
+    },
+    updateDraft ({commit}, draft) {
+      Drafts.updateById(draft.id, draft).then(res => {
         commit('setDraft', res.drafts)
       })
     },
@@ -79,6 +84,7 @@ const store = new Vuex.Store({
   },
   mutations: {
     setDraft (state, draft) {
+      console.log(draft)
       state.draft = draft
     },
     setProject (state, project) {
