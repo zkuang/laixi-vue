@@ -1,9 +1,10 @@
 <template>
   <div class="task-discussion">
+    <div v-show="draft.removed" class="ui red message"><i class="large trash icon"></i>当前文文档在垃圾箱，处于锁定状态，不可修改。如需修改，可将文档先移出垃圾箱。</div>
     <breadcrumb></breadcrumb>
     <task :task="task" class="task"></task>
     <discussion-items :items="posts" class="discussion-items" @reply="onReply"></discussion-items>
-    <discussion-editor ref="editor" :user="getCurrentUser" class="discussion-editor"></discussion-editor>
+    <discussion-editor v-show="!draft.removed" ref="editor" :user="getCurrentUser" class="discussion-editor"></discussion-editor>
   </div>
 </template>
 
@@ -44,7 +45,8 @@
       ...mapGetters([
         'task',
         'getCurrentUser',
-        'posts'
+        'posts',
+        'draft'
       ])
     }
   }

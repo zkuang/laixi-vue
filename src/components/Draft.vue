@@ -58,9 +58,10 @@
 </style>
 
 <script>
+  import { mapGetters } from 'vuex'
+
   export default {
-    name: 'draft',
-    props: ['draft'],
+    name: 'Draft',
     methods: {
       edit() {
         this.$router.push({name: 'DraftEdit', params: {did: this.$route.params.did}})
@@ -83,7 +84,10 @@
     computed: {
       historyLink() {
         return `/document/history/${this.$route.params.did}`
-      }
+      },
+      ...mapGetters([
+        'draft'
+      ])
     }
   }
 </script>

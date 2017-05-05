@@ -46,7 +46,7 @@ let draft = {
   creator: users[0],
   updated: '2015-08-21T08:30:32.313554',
   updator: users[0],
-  removed: false
+  removed: true
 }
 
 let tasks = [

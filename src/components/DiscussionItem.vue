@@ -174,7 +174,7 @@ import TaskItem from './TaskEventItem'
 import CritiqueItem from './CritiqueEventItem'
 export default {
   name: 'DiscussionItem',
-  props: ['item'],
+  props: ['item', 'disabled'],
   components: {
     draftitem: DraftItem,
     taskitem: TaskItem,
@@ -182,6 +182,9 @@ export default {
   },
   methods: {
     active() {
+      if (this.disabled) {
+        return
+      }
       $(this.$el).addClass('active')
     },
     deactive() {

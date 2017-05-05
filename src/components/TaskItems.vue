@@ -3,9 +3,12 @@
     <div class="thirteen wide column section">
       <h3 class="taskitem-list-header">任务</h3>
       <ul class="taskitem-list">
-        <task-item v-for="task in tasks" :key="task.id" :taskId="task.id"></task-item>
+        <task-item v-for="task in uncheckedTasks" :key="task.id" :task="task" :disabled="draft.removed"></task-item>
       </ul>
       <p class="sixteen wide column task-actions"><a>添加新任务</a><a>查看已完成任务</a></p>
+      <ul class="taskitem-list">
+        <task-item v-for="task in checkedTasks" :key="task.id" :task="task" :disabled="draft.removed"></task-item>
+      </ul>
     </div>
   </section>
 </template>
@@ -55,7 +58,17 @@
       ...mapGetters([
         'tasks',
         'draft'
-      ])
+      ]),
+      uncheckedTasks() {
+        return this.tasks.filter(task => {
+          return task.checked === false
+        })
+      },
+      checkedTasks() {
+        return this.tasks.filter(task => {
+          return task.checked === true
+        })
+      }
     }
   }
 </script>

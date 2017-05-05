@@ -1,11 +1,11 @@
 <template>
   <div class="doc-discussion">
-    <div v-if="draft.removed" class="ui red message"><i class="large trash icon"></i>当前文文档在垃圾箱，处于锁定状态，不可修改。如需修改，可将文档先移出垃圾箱。</div>
+    <div v-show="draft.removed" class="ui red message"><i class="large trash icon"></i>当前文文档在垃圾箱，处于锁定状态，不可修改。如需修改，可将文档先移出垃圾箱。</div>
     <breadcrumb></breadcrumb>
-    <draft :draft="draft" class="document"></draft>
+    <draft class="document"></draft>
     <task-items class="task-items"></task-items>
-    <discussion-items :items="posts" class="discussion-items" @reply="onReply"></discussion-items>
-    <discussion-editor ref="editor" :user="getCurrentUser" class="discussion-editor"></discussion-editor>
+    <discussion-items class="discussion-items" @reply="onReply"></discussion-items>
+    <discussion-editor v-show="!draft.removed" ref="editor" :user="getCurrentUser" class="discussion-editor"></discussion-editor>
   </div>
 </template>
 
@@ -15,9 +15,7 @@
   import DiscussionItems from './DiscussionItems'
   import DiscussionEditor from './DiscussionEditor'
   import BreadCrumb from './BreadCrumb'
-  import {
-    mapGetters
-  } from 'vuex'
+  import { mapGetters } from 'vuex'
 
   export default {
     name: 'DocDiscussion',

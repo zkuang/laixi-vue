@@ -1,12 +1,15 @@
 <template>
   <section class="ui stackable two column grid">
     <div class="thirteen wide column task-description section">
-      <input type="checkbox">
+      <span class="checkbox-wrapper" :class="{disabled: draft.removed}">
+        <input type="checkbox" :checked="task.checked" :id="taskId" :disabled="draft.removed">
+        <label class="disable-checkbox" :for="taskId"></label>
+      </span>
       <span class="task-title">{{task.title}}</span>
       <div class="task-content">
       <span>
-          <span>{{task.assignee.nickname}}</span>
-      <span>{{dueDate}}</span>
+        <span>{{task.assignee.nickname}}</span>
+        <span>{{dueDate}}</span>
       </span>
       </div>
       <div class="task-detail">
@@ -15,7 +18,7 @@
         </div>
       </div>
     </div>
-    <div class="three wide column ui secondary vertical menu buttons">
+    <div v-if="!draft.removed" class="three wide column ui secondary vertical menu buttons">
       <div class="item">
         <div class="ui positive basic button">编辑</div>
       </div>
@@ -69,7 +72,7 @@
     margin-top: -.5em;
   }
 
-  .task-description span > span {
+  .task-description > span > span {
     margin-top: auto;
     margin-bottom: auto;
   }
@@ -80,6 +83,7 @@
 </style>
 
 <script>
+  import {mapGetters} from 'vuex'
   import {DateTime} from '../utils'
   export default {
     name: 'Task',
@@ -87,6 +91,12 @@
     computed: {
       dueDate() {
         return DateTime.DateMonth(this.task.deadline)
+      },
+      ...mapGetters([
+        'draft'
+      ]),
+      taskId() {
+        return `task${this.task.id}`
       }
     }
   }

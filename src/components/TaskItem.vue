@@ -8,11 +8,14 @@
         <i class="trash outline icon"></i>
       </button>
     </div>
-    <input type="checkbox" :checked="checked">
-    <label>{{title}}</label>
+    <span class="checkbox-wrapper" :class="{disabled}">
+      <input type="checkbox" :checked="task.checked" :id="itemId"  :disabled="disabled">
+      <label class="disable-checkbox" :for="itemId"></label>
+    </span>
+    <label>{{task.title}}</label>
     <div class="task-content">
       <span>
-        <span>{{assignee.nickname}}</span>
+        <span>{{task.assignee.nickname}}</span>
         <span>{{dueDate}}</span>
       </span>
     </div>
@@ -51,9 +54,8 @@
     padding-left: 1.2em;
   }
 
-  .taskitem input {
+  .taskitem .checkbox-wrapper {
     margin-right: 1.2rem;
-    font-size: 1.6rem;
   }
 
   .taskitem .task-content {
@@ -91,17 +93,20 @@
 
   export default {
     name: 'TaskItem',
-    props: ['taskId'],
-    data () {
-      return this.$store.getters.getTaskById(this.taskId)
-    },
+    props: ['task', 'disabled'],
     computed: {
       dueDate () {
-        return DateTime.DateMonth(this.$store.getters.getTaskById(this.taskId).created)
+        return DateTime.DateMonth(this.task.created)
+      },
+      itemId () {
+        return `task${this.task.id}`
       }
     },
     methods: {
       active () {
+        if (this.disabled) {
+          return
+        }
         $(this.$el).addClass('active')
       },
       deactive () {
