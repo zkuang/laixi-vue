@@ -11,5 +11,8 @@ export const DateTime = {
   },
   DateMonthYearTime (string) {
     return moment(string).format('Y-M-D hh:mm')
+  },
+  DateFromNow (string) {
+    return moment(string).fromNow()
   }
 }

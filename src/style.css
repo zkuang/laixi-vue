@@ -82,9 +82,3 @@ body {
   filter: alpha(opacity=100);
   opacity: 1;
 }
-
-.checkbox-wrapper.disabled input[type=checkbox]:checked + label:after {
-  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
-  filter: alpha(opacity=0);
-  opacity: 0;
-}

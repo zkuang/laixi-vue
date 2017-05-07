@@ -15,6 +15,7 @@
   import DiscussionItems from './DiscussionItems'
   import DiscussionEditor from './DiscussionEditor'
   import BreadCrumb from './BreadCrumb'
+  import TaskAssignmentEditor from './TaskAssignmentEditor'
   import { mapGetters } from 'vuex'
 
   export default {
@@ -24,7 +25,8 @@
       'task-items': TaskItems,
       'discussion-items': DiscussionItems,
       'discussion-editor': DiscussionEditor,
-      'breadcrumb': BreadCrumb
+      'breadcrumb': BreadCrumb,
+      'assignment-editor': TaskAssignmentEditor
     },
     beforeMount() {
       this.$store.dispatch('getDraftTasks', this.$route.params.did).then(() => {

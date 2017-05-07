@@ -46,7 +46,7 @@ let draft = {
   creator: users[0],
   updated: '2015-08-21T08:30:32.313554',
   updator: users[0],
-  removed: true
+  removed: false
 }
 
 let tasks = [
@@ -55,10 +55,10 @@ let tasks = [
     draft_id: 'a49ebddc88a14283b5671adcb1dc6259',
     title: '增加家庭关系部分',
     description: '任务详细描述……',
-    created: '2015-08-21T08:30:32.313554',
+    created: '2017-05-01T08:30:32.313554',
     creator: users[1],
     assignee: users[0],
-    deadline: '2015-08-21T08:30:32.313554',
+    deadline: '2017-05-05T08:30:32.313554',
     checked: false,
     checked_at: undefined
   },
@@ -67,10 +67,10 @@ let tasks = [
     draft_id: 'a49ebddc88a14283b5671adcb1dc6259',
     title: '增加和二舅的关系',
     description: '任务详细描述……',
-    created: '2015-08-21T08:30:32.313554',
+    created: '2017-05-01T08:30:32.313554',
     creator: users[1],
     assignee: users[0],
-    deadline: '2015-08-21T08:30:32.313554',
+    deadline: '2017-05-06T08:30:32.313554',
     checked: false,
     checked_at: undefined
   },
@@ -79,10 +79,10 @@ let tasks = [
     draft_id: 'a49ebddc88a14283b5671adcb1dc6259',
     title: '增加和三姨的关系',
     description: '任务详细描述……',
-    created: '2015-08-21T08:30:32.313554',
+    created: '2017-05-01T08:30:32.313554',
     creator: users[1],
     assignee: users[0],
-    deadline: '2015-08-21T08:30:32.313554',
+    deadline: '2017-05-07T08:30:32.313554',
     checked: false,
     checked_at: undefined
   },
@@ -91,10 +91,10 @@ let tasks = [
     draft_id: 'a49ebddc88a14283b5671adcb1dc6259',
     title: '增加和狗关系部分',
     description: '任务详细描述……',
-    created: '2015-08-21T08:30:32.313554',
+    created: '2017-05-01T08:30:32.313554',
     creator: users[1],
     assignee: users[0],
-    deadline: '2015-08-21T08:30:32.313554',
+    deadline: '2017-05-13T08:30:32.313554',
     checked: false,
     checked_at: undefined
   }
@@ -364,17 +364,12 @@ export const Tasks = {
       })})
     })
   },
-  updateById (id, {title, assigneeId, deadline, description}) {
+  updateById (id, task) {
     return new Promise(resolve => {
-      let task = tasks.find(task => {
+      let t = tasks.find(task => {
         return task.id === id
       })
-      task.title = title
-      task.assignee = users.find(user => {
-        return user.id === assigneeId
-      })
-      task.description = description
-      resolve({task: task})
+      resolve({task: Object.assign(t, task)})
     })
   },
   deleteById (id) {

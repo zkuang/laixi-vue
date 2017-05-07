@@ -66,6 +66,12 @@ const store = new Vuex.Store({
         commit('setTasks', res.tasks)
       })
     },
+    updateTask ({commit}, task) {
+      Tasks.updateById(task.id, task).then(res => {
+        commit('setTask', res.task)
+        commit('setOneTask', res.task)
+      })
+    },
     getDraftPosts ({commit}, draftId) {
       Posts.getPostsByDraftId(draftId).then(res => {
         commit('setPosts', res.posts)
@@ -84,7 +90,6 @@ const store = new Vuex.Store({
   },
   mutations: {
     setDraft (state, draft) {
-      console.log(draft)
       state.draft = draft
     },
     setProject (state, project) {
@@ -92,6 +97,14 @@ const store = new Vuex.Store({
     },
     setTasks (state, tasks) {
       state.tasks = tasks
+    },
+    setOneTask (state, task) {
+      const index = state.tasks.findIndex(t => {
+        return task.id === t.id
+      })
+      console.log(index)
+      if (index === -1) return
+      state.tasks.splice(index, 1, task)
     },
     setPosts (state, posts) {
       state.posts = posts

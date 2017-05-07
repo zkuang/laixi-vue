@@ -1,5 +1,5 @@
 <template>
-  <li class="taskitem" @mouseover="active" @mouseleave="deactive">
+  <li class="taskitem" :id="itemId" @mouseover="active" @mouseleave="deactive">
     <div class="task-actions">
       <button class="ui button">
         <i class="write icon"></i>
@@ -9,15 +9,16 @@
       </button>
     </div>
     <span class="checkbox-wrapper" :class="{disabled}">
-      <input type="checkbox" :checked="task.checked" :id="itemId"  :disabled="disabled">
-      <label class="disable-checkbox" :for="itemId"></label>
+      <input type="checkbox" :checked="task.checked" :id="inputId" :disabled="disabled" @change="taskStateChange">
+      <label class="disable-checkbox" :for="inputId"></label>
     </span>
     <label>{{task.title}}</label>
     <div class="task-content">
-      <span>
+      <span class="assignment">
         <span>{{task.assignee.nickname}}</span>
         <span>{{dueDate}}</span>
       </span>
+      <assignment-editor :ref="assignmentEditorId" :name="assignmentEditorId"></assignment-editor>
     </div>
   </li>
 </template>
@@ -64,7 +65,16 @@
     height: 100%;
   }
 
-  .taskitem .task-content > span {
+  .taskitem span > span {
+    margin-top: auto;
+    margin-bottom: auto;
+  }
+
+  .taskitem span > span:first-child {
+    margin-right: .52rem;
+  }
+
+  .assignment {
     display: inline-block;
     margin-left: .4rem;
     background: #e8e8e8;
@@ -75,31 +85,76 @@
     vertical-align: middle;
     padding-left: 1.2em;
     padding-right: 1.2em;
+    color: gray;
+    cursor: pointer;
   }
 
-  .taskitem span > span {
-    margin-top: auto;
-    margin-bottom: auto;
+  .assignment:hover {
+    color: black;
   }
-
-  .taskitem span > span:first-child {
-    margin-right: .52rem;
-  }
-
 </style>
 
 <script>
   import {DateTime} from '../utils'
+  import TaskAssignmentEditor from './TaskAssignmentEditor'
 
   export default {
     name: 'TaskItem',
     props: ['task', 'disabled'],
+    components: {
+      'assignment-editor': TaskAssignmentEditor
+    },
     computed: {
       dueDate () {
-        return DateTime.DateMonth(this.task.created)
+        return DateTime.DateFromNow(this.task.deadline)
       },
       itemId () {
-        return `task${this.task.id}`
+        return `task-${this.task.id}`
+      },
+      inputId () {
+        return `task-input-${this.task.id}`
+      },
+      assignmentEditorId() {
+        return `taskitem-assignmenteditor-${this.task.id}`
+      }
+    },
+    mounted() {
+      console.log('mounted.............')
+      if (!this.disabled) {
+        let self = this
+        $(this.$el).find('.assignment').popup({
+          lastResort: 'right center',
+          position: 'right center',
+          hoverable: true,
+          on: 'click',
+          onShow() {
+            if (self.task.assignee) {
+              self.$refs[self.assignmentEditorId].setSelection(self.task.assignee.id)
+              return true
+            }
+          }
+        })
+      }
+    },
+    watch: {
+      disabled(isDisabled) {
+        if (isDisabled) {
+          $(this.$el).find('.assignment').popup('destroy')
+        } else {
+          let self = this
+          $(this.$el).find('.assignment').popup({
+            lastResort: 'right center',
+            position: 'right center',
+            hoverable: true,
+            on: 'click',
+            onShow() {
+              if (self.task.assignee) {
+                self.$refs[self.assignmentEditorId].setSelection(self.task.assignee.id)
+                return true
+              }
+            }
+          })
+        }
       }
     },
     methods: {
@@ -111,6 +166,10 @@
       },
       deactive () {
         $(this.$el).removeClass('active')
+      },
+      taskStateChange () {
+        this.task.checked = $(`#${this.inputId}`).is(':checked')
+        this.$store.dispatch('updateTask', this.task)
       }
     }
   }

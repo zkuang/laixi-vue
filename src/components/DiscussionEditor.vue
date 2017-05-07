@@ -15,23 +15,7 @@
             <i class="check circle large icon"></i>
             <a>分配任务</a>
           </div>
-          <form class="ui popup form">
-            <div class="field">
-              <label>将任务指派给</label>
-              <select name="select">
-                <option v-for="user in users" value="user.id">{{user.username}}</option>
-              </select>
-            </div>
-            <div class="field">
-              <label>任务截止时间</label>
-              <div class="ui calendar" id="due-date-picker">
-                <div class="ui input left icon">
-                  <i class="calendar icon"></i>
-                  <input type="text" placeholder="Date">
-                </div>
-              </div>
-            </div>
-          </form>
+          <assignment-editor :name="assignmentEditorId()"></assignment-editor>
           <div class="editor-buttons">
             <button class="ui secondary basic button">取消</button>
             <button class="ui teal basic button" @click="publish">发布</button>
@@ -132,22 +116,21 @@
 </style>
 
 <script>
-  import 'semantic-calendar/calendar'
-  import 'semantic-calendar/calendar.css'
   import {DateTime} from '../utils'
   import toMD from 'to-markdown'
-
+  import TaskAssignmentEditor from './TaskAssignmentEditor'
   export default {
     name: 'DiscussionEditor',
     props: ['user'],
+    components: {
+      'assignment-editor': TaskAssignmentEditor
+    },
     mounted() {
       $('.task-options').popup({
         lastResort: 'right center',
         position: 'right center',
-        hoverable: true
-      })
-      $('#due-date-picker').calendar({
-        type: 'date'
+        hoverable: true,
+        on: 'click'
       })
       CKEDITOR.replace('discussion-editor')
       $('.fake-textarea').click((event) => {
@@ -156,12 +139,10 @@
         $('.cke_top').hide()
       })
     },
-    computed: {
-      users() {
-        return this.$store.getters.users
-      }
-    },
     methods: {
+      assignmentEditorId() {
+        return 'editor'
+      },
       updateContent(item) {
         const author = item.user
         let quote = ''
