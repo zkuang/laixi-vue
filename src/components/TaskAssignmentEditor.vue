@@ -2,7 +2,7 @@
   <form class="task-assignment ui popup form">
     <div class="field">
       <label>将任务指派给</label>
-      <select name="assignment">
+      <select name="assignment" @change="setAssignee">
         <option value="unknown">未指派</option>
         <option v-for="user in users" :value="user.id">{{user.nickname}}</option>
       </select>
@@ -22,18 +22,29 @@
 <script>
   import 'semantic-calendar/calendar'
   import 'semantic-calendar/calendar.css'
-  import { mapGetters } from 'vuex'
+  import {mapGetters} from 'vuex'
+  import moment from 'moment'
   export default {
     name: 'TaskAssignmentEditor',
     props: ['name'],
+    data () {
+      return {
+        assignment: {
+          assignee: undefined,
+          deadline: undefined
+        }
+      }
+    },
     mounted() {
-//      console.log($(this.$el).find(`#date-picker-${this.name}`))
-      var self = this
-      setTimeout(() => {
-        $(self.$el).find(`#date-picker-${self.name}`).calendar({
-          type: 'date'
-        })
-      }, 500)
+      let assignment = this.assignment
+      $(this.$el).find(`#date-picker-${this.name}`).calendar({
+        type: 'date',
+        onChange: function (date, text, mode) {
+          if (date) {
+            assignment.deadline = moment(date)
+          }
+        }
+      })
     },
     computed: {
       ...mapGetters(['users']),
@@ -44,6 +55,14 @@
     methods: {
       setSelection(value) {
         $(this.$el).find('select[name="assignment"]').val(value)
+      },
+      getData() {
+        return Object.assign({}, this.assignment)
+      },
+      setAssignee(e) {
+        this.assignment.assignee = this.users.find(user => {
+          return user.id === e.target.value
+        })
       }
     }
   }

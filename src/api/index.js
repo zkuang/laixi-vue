@@ -338,19 +338,17 @@ export const Tasks = {
       })
     })
   },
-  addTaskToDraft (draftId, {title, assigneeId, deadline, description}) {
+  addTaskToDraft (draftId, {title, assignee, deadline, description}) {
     return new Promise(resolve => {
       let task = {
-        id: `aec35a689bca4e40b96aea1b23ae19${Math.random() * 100}`,
+        id: `33650a689bca4e40b96aea1b23ae19${Math.random() * 100}`,
         draft_id: draftId,
         title: title,
         created: '2015-08-21T08:30:32.313554',
         creator: currentUser,
-        assignee: users.find(user => {
-          return user.id === assigneeId
-        }),
-        description: description,
-        deadline: deadline,
+        assignee,
+        description,
+        deadline,
         checked: false,
         checked_at: undefined
       }

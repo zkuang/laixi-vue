@@ -67,9 +67,20 @@ const store = new Vuex.Store({
       })
     },
     updateTask ({commit}, task) {
+      console.log('updating tasks........')
       Tasks.updateById(task.id, task).then(res => {
         commit('setTask', res.task)
         commit('setOneTask', res.task)
+      })
+    },
+    createTask ({commit}, {draftId, task}) {
+      Tasks.addTaskToDraft(draftId, task).then(res => {
+        commit('createTask', res.task)
+      })
+    },
+    delTask ({commit}, task) {
+      Tasks.deleteById(task.id).then(() => {
+        commit('removeOneTask', task)
       })
     },
     getDraftPosts ({commit}, draftId) {
@@ -96,15 +107,27 @@ const store = new Vuex.Store({
       state.project = project
     },
     setTasks (state, tasks) {
-      state.tasks = tasks
+      console.log('set tasks')
+      state.tasks.splice(1, undefined, ...tasks)
+    },
+    createTask (state, task) {
+      console.log('create task')
+      state.tasks.push(task)
     },
     setOneTask (state, task) {
+      console.log('set one task')
       const index = state.tasks.findIndex(t => {
         return task.id === t.id
       })
-      console.log(index)
       if (index === -1) return
       state.tasks.splice(index, 1, task)
+    },
+    removeOneTask (state, task) {
+      const index = state.tasks.findIndex(t => {
+        return task.id === t.id
+      })
+      if (index === -1) return
+      state.tasks.splice(index, 1)
     },
     setPosts (state, posts) {
       state.posts = posts
@@ -125,4 +148,5 @@ const store = new Vuex.Store({
   getters
 })
 
+store.commit('createTask', {id: 'undefined', deadline: undefined, assignee: undefined})
 export default store

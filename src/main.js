@@ -8,7 +8,7 @@ import 'semantic/semantic.css'
 import './style.css'
 import store from './store'
 
-$.site('enable debug')
+// $.site('enable debug')
 Vue.config.productionTip = false
 
 /* eslint-disable no-new */
