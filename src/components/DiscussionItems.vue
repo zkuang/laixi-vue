@@ -5,6 +5,15 @@
                        :assignable="(post.type === 'critique' && (currentUser && currentUser.id === post.user.id))">
       </discussion-item>
     </ul>
+    <div class="ui small modal" id="post-deletion-modal">
+      <div class="content">
+        <p>你确定要删除这条回复吗？</p>
+      </div>
+      <div class="actions">
+        <div class="ui approve button">确定</div>
+        <div class="ui cancel button">取消</div>
+      </div>
+    </div>
   </section>
 </template>
 

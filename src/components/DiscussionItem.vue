@@ -13,6 +13,10 @@
       <button :class="{hidden: !assignable}" class="ui button has-popup">
         <i class="content icon"></i>
       </button>
+      <div class="ui popup">
+        <button class="ui button in-popup" @click="modify">修改</button>
+        <button class="ui button in-popup" @click="del">删除</button>
+      </div>
     </div>
 
   </li>
@@ -146,11 +150,16 @@
     margin-top: .5em;
   }
 
-  .ui.button.in-popup {
+  .discussion-item .ui.icon.buttons .ui.button.in-popup {
     background: transparent;
     display: block;
-    padding: .5em;
+    padding: .2em;
     margin-right: 0;
+    color: grey;
+    min-width: 3em;
+  }
+  .discussion-item .ui.icon.buttons .ui.button.in-popup:hover {
+    color: #0e8c8c;
   }
 
   .ui.button.hidden {
@@ -192,13 +201,27 @@
       },
       reply() {
         this.$emit('reply', this.item)
+      },
+      del() {
+        let self = this
+        $(this.$el).find('.has-popup').popup('hide')
+        $('#post-deletion-modal').modal({
+          closable: true,
+          onApprove: function () {
+            self.$store.dispatch('delPost', self.item)
+          }
+        }).modal('show')
+      },
+      modify() {
+        $(this.$el).find('.has-popup').popup('hide')
+        console.log('modify')
       }
     },
     mounted() {
-      $('.has-popup').popup({
+      $(this.$el).find('.has-popup').popup({
         position: 'bottom center',
         hoverable: true,
-        html: `<div><button class="ui button in-popup">修改</button><button class="ui button in-popup">删除</button></div>`
+        on: 'click'
       })
     },
     computed: {

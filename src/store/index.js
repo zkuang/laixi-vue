@@ -106,9 +106,20 @@ const store = new Vuex.Store({
         return dispatch('addPostToDraft', {post: eventlog, origin: eventlog})
       })
     },
-    delTask ({commit}, task) {
+    delTask ({commit, state}, task) {
       Tasks.deleteById(task.id).then(() => {
+        let posts = state.posts.filter(post => {
+          return post.task && post.task.id === task.id
+        })
         commit('removeOneTask', task)
+        posts.forEach(p => {
+          commit('removePost', p)
+        })
+      })
+    },
+    delPost ({commit}, post) {
+      Posts.deleteById(post.id).then(() => {
+        commit('removePost', post)
       })
     },
     getDraftPosts ({commit}, draftId) {
@@ -164,14 +175,18 @@ const store = new Vuex.Store({
     addPost (state, post) {
       state.posts.push(post)
     },
+    removePost (state, post) {
+      const i = state.posts.findIndex(p => {
+        return post.id === p.id
+      })
+      state.posts.splice(i, 1)
+    },
     updatePost (state, {updated, origin}) {
       if (origin) {
         let i = state.posts.findIndex(post => {
           return post === origin
         })
-        console.log(i)
-        console.log(updated)
-        // state.posts.splice(i, 1, updated)
+        state.posts.splice(i, 1, updated)
       }
     },
     setCurrentUser (state, user) {

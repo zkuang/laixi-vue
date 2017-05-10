@@ -315,7 +315,13 @@
         })
       },
       del() {
-        this.$store.dispatch('delTask', this.task)
+        let self = this
+        $('#task-deletion-modal').modal({
+          closable: true,
+          onApprove: function () {
+            self.$store.dispatch('delTask', self.task)
+          }
+        }).modal('show')
       }
     }
   }
