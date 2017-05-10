@@ -15,7 +15,7 @@
             <i class="check circle large icon"></i>
             <a>分配任务</a>
           </div>
-          <assignment-editor :name="assignmentEditorId()"></assignment-editor>
+          <assignment-editor :ref="assignmentEditorId" :name="assignmentEditorId"></assignment-editor>
           <div class="editor-buttons">
             <button class="ui secondary basic button">取消</button>
             <button class="ui teal basic button" @click="publish">发布</button>
@@ -34,6 +34,10 @@
 
   .discussion-editor .editor-actions .task-options {
     display: inline-block;
+  }
+
+  .discussion-editor .editor-actions .task-options > a {
+    cursor: pointer;
   }
 
   .discussion-editor .editor-actions .editor-buttons {
@@ -122,26 +126,51 @@
   export default {
     name: 'DiscussionEditor',
     props: ['user'],
+    data() {
+      return {
+        task: undefined
+      }
+    },
     components: {
       'assignment-editor': TaskAssignmentEditor
     },
     mounted() {
+      let self = this
       $('.task-options').popup({
         lastResort: 'right center',
         position: 'right center',
         hoverable: true,
-        on: 'click'
+        on: 'click',
+        onHide() {
+          let assignment = self.$refs[self.assignmentEditorId].getData()
+          if ((assignment.assignee || assignment.deadline)) {
+            self.task = assignment
+          }
+          return true
+        }
       })
       CKEDITOR.replace('discussion-editor')
-      $('.fake-textarea').click((event) => {
-        $(event.target).hide()
-        $('.real-textarea').show()
-        $('.cke_top').hide()
+      $(this.$el).find('.fake-textarea').click((event) => {
+        self.showEditor('')
       })
     },
-    methods: {
+    computed: {
       assignmentEditorId() {
         return 'editor'
+      }
+    },
+    methods: {
+      showEditor(content) {
+        $(this.$el).find('.fake-textarea').hide()
+        $(this.$el).find('.real-textarea').show()
+        $(this.$el).find('.cke_top').hide()
+        let editor = CKEDITOR.instances['discussion-editor']
+        editor.setData(content, () => {
+          editor.focus()
+          let range = editor.createRange()
+          range.moveToElementEditEnd(range.root)
+          editor.getSelection().selectRanges([range])
+        })
       },
       updateContent(item) {
         const author = item.user
@@ -155,35 +184,41 @@
           }
           if (item.content) {
             let content = item.content.replace(/(^> .*$)/gm, '').trim()
-            console.log(content)
             quote += `<p>${content.replace(/(?:\r\n|\r|\n)/g, '<br />')}</p>`
           }
           quote += `<p><a href="http://localhost:8080/users/${author.id}">@${author.nickname}</a></p>`
         }
         quote = '<blockquote>' + quote + '</blockquote><p></p>'
-        CKEDITOR.instances['discussion-editor'].setData(quote)
-        $('.fake-textarea').hide()
-        $('.real-textarea').show()
-        $('.cke_top').hide()
+        this.showEditor(quote)
       },
       publish() {
-        let data = toMD(CKEDITOR.instances['discussion-editor'].getData())
-        const regex = />.*\(http:\/\/.*\/documents\/.*\/tasks\/(.*)\).*$/gm
         const draftId = this.$route.params.did
-        let match = regex.exec(data)
-        let taskId
-        if (match !== null) {
-          taskId = match[1]
-          data = data.replace(regex, '').trim()
+        if (!this.task) {
+          let data = toMD(CKEDITOR.instances['discussion-editor'].getData())
+          const regex = />.*\(http:\/\/.*\/documents\/.*\/tasks\/(.*)\).*$/gm
+          let match = regex.exec(data)
+          let taskId
+          if (match !== null) {
+            taskId = match[1]
+            data = data.replace(regex, '').trim()
+          }
+          let post = {
+            draft_id: draftId,
+            content: data,
+            task_id: taskId,
+            user: this.user,
+            type: 'critique'
+          }
+          this.$store.dispatch('addPostToDraft', {post})
+        } else {
+          let data = toMD(CKEDITOR.instances['discussion-editor'].getData())
+          let task = {
+            title: data,
+            assignee: this.task.assignee,
+            deadline: this.task.deadline
+          }
+          this.$store.dispatch('createTask', {draftId, task})
         }
-        let post = {
-          draft_id: draftId,
-          content: data,
-          task_id: taskId,
-          user: this.user,
-          type: 'critique'
-        }
-        this.$store.dispatch('addPostToDraft', {post})
         CKEDITOR.instances['discussion-editor'].setData('')
       }
     }
