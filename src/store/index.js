@@ -122,6 +122,11 @@ const store = new Vuex.Store({
         commit('removePost', post)
       })
     },
+    updatePost ({commit}, post) {
+      Posts.updatePost(post).then(res => {
+        commit('updatePost', {updated: res.post})
+      })
+    },
     getDraftPosts ({commit}, draftId) {
       Posts.getPostsByDraftId(draftId).then(res => {
         commit('setPosts', res.posts)
@@ -182,12 +187,17 @@ const store = new Vuex.Store({
       state.posts.splice(i, 1)
     },
     updatePost (state, {updated, origin}) {
+      let i
       if (origin) {
-        let i = state.posts.findIndex(post => {
+        i = state.posts.findIndex(post => {
           return post === origin
         })
-        state.posts.splice(i, 1, updated)
+      } else {
+        i = state.posts.findIndex(post => {
+          return post.id === updated.id
+        })
       }
+      state.posts.splice(i, 1, updated)
     },
     setCurrentUser (state, user) {
       state.currentUser = user

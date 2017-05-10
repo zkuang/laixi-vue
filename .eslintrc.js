@@ -11,7 +11,8 @@ module.exports = {
     jquery: true
   },
   globals: {
-    'CKEDITOR': true
+    'CKEDITOR': true,
+    'markdownit': true
   },
   // https://github.com/feross/standard/blob/master/RULES.md#javascript-standard-style
   extends: 'standard',

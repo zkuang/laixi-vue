@@ -4,7 +4,7 @@
     </taskitem>
     <draftitem :item="item" v-else-if="isDraft" class="doc-log">
     </draftitem>
-    <critiqueitem :item="item" v-else class="comment">
+    <critiqueitem :ref="id" :item="item" v-else class="comment" @critique-save="save" @critique-dismiss="dismiss">
     </critiqueitem>
     <div class="right floated ui icon buttons">
       <button class="ui button" @click="reply">
@@ -105,6 +105,7 @@
   .discussion-item .discussion-item-content {
     display: inline-block;
     margin-left: 5.5rem;
+    width: 90%;
   }
 
   .discussion-item .comment {
@@ -181,6 +182,7 @@
   import DraftItem from './DraftEventItem'
   import TaskItem from './TaskEventItem'
   import CritiqueItem from './CritiqueEventItem'
+
   export default {
     name: 'DiscussionItem',
     props: ['item', 'disabled', 'assignable'],
@@ -189,9 +191,14 @@
       taskitem: TaskItem,
       critiqueitem: CritiqueItem
     },
+    data() {
+      return {
+        editing: false
+      }
+    },
     methods: {
       active() {
-        if (this.disabled) {
+        if (this.disabled || this.editing) {
           return
         }
         $(this.$el).addClass('active')
@@ -214,7 +221,16 @@
       },
       modify() {
         $(this.$el).find('.has-popup').popup('hide')
-        console.log('modify')
+        this.$refs[this.id].showEditor()
+        this.editing = true
+        $(this.$el).removeClass('active')
+      },
+      save(post) {
+        this.editing = false
+        this.$store.dispatch('updatePost', post)
+      },
+      dismiss() {
+        this.editing = false
       }
     },
     mounted() {
@@ -236,6 +252,9 @@
         if (this.isDraft) return 'discussion-doc-log'
         else if (this.isTask) return 'discussion-task-log'
         else return 'discussion-comment-log'
+      },
+      id() {
+        return `critique-${this.item.id}`
       }
     }
   }

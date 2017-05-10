@@ -303,12 +303,12 @@ export const Posts = {
       }))
     })
   },
-  updateById (id, content) {
+  updatePost (post) {
     return new Promise(resolve => {
-      let post = posts.find(post => {
-        return post.id === id
+      let task = tasks.find(t => {
+        return t.id === post.task_id
       })
-      post.content = content
+      post.task = task
       resolve({post: post})
     })
   },
