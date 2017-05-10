@@ -95,7 +95,7 @@ let tasks = [
     creator: users[1],
     assignee: users[0],
     deadline: '2017-05-13T08:30:32.313554',
-    checked: false,
+    checked: true,
     checked_at: undefined
   }
 ]
@@ -277,19 +277,9 @@ export const Posts = {
       })
     })
   },
-  addPostsToDraft (draftId, content, taskId) {
+  addPostsToDraft (post) {
     return new Promise(resolve => {
-      let post = {
-        id: `aaaaaa689bca4e40b96aea1b23ae19${Math.random() * 100}`,
-        draft_id: draftId,
-        type: 'critique',
-        created: '2015-08-21T08:30:32.313554',
-        user: currentUser,
-        content: content,
-        task: tasks.find(task => {
-          return task.id === taskId
-        })
-      }
+      post.id = `aaaaaa689bca4e40b96aea1b23ae19${Math.random() * 100}`
       resolve({post: post})
     })
   },

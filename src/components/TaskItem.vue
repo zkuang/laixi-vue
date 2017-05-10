@@ -15,7 +15,7 @@
       </span>
       <label>{{task.title}}</label>
       <div class="task-content">
-        <span class="assignment">
+        <span class="assignment" :class="{diasbled: task.checked}">
           <span>{{assignee}}</span>
           <span>{{dueDate}}</span>
         </span>
@@ -29,7 +29,7 @@
           </span>
       <input type="text">
       <div class="task-content">
-            <span class="assignment">
+            <span class="assignment" :class="{diasbled: task.checked}">
               <span>{{assignee}}</span>
               <span>{{dueDate}}</span>
             </span>
@@ -133,6 +133,10 @@
     cursor: pointer;
   }
 
+  .assignment.diasbled {
+    cursor: default;
+  }
+
   .assignment:hover {
     color: black;
   }
@@ -176,12 +180,14 @@
       }
     },
     mounted() {
-      if (!this.disabled) {
+      if (!this.disabled && !this.task.checked) {
         this.setupPopups()
       }
     },
     updated() {
-      this.setupPopups()
+      if (!this.task.checked) {
+        this.setupPopups()
+      }
       if (this.editable && this.switched) {
         $(this.$el).find('.task-detail > input').val(this.task.title)
         this.switched = false
@@ -192,7 +198,9 @@
         if (isDisabled) {
           $(this.$el).find('.assignment').popup('destroy')
         } else {
-          this.setupPopups()
+          if (!this.task.checked) {
+            this.setupPopups()
+          }
         }
       }
     },

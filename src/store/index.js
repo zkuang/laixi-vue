@@ -89,7 +89,7 @@ const store = new Vuex.Store({
           task: res.task
         }
         commit('addPost', eventlog)
-        return dispatch('addPostToDraft', undefined, res.task.id)
+        return dispatch('addPostToDraft', {post: eventlog, origin: eventlog})
       })
     },
     createTask ({dispatch, commit, getters}, {draftId, task}) {
@@ -103,7 +103,7 @@ const store = new Vuex.Store({
           task: res.task
         }
         commit('addPost', eventlog)
-        return dispatch('addPostToDraft', undefined, res.task.id)
+        return dispatch('addPostToDraft', {post: eventlog, origin: eventlog})
       })
     },
     delTask ({commit}, task) {
@@ -121,9 +121,13 @@ const store = new Vuex.Store({
         commit('setPosts', res.posts)
       })
     },
-    addPostToDraft ({commit}, {draftId, content, taskId}) {
-      Posts.addPostsToDraft(draftId, content, taskId).then(res => {
-        commit('addPost', res.post)
+    addPostToDraft ({commit}, {post, origin}) {
+      Posts.addPostsToDraft(post).then(res => {
+        if (!origin) {
+          commit('addPost', res.post)
+        } else {
+          commit('updatePost', {origin: origin, updated: res.post})
+        }
       })
     }
   },
@@ -135,15 +139,12 @@ const store = new Vuex.Store({
       state.project = project
     },
     setTasks (state, tasks) {
-      console.log('set tasks')
       state.tasks.splice(1, undefined, ...tasks)
     },
     createTask (state, task) {
-      console.log('create task')
       state.tasks.push(task)
     },
     setOneTask (state, task) {
-      console.log('set one task')
       const index = state.tasks.findIndex(t => {
         return task.id === t.id
       })
@@ -162,6 +163,16 @@ const store = new Vuex.Store({
     },
     addPost (state, post) {
       state.posts.push(post)
+    },
+    updatePost (state, {updated, origin}) {
+      if (origin) {
+        let i = state.posts.findIndex(post => {
+          return post === origin
+        })
+        console.log(i)
+        console.log(updated)
+        // state.posts.splice(i, 1, updated)
+      }
     },
     setCurrentUser (state, user) {
       state.currentUser = user
