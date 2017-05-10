@@ -66,16 +66,44 @@ const store = new Vuex.Store({
         commit('setTasks', res.tasks)
       })
     },
-    updateTask ({commit}, task) {
-      console.log('updating tasks........')
+    updateTask ({dispatch, commit, getters}, task) {
+      const oTask = getters.tasks.find(t => {
+        return task.id === t.id
+      })
+      let type = 'task-edited'
+      if (oTask.checked !== task.checked) {
+        if (task.checked) {
+          type = 'task-checked'
+        } else {
+          type = 'task-unchecked'
+        }
+      }
       Tasks.updateById(task.id, task).then(res => {
         commit('setTask', res.task)
         commit('setOneTask', res.task)
+        let eventlog = {
+          draft_id: res.task.draft_id,
+          type,
+          create: new Date().toISOString(),
+          user: getters.getCurrentUser,
+          task: res.task
+        }
+        commit('addPost', eventlog)
+        return dispatch('addPostToDraft', undefined, res.task.id)
       })
     },
-    createTask ({commit}, {draftId, task}) {
+    createTask ({dispatch, commit, getters}, {draftId, task}) {
       Tasks.addTaskToDraft(draftId, task).then(res => {
         commit('createTask', res.task)
+        let eventlog = {
+          draft_id: res.task.draft_id,
+          type: 'task-created',
+          create: new Date().toISOString(),
+          user: getters.currentUser,
+          task: res.task
+        }
+        commit('addPost', eventlog)
+        return dispatch('addPostToDraft', undefined, res.task.id)
       })
     },
     delTask ({commit}, task) {
@@ -95,7 +123,7 @@ const store = new Vuex.Store({
     },
     addPostToDraft ({commit}, {draftId, content, taskId}) {
       Posts.addPostsToDraft(draftId, content, taskId).then(res => {
-        commit('addPosts', res.post)
+        commit('addPost', res.post)
       })
     }
   },
@@ -132,7 +160,7 @@ const store = new Vuex.Store({
     setPosts (state, posts) {
       state.posts = posts
     },
-    addPosts (state, post) {
+    addPost (state, post) {
       state.posts.push(post)
     },
     setCurrentUser (state, user) {

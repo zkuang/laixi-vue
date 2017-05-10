@@ -203,6 +203,7 @@ export default {
   },
   computed: {
     isTask() {
+      console.log(`${this.item.id} ${this.item.type}`)
       return this.item.type === 'task-created' || this.item.type === 'task-edited' ||
         this.item.type === 'task-checked' || this.item.type === 'task-unchecked'
     },

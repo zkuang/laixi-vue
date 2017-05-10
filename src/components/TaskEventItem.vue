@@ -4,7 +4,7 @@
         <i class="grey check circle icon"></i>
       </span>
     <span class="time-span">{{createdDate}}</span>
-    <span class="username">{{item.task.creator.nickname}}</span>
+    <span class="username">{{item.user.nickname}}</span>
     <span v-if="isTaskCreate">为</span>
     <span v-if="isTaskCreate" class="username">{{item.task.assignee.nickname}}</span>
     <span>{{content}}</span>
