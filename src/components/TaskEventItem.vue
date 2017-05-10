@@ -5,8 +5,8 @@
       </span>
     <span class="time-span">{{createdDate}}</span>
     <span class="username">{{item.user.nickname}}</span>
-    <span v-if="isTaskCreate">为</span>
-    <span v-if="isTaskCreate" class="username">{{item.task.assignee.nickname}}</span>
+    <span v-if="hasBeenAssigned">为</span>
+    <span v-if="hasBeenAssigned" class="username">{{item.task.assignee.nickname}}</span>
     <span>{{content}}</span>
     <a class="task-link">{{item.task.title}}</a>
     <span class="emphasized-date">{{dueDate}}</span>
@@ -25,11 +25,15 @@
     name: 'TakeEventItem',
     props: ['item'],
     computed: {
-      isTaskCreate() {
-        return this.item.type === 'task-created'
+      hasBeenAssigned() {
+        return this.item.type === 'task-created' && this.item.task.assignee
       },
       dueDate () {
-        return DateTime.DateMonth(this.item.task.deadline)
+        if (this.item.task.deadline) {
+          return DateTime.DateMonth(this.item.task.deadline)
+        } else {
+          return '未限时'
+        }
       },
       createdDate () {
         return DateTime.DateMonthYearTime(this.item.created)

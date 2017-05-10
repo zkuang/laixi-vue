@@ -176,7 +176,14 @@
           taskId = match[1]
           data = data.replace(regex, '').trim()
         }
-        this.$store.dispatch('addPostToDraft', {draftId, content: data, taskId})
+        let post = {
+          draft_id: draftId,
+          content: data,
+          task_id: taskId,
+          user: this.user,
+          type: 'critique'
+        }
+        this.$store.dispatch('addPostToDraft', {post})
         CKEDITOR.instances['discussion-editor'].setData('')
       }
     }

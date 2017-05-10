@@ -280,6 +280,10 @@ export const Posts = {
   addPostsToDraft (post) {
     return new Promise(resolve => {
       post.id = `aaaaaa689bca4e40b96aea1b23ae19${Math.random() * 100}`
+      let task = tasks.find(t => {
+        return t.id === post.task_id
+      })
+      post.task = task
       resolve({post: post})
     })
   },
@@ -342,6 +346,7 @@ export const Tasks = {
         checked: false,
         checked_at: undefined
       }
+      tasks.push(task)
       resolve({task: task})
     })
   },

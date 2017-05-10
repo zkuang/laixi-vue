@@ -86,7 +86,7 @@ const store = new Vuex.Store({
           type,
           create: new Date().toISOString(),
           user: getters.getCurrentUser,
-          task: res.task
+          task_id: res.task.id
         }
         commit('addPost', eventlog)
         return dispatch('addPostToDraft', {post: eventlog, origin: eventlog})
@@ -99,8 +99,8 @@ const store = new Vuex.Store({
           draft_id: res.task.draft_id,
           type: 'task-created',
           create: new Date().toISOString(),
-          user: getters.currentUser,
-          task: res.task
+          user: getters.getCurrentUser,
+          task_id: res.task.id
         }
         commit('addPost', eventlog)
         return dispatch('addPostToDraft', {post: eventlog, origin: eventlog})

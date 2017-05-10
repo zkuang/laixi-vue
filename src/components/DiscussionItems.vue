@@ -1,7 +1,9 @@
 <template>
   <section class="ui grid discussion-items">
     <ul class="thirteen wide column">
-      <discussion-item v-for="post in posts" key="post.id" :item="post" @reply="onReply" :disabled="draft.removed"></discussion-item>
+      <discussion-item v-for="post in posts" key="post.id" :item="post" @reply="onReply" :disabled="draft.removed"
+                       :assignable="(post.type === 'critique' && (currentUser && currentUser.id === post.user.id))">
+      </discussion-item>
     </ul>
   </section>
 </template>
@@ -27,10 +29,11 @@
       'discussion-item': DiscussionItem
     },
     computed: {
-      ...mapGetters([
-        'posts',
-        'draft'
-      ])
+      ...mapGetters({
+        currentUser: 'getCurrentUser',
+        posts: 'posts',
+        draft: 'draft'
+      })
     },
     methods: {
       onReply(item) {
