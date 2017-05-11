@@ -4,7 +4,7 @@
       <h3 class="taskitem-list-header">任务</h3>
       <ul class="taskitem-list">
         <task-item v-for="task in uncheckedTasks" :key="task.id" :task="Object.assign({}, task)" :disabled="draft.removed" :create="false"></task-item>
-        <task-item ref="task-create-form" v-for="task in placeholderTasks" :key="task.id" :task="Object.assign({}, task)" :disabled="true" :create="true"></task-item>
+        <task-item ref="task-create-form" v-for="task in placeholderTasks" :key="task.id" :task="Object.assign({}, task)" :create="true"></task-item>
       </ul>
       <p class="sixteen wide column task-actions"><a style="cursor:pointer;" disabled="true" @click="createTask">添加新任务</a><a style="cursor:pointer;" :disabled="draft.removed" >查看已完成任务</a></p>
       <ul class="taskitem-list">
@@ -98,7 +98,6 @@
     },
     methods: {
       createTask() {
-        console.log(this.$refs['task-create-form'])
         this.$refs['task-create-form'][0].setEditable(true)
       }
     }

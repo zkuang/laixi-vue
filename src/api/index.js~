@@ -117,8 +117,8 @@ let posts = [
     content: '这是一条评论。\n评论可以很多行。。。'
   },
   {
-    id: 'a49ebddc88a14283b5671adcb1dc625a',
-    draft_id: 'a49ebddc88a14283b5671adcb1dc6259',
+    id: 'a49ebddc88a14283b5671adcb1dc6259',
+    draft_id: 'a49ebddc88a14283b5671adcb1dc625a',
     type: 'critique',
     created: '2015-08-21T08:30:32.313554',
     user: users[0],
@@ -141,7 +141,7 @@ let posts = [
   },
   {
     id: 'a49ebddc88a14283b5671adcb1dc625d',
-    draft_id: 'a49ebddc88a14283b5671adcb1dc6259',
+    draft_id: 'a49ebddc88a14283b5671adcb1dc625a',
     type: 'critique',
     created: '2015-08-21T08:30:32.313554',
     user: users[0],
@@ -226,7 +226,11 @@ let posts = [
 export const Users = {
   getMembersByProjectId (projectId) {
     return new Promise(resolve => {
+<<<<<<< Updated upstream
       resolve({members: users.slice()})
+=======
+      resolve({members: users.slice})
+>>>>>>> Stashed changes
     })
   }
 }
@@ -311,28 +315,18 @@ export const Posts = {
       let task = tasks.find(t => {
         return t.id === post.task_id
       })
-      let i = posts.findIndex(p => {
+      let updated = posts.find(p => {
         return post.id === p.id
       })
-      let updated = posts[i]
-      if (task) {
-        updated.task = task
-      }
-      post.task_id = undefined
-      updated = Object.assign(updated, post)
-      posts.splice(i, 1, updated)
+      updated.task = task
       resolve({post: Object.assign({}, updated)})
     })
   },
   deleteById (id) {
     return new Promise(resolve => {
-      let i = posts.findIndex(post => {
-        return post.id === id
+      posts = posts.filter(post => {
+        return post.id !== id
       })
-      console.log(posts)
-      console.log(i)
-      posts.splice(i, 1)
-      console.log(posts)
       resolve()
     })
   }

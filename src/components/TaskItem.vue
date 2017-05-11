@@ -180,12 +180,13 @@
       }
     },
     mounted() {
+      console.log('mounted')
       if (!this.disabled && !this.task.checked) {
         this.setupPopups()
       }
     },
     updated() {
-      if (!this.task.checked) {
+      if (!this.task.checked && !this.disabled) {
         this.setupPopups()
       }
       if (this.editable && this.switched) {
@@ -273,6 +274,7 @@
         }
       },
       setupPopups() {
+        console.log('setup popup...........')
         let self = this
         $(this.$el).find('.assignment').popup({
           lastResort: 'right center',

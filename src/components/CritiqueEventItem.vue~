@@ -45,16 +45,26 @@
     components: {
       markdown: VueMarkdown
     },
-//    mounted() {
-//      let self = this
-//      setTimeout(() => {
-//        if (self.editable && !CKEDITOR.instances[self.id]) {
-//          CKEDITOR.replace(self.id)
-//        }
-//      }, 500)
-//    },
+    mounted() {
+      let self = this
+      setTimeout(() => {
+<<<<<<< Updated upstream
+        console.log(this.item)
+        console.log(this.editable && !CKEDITOR.instances[this.id])
+        if (this.editable && !CKEDITOR.instances[this.id]) {
+          CKEDITOR.replace(this.id)
+=======
+        console.log(self)
+        console.log(self.editable && !CKEDITOR.instances[self.id])
+        if (self.editable && !CKEDITOR.instances[self.id]) {
+          CKEDITOR.replace(self.id)
+>>>>>>> Stashed changes
+        }
+      }, 500)
+    },
     methods: {
       save() {
+        this.hideEditor()
         let data = toMD(CKEDITOR.instances[this.id].getData())
         const regex = />.*\(http:\/\/.*\/documents\/.*\/tasks\/(.*)\).*$/gm
         const draftId = this.$route.params.did
@@ -73,14 +83,9 @@
           type: 'critique'
         }
         this.$emit('critique-save', post)
-        this.hideEditor()
-        setTimeout(() => {
-          this.destroyEditor()
-        }, 200)
       },
       dismiss() {
         this.hideEditor()
-        this.destroyEditor()
         this.$emit('critique-dismiss')
       },
       showEditor() {
@@ -89,24 +94,15 @@
           breaks: true
         })
         let content = md.render(this.content)
-        CKEDITOR.replace(this.id)
-        setTimeout(() => {
-          $(this.$el).find('.critique-content').hide()
-          $(this.$el).find('.critique-editor').show()
-          $(this.$el).find('.cke_top').hide()
-          CKEDITOR.instances[this.id].setData(content)
-        }, 100)
+        $(this.$el).find('.critique-content').hide()
+        $(this.$el).find('.critique-editor').show()
+        $(this.$el).find('.cke_top').hide()
+        CKEDITOR.instances[this.id].setData(content)
       },
       hideEditor() {
         $(this.$el).find('.critique-editor').hide()
         $(this.$el).find('.critique-content').show()
-      },
-      destroyEditor() {
-        let instance = CKEDITOR.instances[this.id]
-        instance.removeAllListeners()
-        instance.destroy()
-        CKEDITOR.remove(instance)
-        $(this.$el).find(`#cke_${this.id}`).remove()
+        $(this.$el).find('.cke_top').hide()
       }
     },
     computed: {
@@ -114,6 +110,7 @@
         'getCurrentUser'
       ]),
       editable() {
+        console.log(this.getCurrentUser)
         return (this.getCurrentUser && this.getCurrentUser.id === this.item.user.id)
       },
       avatar() {

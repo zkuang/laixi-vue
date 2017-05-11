@@ -23,7 +23,16 @@
         <div class="ui positive basic button">编辑</div>
       </div>
       <div class="item">
-        <div class="ui negative basic button">删除</div>
+        <div class="ui negative basic button" @click="delTask">删除</div>
+      </div>
+    </div>
+    <div class="ui small modal" id="task-deletion-modal">
+      <div class="content">
+        <p>你确定要删除这个任务吗？</p>
+      </div>
+      <div class="actions">
+        <div class="ui approve button">确定</div>
+        <div class="ui cancel button">取消</div>
       </div>
     </div>
   </section>
@@ -88,6 +97,18 @@
   export default {
     name: 'Task',
     props: ['task'],
+    methods: {
+      delTask() {
+        let self = this
+        $('#task-deletion-modal').modal({
+          closable: true,
+          onApprove: function () {
+            self.$store.dispatch('delTask', self.task)
+            self.$router.push(`/documents/${self.task.draft_id}`)
+          }
+        }).modal('show')
+      }
+    },
     computed: {
       dueDate() {
         return DateTime.DateMonth(this.task.deadline)
