@@ -226,7 +226,7 @@ let posts = [
 export const Users = {
   getMembersByProjectId (projectId) {
     return new Promise(resolve => {
-      resolve({members: users})
+      resolve({members: users.slice})
     })
   }
 }
@@ -234,7 +234,7 @@ export const Users = {
 export const Projects = {
   getById (id) {
     return new Promise(resolve => {
-      resolve({project: project})
+      resolve({project: Object.assign({}, project)})
     })
   }
 }
@@ -243,7 +243,7 @@ export const Drafts = {
   getById (id) {
     return new Promise((resolve, reject) => {
       if (draft.id === id) {
-        resolve({drafts: draft})
+        resolve({drafts: Object.assign({}, draft)})
       } else {
         reject('no such draft')
       }
@@ -251,11 +251,12 @@ export const Drafts = {
   },
   updateById (id, draft) {
     return new Promise(resolve => {
-      resolve({drafts: draft})
+      resolve({drafts: Object.assign({}, draft)})
     })
   },
   deleteById (id) {
     return new Promise(resolve => {
+      draft = undefined
       resolve()
     })
   }
@@ -268,7 +269,7 @@ export const Posts = {
         return post.draft_id === draftId
       })
       resolve({
-        posts: p,
+        posts: p.slice(),
         pagination: {
           has_next: false,
           has_prev: false,
@@ -284,7 +285,9 @@ export const Posts = {
         return t.id === post.task_id
       })
       post.task = task
-      resolve({post: post})
+      let p = Object.assign({}, post)
+      posts.push(p)
+      resolve({post: p})
     })
   },
   getPostsByTaskId (taskId) {
@@ -292,15 +295,15 @@ export const Posts = {
       resolve({
         posts: posts.filter(post => {
           return post.task && post.task.id === taskId
-        })
+        }).slice()
       })
     })
   },
   getById (id) {
     return new Promise(resolve => {
-      resolve(posts.find(post => {
+      resolve({post: Object.assign({}, posts.find(post => {
         return post.id === id
-      }))
+      }))})
     })
   },
   updatePost (post) {
@@ -308,8 +311,11 @@ export const Posts = {
       let task = tasks.find(t => {
         return t.id === post.task_id
       })
-      post.task = task
-      resolve({post: post})
+      let updated = posts.find(p => {
+        return post.id === p.id
+      })
+      updated.task = task
+      resolve({post: Object.assign({}, updated)})
     })
   },
   deleteById (id) {
@@ -328,7 +334,7 @@ export const Tasks = {
       resolve({
         tasks: tasks.filter(task => {
           return task.draft_id === draftId
-        })
+        }).slice()
       })
     })
   },
@@ -352,17 +358,19 @@ export const Tasks = {
   },
   getById (id) {
     return new Promise(resolve => {
-      resolve({task: tasks.find(task => {
+      resolve({task: Object.assign({}, tasks.find(task => {
         return task.id === id
-      })})
+      }))})
     })
   },
   updateById (id, task) {
     return new Promise(resolve => {
-      let t = tasks.find(task => {
+      let i = tasks.findIndex(task => {
         return task.id === id
       })
-      resolve({task: Object.assign(t, task)})
+      let t = Object.assign(tasks[i], task)
+      tasks.splice(i, 1, t)
+      resolve({task: Object.assign({}, t)})
     })
   },
   deleteById (id) {
