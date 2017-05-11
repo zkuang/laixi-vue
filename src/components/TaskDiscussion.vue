@@ -3,8 +3,7 @@
     <div v-show="draft.removed" class="ui red message"><i class="large trash icon"></i>当前文文档在垃圾箱，处于锁定状态，不可修改。如需修改，可将文档先移出垃圾箱。</div>
     <breadcrumb></breadcrumb>
     <task :task="task" class="task"></task>
-    <discussion-items :items="posts" class="discussion-items" @reply="onReply"></discussion-items>
-    <discussion-editor v-show="!draft.removed" ref="editor" :user="getCurrentUser" class="discussion-editor"></discussion-editor>
+    <discussion-items :items="posts" class="discussion-items"></discussion-items>
   </div>
 </template>
 
@@ -22,7 +21,7 @@
   import { mapGetters } from 'vuex'
   import Task from './Task'
   import DiscussionItems from './DiscussionItems'
-  import DiscussionEditor from './DiscussionEditor'
+//  import DiscussionEditor from './DiscussionEditor'
   import BreadCrumb from './BreadCrumb'
 
   export default {
@@ -30,19 +29,14 @@
     components: {
       task: Task,
       'discussion-items': DiscussionItems,
-      'discussion-editor': DiscussionEditor,
+//      'discussion-editor': DiscussionEditor,
       'breadcrumb': BreadCrumb
     },
     beforeMount () {
-      if (!this.task) {
+      if (!this.task.id) {
         this.$store.dispatch('getTaskById', this.$route.params.tid)
       }
       this.$store.dispatch('getTaskPosts', this.$route.params.tid)
-    },
-    methods: {
-      onReply(item) {
-        this.$refs.editor.updateContent(item)
-      }
     },
     computed: {
       ...mapGetters([

@@ -8,13 +8,12 @@
     <span v-if="hasBeenAssigned">为</span>
     <span v-if="hasBeenAssigned" class="username">{{item.task.assignee.nickname}}</span>
     <span>{{content}}</span>
-    <router-link :to="taskLink" class="task-link">{{item.task.title}}</router-link>
+    <a class="task-link" @click="navigateToTask">{{item.task.title}}</a>
     <span class="emphasized-date">{{dueDate}}</span>
   </div>
 </template>
 
 <style>
-
 </style>
 
 
@@ -24,6 +23,20 @@
   export default {
     name: 'TakeEventItem',
     props: ['item'],
+    methods: {
+      navigateToTask() {
+        let name
+        for (name in CKEDITOR.instances) {
+          if (name !== 'discussion-editor') {
+            let instance = CKEDITOR.instances[name]
+            instance.removeAllListeners()
+            instance.destroy()
+            CKEDITOR.remove(instance)
+          }
+        }
+        this.$router.push(`/documents/${this.item.task.draft_id}/tasks/${this.item.task.id}`)
+      }
+    },
     computed: {
       hasBeenAssigned() {
         return this.item.type === 'task-created' && this.item.task.assignee
@@ -37,9 +50,6 @@
       },
       createdDate () {
         return DateTime.DateMonthYearTime(this.item.created)
-      },
-      taskLink () {
-        return `/documents/${this.$route.params.did}/tasks/${this.item.task.id}`
       },
       content () {
         if (this.item.type === 'task-created') return '创建了任务'

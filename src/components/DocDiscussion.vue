@@ -4,8 +4,7 @@
     <breadcrumb></breadcrumb>
     <draft class="document"></draft>
     <task-items class="task-items"></task-items>
-    <discussion-items class="discussion-items" @reply="onReply"></discussion-items>
-    <discussion-editor v-show="!draft.removed" ref="editor" :user="getCurrentUser" class="discussion-editor"></discussion-editor>
+    <discussion-items class="discussion-items"></discussion-items>
   </div>
 </template>
 
@@ -13,7 +12,7 @@
   import Draft from './Draft'
   import TaskItems from './TaskItems'
   import DiscussionItems from './DiscussionItems'
-  import DiscussionEditor from './DiscussionEditor'
+//  import DiscussionEditor from './DiscussionEditor'
   import BreadCrumb from './BreadCrumb'
   import TaskAssignmentEditor from './TaskAssignmentEditor'
   import { mapGetters } from 'vuex'
@@ -24,7 +23,7 @@
       draft: Draft,
       'task-items': TaskItems,
       'discussion-items': DiscussionItems,
-      'discussion-editor': DiscussionEditor,
+//      'discussion-editor': DiscussionEditor,
       'breadcrumb': BreadCrumb,
       'assignment-editor': TaskAssignmentEditor
     },
@@ -32,11 +31,6 @@
       this.$store.dispatch('getDraftTasks', this.$route.params.did).then(() => {
         return this.$store.dispatch('getDraftPosts', this.$route.params.did)
       })
-    },
-    methods: {
-      onReply(item) {
-        this.$refs.editor.updateContent(item)
-      }
     },
     computed: {
       ...mapGetters([

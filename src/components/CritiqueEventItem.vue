@@ -1,7 +1,7 @@
 <template>
   <div class="comment">
     <div class="discussion-item-avatar">
-      <img :src="avatar" class="ui avatar image" />
+      <img :src="avatar" class="ui avatar image"/>
     </div>
     <div class="discussion-item-content">
       <div class="critique-content">
@@ -37,12 +37,21 @@
   import VueMarkdown from 'vue-markdown'
   import {DateTime} from '../utils'
   import toMD from 'to-markdown'
+  import {mapGetters} from 'vuex'
 
   export default {
     name: 'CritiqueItem',
     props: ['item'],
     components: {
       markdown: VueMarkdown
+    },
+    mounted() {
+      setTimeout(() => {
+        console.log(this.editable && !CKEDITOR.instances[this.id])
+        if (this.editable && !CKEDITOR.instances[this.id]) {
+          CKEDITOR.replace(this.id)
+        }
+      })
     },
     methods: {
       save() {
@@ -79,6 +88,7 @@
         $(this.$el).find('.critique-content').hide()
         $(this.$el).find('.critique-editor').show()
         $(this.$el).find('.cke_top').hide()
+        console.log(CKEDITOR.instances)
         CKEDITOR.instances[this.id].setData(content)
       },
       hideEditor() {
@@ -87,10 +97,13 @@
         $(this.$el).find('.cke_top').hide()
       }
     },
-    mounted() {
-      CKEDITOR.replace(this.id)
-    },
     computed: {
+      ...mapGetters([
+        'getCurrentUser'
+      ]),
+      editable() {
+        return (this.getCurrentUser && this.getCurrentUser.id === this.item.user.id)
+      },
       avatar() {
         return this.item.user.headimgurl
       },

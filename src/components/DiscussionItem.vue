@@ -1,10 +1,10 @@
 <template>
   <li class="discussion-item" :class="style" @mouseover="active" @mouseleave="deactive">
-    <taskitem :item="item" v-if="isTask" class="task-log">
+    <taskitem v-if="isTask" :item="item" class="task-log">
     </taskitem>
-    <draftitem :item="item" v-else-if="isDraft" class="doc-log">
+    <draftitem v-else-if="isDraft" :item="item" class="doc-log">
     </draftitem>
-    <critiqueitem :ref="id" :item="item" v-else class="comment" @critique-save="save" @critique-dismiss="dismiss">
+    <critiqueitem v-else :ref="id" :item="item" @critique-save="save" @critique-dismiss="dismiss">
     </critiqueitem>
     <div class="right floated ui icon buttons">
       <button class="ui button" @click="reply">
@@ -182,6 +182,7 @@
   import DraftItem from './DraftEventItem'
   import TaskItem from './TaskEventItem'
   import CritiqueItem from './CritiqueEventItem'
+  import EventBus from '../EventBus'
 
   export default {
     name: 'DiscussionItem',
@@ -207,7 +208,7 @@
         $(this.$el).removeClass('active')
       },
       reply() {
-        this.$emit('reply', this.item)
+        EventBus.$emit('reply', this.item)
       },
       del() {
         let self = this

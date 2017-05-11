@@ -138,9 +138,10 @@
       if (this.$route.params.tid) {
         $(this.$el).find('.task-options').hide()
       }
-      console.log(CKEDITOR.instances['discussion-editor'])
-      if (CKEDITOR.instances['discussion-editor']) {
-        CKEDITOR.instances['discussion-editor'].destroy(true)
+      let instance = CKEDITOR.instances['discussion-editor']
+      if (instance) {
+        instance.destroy(true)
+        CKEDITOR.remove(instance)
       }
       let self = this
       $('.task-options').popup({

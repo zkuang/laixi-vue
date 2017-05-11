@@ -1,12 +1,25 @@
 <template>
   <div id="app">
     <router-view></router-view>
+    <discussion-editor v-show="!draft.removed" ref="editor" :user="getCurrentUser" class="discussion-editor"></discussion-editor>
   </div>
 </template>
 
 <script>
+  import DiscussionEditor from './components/DiscussionEditor'
+  import { mapGetters } from 'vuex'
+  import EventBus from './EventBus'
+
   export default {
     name: 'app',
+    components: {
+      'discussion-editor': DiscussionEditor
+    },
+    mounted() {
+      EventBus.$on('reply', item => {
+        this.$refs.editor.updateContent(item)
+      })
+    },
     beforeCreate() {
       this.$store.dispatch('getDraftById', this.$route.params.did)
         .then(() => {
@@ -25,6 +38,12 @@
         .then(() => {
           this.$store.commit('setCurrentUser', this.$store.state.users[0])
         })
+    },
+    computed: {
+      ...mapGetters([
+        'draft',
+        'getCurrentUser'
+      ])
     }
   }
 </script>
