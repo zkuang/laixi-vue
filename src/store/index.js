@@ -155,7 +155,7 @@ const store = new Vuex.Store({
       state.project = project
     },
     setTasks (state, tasks) {
-      state.tasks.splice(1, undefined, ...tasks)
+      state.tasks.splice(1, state.tasks.length - 1, ...tasks)
     },
     createTask (state, task) {
       state.tasks.push(task)

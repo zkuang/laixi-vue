@@ -8,7 +8,7 @@
     <span v-if="hasBeenAssigned">为</span>
     <span v-if="hasBeenAssigned" class="username">{{item.task.assignee.nickname}}</span>
     <span>{{content}}</span>
-    <a class="task-link">{{item.task.title}}</a>
+    <router-link :to="taskLink" class="task-link">{{item.task.title}}</router-link>
     <span class="emphasized-date">{{dueDate}}</span>
   </div>
 </template>
@@ -37,6 +37,9 @@
       },
       createdDate () {
         return DateTime.DateMonthYearTime(this.item.created)
+      },
+      taskLink () {
+        return `/documents/${this.$route.params.did}/tasks/${this.item.task.id}`
       },
       content () {
         if (this.item.type === 'task-created') return '创建了任务'

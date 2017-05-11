@@ -17,7 +17,7 @@
           </div>
           <assignment-editor :ref="assignmentEditorId" :name="assignmentEditorId"></assignment-editor>
           <div class="editor-buttons">
-            <button class="ui secondary basic button">取消</button>
+            <button class="ui secondary basic button" @click="cancel">取消</button>
             <button class="ui teal basic button" @click="publish">发布</button>
           </div>
         </div>
@@ -135,12 +135,32 @@
       'assignment-editor': TaskAssignmentEditor
     },
     mounted() {
+      if (this.$route.params.tid) {
+        $(this.$el).find('.task-options').hide()
+      }
+      console.log(CKEDITOR.instances['discussion-editor'])
+      if (CKEDITOR.instances['discussion-editor']) {
+        CKEDITOR.instances['discussion-editor'].destroy(true)
+      }
       let self = this
       $('.task-options').popup({
         lastResort: 'right center',
         position: 'right center',
         hoverable: true,
         on: 'click',
+        onShow() {
+          if (self.task && self.task.assignee) {
+            self.$refs[self.assignmentEditorId].setSelection(self.task.assignee.id)
+          } else {
+            self.$refs[self.assignmentEditorId].setSelection('unknown')
+          }
+          if (self.task && self.task.deadline) {
+            self.$refs[self.assignmentEditorId].setDate(self.task.deadline)
+          } else {
+            self.$refs[self.assignmentEditorId].setDate()
+          }
+          return true
+        },
         onHide() {
           let assignment = self.$refs[self.assignmentEditorId].getData()
           if ((assignment.assignee || assignment.deadline)) {
@@ -171,6 +191,8 @@
           range.moveToElementEditEnd(range.root)
           editor.getSelection().selectRanges([range])
         })
+        this.task = undefined
+        this.$refs[this.assignmentEditorId].reset()
       },
       updateContent(item) {
         const author = item.user
@@ -191,6 +213,10 @@
         quote = '<blockquote>' + quote + '</blockquote><p></p>'
         this.showEditor(quote)
       },
+      cancel() {
+        $(this.$el).find('.real-textarea').hide()
+        $(this.$el).find('.fake-textarea').show()
+      },
       publish() {
         const draftId = this.$route.params.did
         if (!this.task) {
@@ -202,6 +228,7 @@
             taskId = match[1]
             data = data.replace(regex, '').trim()
           }
+          console.log(data)
           let post = {
             draft_id: draftId,
             content: data,
@@ -219,6 +246,8 @@
           }
           this.$store.dispatch('createTask', {draftId, task})
         }
+        this.$refs[this.assignmentEditorId].reset()
+        this.task = undefined
         CKEDITOR.instances['discussion-editor'].setData('')
       }
     }

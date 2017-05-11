@@ -63,6 +63,17 @@
         this.assignment.assignee = this.users.find(user => {
           return user.id === e.target.value
         })
+      },
+      reset() {
+        this.assignment.assignee = undefined
+        this.assignment.deadline = undefined
+      },
+      setDate(date) {
+        if (!date) {
+          $(this.$el).find(`#${this.datePickerId}`).calendar('clear')
+        } else {
+          $(this.$el).find(`#${this.datePickerId}`).calendar('set date', date.toDate(), true, false)
+        }
       }
     }
   }

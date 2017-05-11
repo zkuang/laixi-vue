@@ -266,8 +266,11 @@
         }
       },
       taskStateChange () {
-        this.task.checked = $(`#${this.inputId}`).is(':checked')
-        this.$store.dispatch('updateTask', this.task)
+        let isCheck = $(this.$el).find(`#${this.inputId}`).is(':checked')
+        if (isCheck !== this.task.checked) {
+          this.task.checked = isCheck
+          this.$store.dispatch('updateTask', this.task)
+        }
       },
       setupPopups() {
         let self = this
@@ -279,8 +282,8 @@
           onShow() {
             if (self.task.assignee) {
               self.$refs[self.assignmentEditorId].setSelection(self.task.assignee.id)
-              return true
             }
+            return true
           },
           onHide() {
             function updateAssignment() {

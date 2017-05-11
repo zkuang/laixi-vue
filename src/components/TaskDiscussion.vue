@@ -34,6 +34,9 @@
       'breadcrumb': BreadCrumb
     },
     beforeMount () {
+      if (!this.task) {
+        this.$store.dispatch('getTaskById', this.$route.params.tid)
+      }
       this.$store.dispatch('getTaskPosts', this.$route.params.tid)
     },
     methods: {
