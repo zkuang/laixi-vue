@@ -200,6 +200,7 @@ const store = new Vuex.Store({
       state.posts.splice(i, 1, updated)
     },
     setCurrentUser (state, user) {
+      console.log(user)
       state.currentUser = user
     },
     setTask (state, task) {

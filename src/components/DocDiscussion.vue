@@ -12,7 +12,6 @@
   import Draft from './Draft'
   import TaskItems from './TaskItems'
   import DiscussionItems from './DiscussionItems'
-//  import DiscussionEditor from './DiscussionEditor'
   import BreadCrumb from './BreadCrumb'
   import TaskAssignmentEditor from './TaskAssignmentEditor'
   import { mapGetters } from 'vuex'
@@ -23,7 +22,6 @@
       draft: Draft,
       'task-items': TaskItems,
       'discussion-items': DiscussionItems,
-//      'discussion-editor': DiscussionEditor,
       'breadcrumb': BreadCrumb,
       'assignment-editor': TaskAssignmentEditor
     },

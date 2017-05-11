@@ -47,6 +47,7 @@
     },
     mounted() {
       setTimeout(() => {
+        console.log(this.item)
         console.log(this.editable && !CKEDITOR.instances[this.id])
         if (this.editable && !CKEDITOR.instances[this.id]) {
           CKEDITOR.replace(this.id)
@@ -88,7 +89,6 @@
         $(this.$el).find('.critique-content').hide()
         $(this.$el).find('.critique-editor').show()
         $(this.$el).find('.cke_top').hide()
-        console.log(CKEDITOR.instances)
         CKEDITOR.instances[this.id].setData(content)
       },
       hideEditor() {
@@ -102,6 +102,7 @@
         'getCurrentUser'
       ]),
       editable() {
+        console.log(this.getCurrentUser)
         return (this.getCurrentUser && this.getCurrentUser.id === this.item.user.id)
       },
       avatar() {

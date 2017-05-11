@@ -226,7 +226,7 @@ let posts = [
 export const Users = {
   getMembersByProjectId (projectId) {
     return new Promise(resolve => {
-      resolve({members: users.slice})
+      resolve({members: users.slice()})
     })
   }
 }

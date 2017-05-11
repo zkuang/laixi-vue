@@ -21,7 +21,6 @@
   import { mapGetters } from 'vuex'
   import Task from './Task'
   import DiscussionItems from './DiscussionItems'
-//  import DiscussionEditor from './DiscussionEditor'
   import BreadCrumb from './BreadCrumb'
 
   export default {
@@ -29,7 +28,6 @@
     components: {
       task: Task,
       'discussion-items': DiscussionItems,
-//      'discussion-editor': DiscussionEditor,
       'breadcrumb': BreadCrumb
     },
     beforeMount () {
