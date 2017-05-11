@@ -31,9 +31,7 @@
       'breadcrumb': BreadCrumb
     },
     beforeMount () {
-      if (!this.task.id) {
-        this.$store.dispatch('getTaskById', this.$route.params.tid)
-      }
+      this.$store.dispatch('getTaskById', this.$route.params.tid)
       this.$store.dispatch('getTaskPosts', this.$route.params.tid)
     },
     computed: {

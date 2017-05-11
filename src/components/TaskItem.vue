@@ -207,7 +207,7 @@
     },
     methods: {
       active () {
-        if (this.disabled || this.editable) {
+        if (this.disabled || this.editable || this.create) {
           return
         }
         $(this.$el).addClass('active')
