@@ -222,14 +222,18 @@
         const draftId = this.$route.params.did
         if (!this.task) {
           let data = toMD(CKEDITOR.instances['discussion-editor'].getData())
+          let taskId
+          if (this.$route.params.tid) {
+            taskId = this.$route.params.tid
+          }
           const regex = />.*\(http:\/\/.*\/documents\/.*\/tasks\/(.*)\).*$/gm
           let match = regex.exec(data)
-          let taskId
           if (match !== null) {
-            taskId = match[1]
+            if (!taskId) {
+              taskId = match[1]
+            }
             data = data.replace(regex, '').trim()
           }
-          console.log(data)
           let post = {
             draft_id: draftId,
             content: data,
