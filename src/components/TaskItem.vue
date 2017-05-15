@@ -1,7 +1,7 @@
 <template>
   <li class="taskitem" :id="itemId" @mouseover="active" @mouseleave="deactive">
-    <div class="task-actions">
-      <button class="ui button" @click="edit">
+    <div class="task-actions" :class="{checked: task.checked}">
+      <button class="ui button" @click="edit" v-if="!task.checked">
         <i class="write icon"></i>
       </button>
       <button class="ui button" @click="del">
@@ -59,6 +59,10 @@
     line-height: 2.2rem;
     margin-right: 1.2rem;
     visibility: hidden;
+  }
+
+  .taskitem .task-actions.checked {
+    margin-left: 2em;
   }
 
   .taskitem .task-detail {

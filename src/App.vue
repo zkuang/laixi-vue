@@ -45,7 +45,7 @@
         'getCurrentUser'
       ]),
       draftEditing() {
-        return this.$route.name === 'DraftEdit' || this.$route.name === 'DraftCreate'
+        return this.$route.name === 'DraftEdit' || this.$route.name === 'DraftCreate' || this.$route.name === 'TaskList'
       }
     }
   }

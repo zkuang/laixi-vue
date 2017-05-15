@@ -3,6 +3,7 @@ import Router from 'vue-router'
 import DocDiscussion from '@/components/DocDiscussion'
 import TaskDiscussion from '@/components/TaskDiscussion'
 import DraftEditor from '@/components/DraftEditor'
+import TaskList from '@/components/TaskList'
 
 Vue.use(Router)
 
@@ -10,24 +11,29 @@ export default new Router({
   mode: 'history',
   routes: [
     {
-      path: '/documents/:did',
+      path: '/drafts/:did',
       name: 'DocDiscussion',
       component: DocDiscussion
     },
     {
-      path: '/documents/:did/tasks/:tid',
+      path: '/drafts/:did/tasks/:tid',
       name: 'TaskDiscussion',
       component: TaskDiscussion
     },
     {
-      path: '/documents/:did/edit',
+      path: '/drafts/:did/edit',
       name: 'DraftEdit',
       component: DraftEditor
     },
     {
-      path: '/documents/edit',
+      path: '/drafts/edit',
       name: 'DraftCreate',
       component: DraftEditor
+    },
+    {
+      path: '/drafts/:did/tasks',
+      name: 'TaskList',
+      component: TaskList
     }
   ]
 })
