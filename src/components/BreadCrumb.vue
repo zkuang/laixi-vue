@@ -1,10 +1,10 @@
 <template>
   <div class="ui breadcrumb">
-    <a href="http://localhost:8080" class="section">{{project.name}}</a>
+    <router-link :to="projLink" class="section">{{project.name}}</router-link>
     <div class="divider"> / </div>
-    <div class="section">{{draft.title}}</div>
-    <div v-if="task.id" class="divider"> / </div>
-    <div v-if="task.id" class="section"> {{taskBreadCrumb}} </div>
+    <router-link :to="draftLink" class="section">{{draft.title}}</router-link>
+    <div v-if="hasTask" class="divider"> / </div>
+    <div v-if="hasTask" class="section"> {{taskBreadCrumb}} </div>
   </div>
 </template>
 
@@ -18,8 +18,21 @@
         'project',
         'task'
       ]),
+      hasTask() {
+        return this.$route.params.tid || this.$route.name === 'TaskList'
+      },
+      projLink() {
+        return `/projects/${this.$route.params.pid}`
+      },
+      draftLink() {
+        return `/projects/${this.$route.params.pid}/drafts/${this.$route.params.did}`
+      },
       taskBreadCrumb() {
-        return `任务：${this.$store.getters.task.title}`
+        if (this.$route.name === 'TaskDiscussion') {
+          return `任务：${this.$store.getters.task.title}`
+        } else {
+          return '所有任务'
+        }
       }
     }
   }

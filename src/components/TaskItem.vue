@@ -62,7 +62,7 @@
   }
 
   .taskitem .task-actions.checked {
-    margin-left: 2em;
+    margin-left: 2.2em;
   }
 
   .taskitem .task-detail {

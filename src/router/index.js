@@ -11,27 +11,27 @@ export default new Router({
   mode: 'history',
   routes: [
     {
-      path: '/drafts/:did',
+      path: '/projects/:pid/drafts/:did',
       name: 'DocDiscussion',
       component: DocDiscussion
     },
     {
-      path: '/drafts/:did/tasks/:tid',
+      path: '/projects/:pid/drafts/:did/tasks/:tid',
       name: 'TaskDiscussion',
       component: TaskDiscussion
     },
     {
-      path: '/drafts/:did/edit',
+      path: '/projects/:pid/drafts/:did/edit',
       name: 'DraftEdit',
       component: DraftEditor
     },
     {
-      path: '/drafts/edit',
+      path: '/projects/:pid/drafts/edit',
       name: 'DraftCreate',
       component: DraftEditor
     },
     {
-      path: '/drafts/:did/tasks',
+      path: '/projects/:pid/drafts/:did/tasks',
       name: 'TaskList',
       component: TaskList
     }

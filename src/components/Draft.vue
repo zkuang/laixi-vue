@@ -73,12 +73,14 @@
         window.frames['print-frame'].window.print()
       },
       del() {
-        this.draft.removed = true
-        this.$store.dispatch('updateDraft', this.draft)
+        let draft = Object.assign({}, this.draft)
+        draft.removed = true
+        this.$store.dispatch('updateDraft', draft)
       },
       undel() {
-        this.draft.removed = false
-        this.$store.dispatch('updateDraft', this.draft)
+        let draft = Object.assign({}, this.draft)
+        draft.removed = false
+        this.$store.dispatch('updateDraft', draft)
       }
     },
     computed: {

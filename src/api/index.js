@@ -252,6 +252,7 @@ export const Drafts = {
   updateById (id, d) {
     draft.content = d.content
     draft.title = d.title
+    draft.removed = d.removed
     return new Promise(resolve => {
       resolve({drafts: Object.assign({}, draft)})
     })

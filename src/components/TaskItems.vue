@@ -88,7 +88,6 @@
         })
       },
       isAllTasks() {
-        console.log(this.$route.name === 'TaskList')
         return this.$route.name === 'TaskList'
       }
     },
@@ -105,7 +104,7 @@
         this.$refs['task-create-form'][0].setEditable(true)
       },
       allTasks() {
-        this.$router.push(`/drafts/${this.$route.params.did}/tasks`)
+        this.$router.push(`/projects/${this.$route.params.pid}/drafts/${this.$route.params.did}/tasks`)
       }
     }
   }
