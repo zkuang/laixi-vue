@@ -128,7 +128,7 @@
         } else {
           let content
           if (!this.$route.params.tid) {
-            content = `> <span>任务 <a href="http://localhost:8080//projects/${this.$route.params.pid}/drafts/${this.item.task.draft_id}/tasks/${this.item.task.id}">${this.item.task.title}</a> <span class="emphasized-date">${DateTime.DateMonth(this.item.task.deadline)}</span></span>`
+            content = `> <span>任务 <a href="http://localhost:8080/projects/${this.$route.params.pid}/drafts/${this.item.task.draft_id}/tasks/${this.item.task.id}">${this.item.task.title}</a> <span class="emphasized-date">${DateTime.DateMonth(this.item.task.deadline)}</span></span>`
             if (!this.item.content.startsWith('>')) {
               content += `\n> [@${this.item.task.creator.nickname}](http://localhost:8080)\n`
             }

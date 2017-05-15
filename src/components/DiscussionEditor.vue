@@ -203,7 +203,7 @@
                     <p>@${author.nickname}</p>`
         } else {
           if (item.task) {
-            quote += `<span>任务</span>&nbsp;&nbsp;<a href="http://localhost:8080//projects/${this.$route.params.pid}/drafts/${item.task.draft_id}/tasks/${item.task.id}" class="task-link">${item.task.title}</a>&nbsp;&nbsp;&nbsp;&nbsp;<span class="emphasized-date">${DateTime.DateMonth(item.task.deadline)}</span>`
+            quote += `<span>任务</span>&nbsp;&nbsp;<a href="http://localhost:8080/projects/${this.$route.params.pid}/drafts/${item.task.draft_id}/tasks/${item.task.id}" class="task-link">${item.task.title}</a>&nbsp;&nbsp;&nbsp;&nbsp;<span class="emphasized-date">${DateTime.DateMonth(item.task.deadline)}</span>`
           }
           if (item.content) {
             let content = item.content.replace(/(^> .*$)/gm, '').trim()
