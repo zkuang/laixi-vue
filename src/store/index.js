@@ -8,6 +8,7 @@ const getters = {
   draft: state => {
     let draft = Object.assign({}, state.draft)
     if (draft.content) {
+      draft.rawContent = draft.content
       draft.content = draft.content.replace(/(?:\r\n|\r|\n)/g, '<br />')
     }
     return draft
@@ -39,31 +40,37 @@ const store = new Vuex.Store({
     getDraftById ({commit}, draftId) {
       Drafts.getById(draftId).then(res => {
         commit('setDraft', res.drafts)
+        return res.drafts
       })
     },
     updateDraft ({commit}, draft) {
       Drafts.updateById(draft.id, draft).then(res => {
         commit('setDraft', res.drafts)
+        return res.drafts
       })
     },
     getProjectById ({commit}, projectId) {
       Projects.getById(projectId).then(res => {
         commit('setProject', res.project)
+        return res.project
       })
     },
     getProjectMembers ({commit}, projectId) {
       Users.getMembersByProjectId(projectId).then(res => {
         commit('setUsers', res.members)
+        return res.members
       })
     },
     getTaskById ({commit}, taskId) {
       Tasks.getById(taskId).then(res => {
         commit('setTask', res.task)
+        return res.task
       })
     },
     getDraftTasks ({commit}, draftId) {
       Tasks.getTasksByDraftId(draftId).then(res => {
         commit('setTasks', res.tasks)
+        return res.tasks
       })
     },
     updateTask ({dispatch, commit, getters}, task) {
@@ -123,22 +130,26 @@ const store = new Vuex.Store({
     delPost ({commit}, post) {
       Posts.deleteById(post.id).then(() => {
         commit('removePost', post)
+        return post
       })
     },
     updatePost ({commit}, post) {
       Posts.updatePost(post).then(res => {
         commit('updatePost', {updated: res.post})
+        return res.post
       })
     },
     getDraftPosts ({commit}, draftId) {
       Posts.getPostsByDraftId(draftId).then(res => {
         console.log(res.posts)
         commit('setPosts', res.posts)
+        return res.posts
       })
     },
     getTaskPosts ({commit}, taskId) {
       Posts.getPostsByTaskId(taskId).then(res => {
         commit('setPosts', res.posts)
+        return res.posts
       })
     },
     addPostToDraft ({commit}, {post, origin}) {
@@ -148,6 +159,7 @@ const store = new Vuex.Store({
         } else {
           commit('updatePost', {origin: origin, updated: res.post})
         }
+        return res.post
       })
     }
   },

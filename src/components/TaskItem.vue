@@ -180,7 +180,6 @@
       }
     },
     mounted() {
-      console.log('mounted')
       if (!this.disabled && !this.task.checked) {
         this.setupPopups()
       }
@@ -274,7 +273,6 @@
         }
       },
       setupPopups() {
-        console.log('setup popup...........')
         let self = this
         $(this.$el).find('.assignment').popup({
           lastResort: 'right center',

@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <router-view></router-view>
-    <discussion-editor v-show="!draft.removed" ref="editor" :user="getCurrentUser" class="discussion-editor"></discussion-editor>
+    <discussion-editor v-show="!draft.removed && !draftEditing" ref="editor" :user="getCurrentUser" class="discussion-editor"></discussion-editor>
   </div>
 </template>
 
@@ -43,7 +43,10 @@
       ...mapGetters([
         'draft',
         'getCurrentUser'
-      ])
+      ]),
+      draftEditing() {
+        return this.$route.name === 'DraftEdit' || this.$route.name === 'DraftCreate'
+      }
     }
   }
 </script>
