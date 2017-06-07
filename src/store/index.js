@@ -37,46 +37,49 @@ const store = new Vuex.Store({
     currentUser: undefined
   },
   actions: {
-    getDraftById ({commit}, draftId) {
+    getDraftById({ commit }, draftId) {
       Drafts.getById(draftId).then(res => {
         commit('setDraft', res.drafts)
         return res.drafts
       })
     },
-    updateDraft ({commit}, draft) {
+    updateDraft({ commit }, draft) {
       Drafts.updateById(draft.id, draft).then(res => {
         commit('setDraft', res.drafts)
         return res.drafts
       })
     },
-    getProjectById ({commit}, projectId) {
+    getProjectById({ commit }, projectId) {
       Projects.getById(projectId).then(res => {
         commit('setProject', res.project)
         return res.project
       })
     },
-    getProjectMembers ({commit}, projectId) {
+    getProjectMembers({ commit }, projectId) {
       Users.getMembersByProjectId(projectId).then(res => {
         commit('setUsers', res.members)
         return res.members
       })
     },
-    getTaskById ({commit}, taskId) {
+    getTaskById({ commit }, taskId) {
       Tasks.getById(taskId).then(res => {
         commit('setTask', res.task)
         return res.task
       })
     },
-    getDraftTasks ({commit}, draftId) {
+    getDraftTasks({ commit }, draftId) {
       Tasks.getTasksByDraftId(draftId).then(res => {
         commit('setTasks', res.tasks)
         return res.tasks
       })
     },
-    updateTask ({dispatch, commit, getters}, task) {
-      const oTask = getters.tasks.find(t => {
+    updateTask({ dispatch, commit, getters }, task) {
+      let oTask = getters.tasks.find(t => {
         return task.id === t.id
       })
+      if (!oTask && getters.task.id === task.id) {
+        oTask = getters.task
+      }
       let type = 'task-edited'
       if (oTask.checked !== task.checked) {
         if (task.checked) {
@@ -96,10 +99,10 @@ const store = new Vuex.Store({
           task_id: res.task.id
         }
         commit('addPost', eventlog)
-        return dispatch('addPostToDraft', {post: eventlog, origin: eventlog})
+        return dispatch('addPostToDraft', { post: eventlog, origin: eventlog })
       })
     },
-    createTask ({dispatch, commit, getters}, {draftId, task}) {
+    createTask({ dispatch, commit, getters }, { draftId, task }) {
       Tasks.addTaskToDraft(draftId, task).then(res => {
         commit('createTask', res.task)
         let eventlog = {
@@ -110,10 +113,10 @@ const store = new Vuex.Store({
           task_id: res.task.id
         }
         commit('addPost', eventlog)
-        return dispatch('addPostToDraft', {post: eventlog, origin: eventlog})
+        return dispatch('addPostToDraft', { post: eventlog, origin: eventlog })
       })
     },
-    delTask ({dispatch, commit, state}, task) {
+    delTask({ dispatch, commit, state }, task) {
       Tasks.deleteById(task.id).then(() => {
         let posts = state.posts.filter(post => {
           return post.task && post.task.id === task.id
@@ -127,76 +130,76 @@ const store = new Vuex.Store({
         return Promise.all(promises)
       })
     },
-    delPost ({commit}, post) {
+    delPost({ commit }, post) {
       Posts.deleteById(post.id).then(() => {
         commit('removePost', post)
         return post
       })
     },
-    updatePost ({commit}, post) {
+    updatePost({ commit }, post) {
       Posts.updatePost(post).then(res => {
-        commit('updatePost', {updated: res.post})
+        commit('updatePost', { updated: res.post })
         return res.post
       })
     },
-    getDraftPosts ({commit}, draftId) {
+    getDraftPosts({ commit }, draftId) {
       Posts.getPostsByDraftId(draftId).then(res => {
         console.log(res.posts)
         commit('setPosts', res.posts)
         return res.posts
       })
     },
-    getTaskPosts ({commit}, taskId) {
+    getTaskPosts({ commit }, taskId) {
       Posts.getPostsByTaskId(taskId).then(res => {
         commit('setPosts', res.posts)
         return res.posts
       })
     },
-    addPostToDraft ({commit}, {post, origin}) {
+    addPostToDraft({ commit }, { post, origin }) {
       Posts.addPostsToDraft(post).then(res => {
         if (!origin) {
           commit('addPost', res.post)
         } else {
-          commit('updatePost', {origin: origin, updated: res.post})
+          commit('updatePost', { origin: origin, updated: res.post })
         }
         return res.post
       })
     }
   },
   mutations: {
-    setDraft (state, draft) {
+    setDraft(state, draft) {
       state.draft = draft
     },
-    setProject (state, project) {
+    setProject(state, project) {
       state.project = project
     },
-    setTasks (state, tasks) {
+    setTasks(state, tasks) {
       state.tasks.splice(1, state.tasks.length - 1, ...tasks)
     },
-    createTask (state, task) {
+    createTask(state, task) {
       state.tasks.push(task)
     },
-    setOneTask (state, task) {
+    setOneTask(state, task) {
       const index = state.tasks.findIndex(t => {
         return task.id === t.id
       })
       if (index === -1) return
       state.tasks.splice(index, 1, task)
     },
-    removeOneTask (state, task) {
+    removeOneTask(state, task) {
       const index = state.tasks.findIndex(t => {
         return task.id === t.id
       })
       if (index === -1) return
       state.tasks.splice(index, 1)
     },
-    setPosts (state, posts) {
+    setPosts(state, posts) {
       state.posts = posts
     },
-    addPost (state, post) {
+    addPost(state, post) {
       state.posts.push(post)
     },
-    removePost (state, post) {
+    removePost(state, post) {
       const i = state.posts.findIndex(p => {
         return post.id === p.id
       })
@@ -204,7 +207,7 @@ const store = new Vuex.Store({
         state.posts.splice(i, 1)
       }
     },
-    updatePost (state, {updated, origin}) {
+    updatePost(state, { updated, origin }) {
       let i
       if (origin) {
         i = state.posts.findIndex(post => {
@@ -217,18 +220,18 @@ const store = new Vuex.Store({
       }
       state.posts.splice(i, 1, updated)
     },
-    setCurrentUser (state, user) {
+    setCurrentUser(state, user) {
       state.currentUser = user
     },
-    setTask (state, task) {
+    setTask(state, task) {
       state.task = task
     },
-    setUsers (state, users) {
+    setUsers(state, users) {
       state.users = users
     }
   },
   getters
 })
 
-store.commit('createTask', {id: 'undefined', deadline: undefined, assignee: undefined})
+store.commit('createTask', { id: 'undefined', deadline: undefined, assignee: undefined })
 export default store
