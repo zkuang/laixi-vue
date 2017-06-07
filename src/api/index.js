@@ -35,9 +35,9 @@ let draft = {
   title: '人物设定： 萨利机长',
   type: 'plaintext',
   content: `告天起裡太館百為圖等進上上來！
-        
+
 新統大如收山性們在原術球活細天：地月放水發正己身後象別查草，定山所不年了童強名長也間響的他議朋庭的今知，計那異他告讀長如結面投外發現表作。
-          
+
 力本面你。高達理定機要怕區驗。眾許落很人道山，情意優多容水因些，量西不會另點熱力你建，照座後機了會才記案細林！
 集力在中消了升影料……大市公謝我，廣人上成，象最存。
 事趣小不，化選一聲，風快來以令市放氣斷樓議國院社人早更速已中險星源不選送美時高德王考他女優性，
@@ -224,40 +224,42 @@ let posts = [
 ]
 
 export const Users = {
-  getMembersByProjectId (projectId) {
+  getMembersByProjectId(projectId) {
     return new Promise(resolve => {
-      resolve({members: users.slice()})
+      resolve({ members: users.slice() })
     })
   }
 }
 
 export const Projects = {
-  getById (id) {
+  getById(id) {
     return new Promise(resolve => {
-      resolve({project: Object.assign({}, project)})
+      resolve({ project: Object.assign({}, project) })
     })
   }
 }
 
 export const Drafts = {
-  getById (id) {
+  getById(id) {
     return new Promise((resolve, reject) => {
+      console.log(id)
+      console.log(draft)
       if (draft.id === id) {
-        resolve({drafts: Object.assign({}, draft)})
+        resolve({ drafts: Object.assign({}, draft) })
       } else {
         reject('no such draft')
       }
     })
   },
-  updateById (id, d) {
+  updateById(id, d) {
     draft.content = d.content
     draft.title = d.title
     draft.removed = d.removed
     return new Promise(resolve => {
-      resolve({drafts: Object.assign({}, draft)})
+      resolve({ drafts: Object.assign({}, draft) })
     })
   },
-  deleteById (id) {
+  deleteById(id) {
     return new Promise(resolve => {
       draft = undefined
       resolve()
@@ -266,7 +268,7 @@ export const Drafts = {
 }
 
 export const Posts = {
-  getPostsByDraftId (draftId) {
+  getPostsByDraftId(draftId) {
     return new Promise(resolve => {
       let p = posts.filter(post => {
         return post.draft_id === draftId
@@ -281,7 +283,7 @@ export const Posts = {
       })
     })
   },
-  addPostsToDraft (post) {
+  addPostsToDraft(post) {
     return new Promise(resolve => {
       post.id = `aaaaaa689bca4e40b96aea1b23ae19${Math.random() * 100}`
       let task = tasks.find(t => {
@@ -290,10 +292,10 @@ export const Posts = {
       post.task = task
       let p = Object.assign({}, post)
       posts.push(p)
-      resolve({post: p})
+      resolve({ post: p })
     })
   },
-  getPostsByTaskId (taskId) {
+  getPostsByTaskId(taskId) {
     return new Promise(resolve => {
       resolve({
         posts: posts.filter(post => {
@@ -302,14 +304,16 @@ export const Posts = {
       })
     })
   },
-  getById (id) {
+  getById(id) {
     return new Promise(resolve => {
-      resolve({post: Object.assign({}, posts.find(post => {
-        return post.id === id
-      }))})
+      resolve({
+        post: Object.assign({}, posts.find(post => {
+          return post.id === id
+        }))
+      })
     })
   },
-  updatePost (post) {
+  updatePost(post) {
     return new Promise(resolve => {
       let task = tasks.find(t => {
         return t.id === post.task_id
@@ -324,10 +328,10 @@ export const Posts = {
       post.task_id = undefined
       updated = Object.assign(updated, post)
       posts.splice(i, 1, updated)
-      resolve({post: Object.assign({}, updated)})
+      resolve({ post: Object.assign({}, updated) })
     })
   },
-  deleteById (id) {
+  deleteById(id) {
     return new Promise(resolve => {
       let i = posts.findIndex(post => {
         return post.id === id
@@ -342,7 +346,7 @@ export const Posts = {
 }
 
 export const Tasks = {
-  getTasksByDraftId (draftId) {
+  getTasksByDraftId(draftId) {
     return new Promise(resolve => {
       resolve({
         tasks: tasks.filter(task => {
@@ -351,7 +355,7 @@ export const Tasks = {
       })
     })
   },
-  addTaskToDraft (draftId, {title, assignee, deadline, description}) {
+  addTaskToDraft(draftId, { title, assignee, deadline, description }) {
     return new Promise(resolve => {
       let task = {
         id: `33650a689bca4e40b96aea1b23ae19${Math.floor(Math.random() * 100)}`,
@@ -366,27 +370,29 @@ export const Tasks = {
         checked_at: undefined
       }
       tasks.push(task)
-      resolve({task: task})
+      resolve({ task: task })
     })
   },
-  getById (id) {
+  getById(id) {
     return new Promise(resolve => {
-      resolve({task: Object.assign({}, tasks.find(task => {
-        return task.id === id
-      }))})
+      resolve({
+        task: Object.assign({}, tasks.find(task => {
+          return task.id === id
+        }))
+      })
     })
   },
-  updateById (id, task) {
+  updateById(id, task) {
     return new Promise(resolve => {
       let i = tasks.findIndex(task => {
         return task.id === id
       })
       let t = Object.assign(tasks[i], task)
       tasks.splice(i, 1, t)
-      resolve({task: Object.assign({}, t)})
+      resolve({ task: Object.assign({}, t) })
     })
   },
-  deleteById (id) {
+  deleteById(id) {
     return new Promise(resolve => {
       tasks = tasks.filter(task => {
         return task.id !== id
@@ -394,7 +400,7 @@ export const Tasks = {
       resolve()
     })
   },
-  checkById (id) {
+  checkById(id) {
     return new Promise(resolve => {
       let task = tasks.find(task => {
         return task.id === id
@@ -404,7 +410,7 @@ export const Tasks = {
       resolve()
     })
   },
-  uncheckById (id) {
+  uncheckById(id) {
     return new Promise(resolve => {
       let task = tasks.find(task => {
         return task.id === id

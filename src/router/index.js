@@ -12,7 +12,7 @@ export default new Router({
   routes: [
     {
       path: '/projects/:pid/drafts/:did',
-      name: 'DocDiscussion',
+      name: 'DraftDiscussion',
       component: DocDiscussion
     },
     {
