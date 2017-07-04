@@ -23,7 +23,7 @@ const getters = {
   },
   posts: state => state.posts,
   users: state => state.users,
-  getCurrentUser: state => state.currentUser
+  getCurrentUser: state => { console.log(state.currrentUser); return state.currentUser }
 }
 
 const store = new Vuex.Store({
@@ -38,37 +38,37 @@ const store = new Vuex.Store({
   },
   actions: {
     getDraftById({ commit }, draftId) {
-      Drafts.getById(draftId).then(res => {
-        commit('setDraft', res.drafts)
-        return res.drafts
+      return Drafts.getById(draftId).then(res => {
+        commit('setDraft', res.draft)
+        return res.draft
       })
     },
     updateDraft({ commit }, draft) {
       Drafts.updateById(draft.id, draft).then(res => {
-        commit('setDraft', res.drafts)
-        return res.drafts
+        commit('setDraft', res.draft)
+        return res.draft
       })
     },
     getProjectById({ commit }, projectId) {
-      Projects.getById(projectId).then(res => {
+      return Projects.getById(projectId).then(res => {
         commit('setProject', res.project)
         return res.project
       })
     },
     getProjectMembers({ commit }, projectId) {
-      Users.getMembersByProjectId(projectId).then(res => {
+      return Users.getMembersByProjectId(projectId).then(res => {
         commit('setUsers', res.members)
         return res.members
       })
     },
     getTaskById({ commit }, taskId) {
-      Tasks.getById(taskId).then(res => {
+      return Tasks.getById(taskId).then(res => {
         commit('setTask', res.task)
         return res.task
       })
     },
     getDraftTasks({ commit }, draftId) {
-      Tasks.getTasksByDraftId(draftId).then(res => {
+      return Tasks.getTasksByDraftId(draftId).then(res => {
         commit('setTasks', res.tasks)
         return res.tasks
       })
@@ -80,44 +80,36 @@ const store = new Vuex.Store({
       if (!oTask && getters.task.id === task.id) {
         oTask = getters.task
       }
-      let type = 'task-edited'
+      let operation
       if (oTask.checked !== task.checked) {
         if (task.checked) {
-          type = 'task-checked'
+          operation = Tasks.checkById(task.id).then(() => {
+            commit('setOneTask', task)
+          })
         } else {
-          type = 'task-unchecked'
+          operation = Tasks.uncheckById(task.id).then(() => {
+            commit('setOneTask', task)
+          })
         }
+      } else {
+        operation = Tasks.updateById(task.id, task).then(res => {
+          commit('setTask', res.task)
+          commit('setOneTask', res.task)
+        })
       }
-      Tasks.updateById(task.id, task).then(res => {
-        commit('setTask', res.task)
-        commit('setOneTask', res.task)
-        let eventlog = {
-          draft_id: res.task.draft_id,
-          type,
-          create: new Date().toISOString(),
-          user: getters.getCurrentUser,
-          task_id: res.task.id
-        }
-        commit('addPost', eventlog)
-        return dispatch('addPostToDraft', { post: eventlog, origin: eventlog })
+      return operation.then(() => {
+        return dispatch('getDraftPosts', task.draft_id)
       })
     },
     createTask({ dispatch, commit, getters }, { draftId, task }) {
-      Tasks.addTaskToDraft(draftId, task).then(res => {
-        commit('createTask', res.task)
-        let eventlog = {
-          draft_id: res.task.draft_id,
-          type: 'task-created',
-          create: new Date().toISOString(),
-          user: getters.getCurrentUser,
-          task_id: res.task.id
-        }
-        commit('addPost', eventlog)
-        return dispatch('addPostToDraft', { post: eventlog, origin: eventlog })
+      return Tasks.addTaskToDraft(draftId, task).then(res => {
+        return commit('createTask', res.task)
+      }).then(() => {
+        return dispatch('getDraftPosts', draftId)
       })
     },
     delTask({ dispatch, commit, state }, task) {
-      Tasks.deleteById(task.id).then(() => {
+      return Tasks.deleteById(task.id).then(() => {
         let posts = state.posts.filter(post => {
           return post.task && post.task.id === task.id
         })
@@ -131,20 +123,20 @@ const store = new Vuex.Store({
       })
     },
     delPost({ commit }, post) {
-      Posts.deleteById(post.id).then(() => {
+      return Posts.deleteById(post.id).then(() => {
         commit('removePost', post)
         return post
       })
     },
     updatePost({ commit }, post) {
-      Posts.updatePost(post).then(res => {
+      return Posts.updatePost(post).then(res => {
         commit('updatePost', { updated: res.post })
         return res.post
       })
     },
     getDraftPosts({ commit }, draftId) {
-      Posts.getPostsByDraftId(draftId).then(res => {
-        console.log(res.posts)
+      console.log('getting posts')
+      return Posts.getPostsByDraftId(draftId).then(res => {
         commit('setPosts', res.posts)
         return res.posts
       })
@@ -175,6 +167,9 @@ const store = new Vuex.Store({
     },
     setTasks(state, tasks) {
       state.tasks.splice(1, state.tasks.length - 1, ...tasks)
+    },
+    setCurrentUser(state, user) {
+      state.currentUser = user
     },
     createTask(state, task) {
       state.tasks.push(task)
@@ -219,9 +214,6 @@ const store = new Vuex.Store({
         })
       }
       state.posts.splice(i, 1, updated)
-    },
-    setCurrentUser(state, user) {
-      state.currentUser = user
     },
     setTask(state, task) {
       state.task = task

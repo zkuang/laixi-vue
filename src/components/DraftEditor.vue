@@ -3,7 +3,7 @@
   <input type="text" name="draft-title" placeholder="文档标题" :value="title">
   <textarea type="text" name="draft-content" placeholder="文档内容" :value="content"></textarea>
   <div class="draft-editor-toolbar">
-    <button class="ui positive button" @click="save" type=submit>保存</button>
+    <button class="ui positive button" @click="save">保存</button>
     <button class="ui basic button" @click="dismiss">取消</button>
   </div>
 </form>
@@ -53,33 +53,6 @@
   resize: none
 }
 
-
-
-
-
-
-
-
-/*.ui.form.draft-editor textarea::-webkit-scrollbar {*/
-
-
-/*!*background: #f5f5dc;*!*/
-
-
-/*}*/
-
-
-/*.ui.form.draft-editor textarea::-webkit-scrollbar-thumb {*/
-
-
-/*color: darkgrey;*/
-
-
-/*!*outline: 1px solid slategrey;*!*/
-
-
-/*}*/
-
 .ui.form.draft-editor .draft-editor-toolbar {
   z-index: 100;
   border-top: 1px solid #e3e3e3;
@@ -113,7 +86,6 @@ export default {
   },
   methods: {
     save() {
-      console.log('save')
       let text = $(this.$el).find('textarea:not([row])')
       let title = $(this.$el).find('input[type=text]')
       let contentTxt = text.val()
@@ -128,11 +100,10 @@ export default {
       }
       let draft
       if (this.$route.name === 'DraftEdit') {
-        console.log('draft edito')
         draft = Object.assign({}, this.draft)
         draft.content = contentTxt
         draft.title = titleTxt
-        this.$store.dispatch('updateDraft', draft).then(() =>
+        this.$store.dispatch('updateDraft', draft).then(() => {
           this.$router.push({
             name: 'DraftDiscussion',
             params: {
@@ -140,7 +111,7 @@ export default {
               pid: this.$route.params.pid
             }
           })
-        )
+        })
       }
     },
     dismiss() {
