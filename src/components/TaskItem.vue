@@ -15,10 +15,6 @@
       </span>
     <label>{{task.title}}</label>
     <div class="task-content">
-      <!-- <span class="assignment" :class="{diasbled: task.checked}">
-          <span>{{assignee}}</span>
-      <span>{{dueDate}}</span>
-      </span> -->
       <div class="ui image label assignment">
         <img v-if="task.assignee && task.assignee.headimgurl" :src="task.assignee.headimgurl" />
         <span v-else>{{ assignee }}</span> {{ dueDate }}
@@ -33,13 +29,9 @@
           </span>
     <input type="text">
     <div class="task-content">
-      <!-- <span class="assignment" :class="{diasbled: task.checked}">
-              <span>{{assignee}}</span>
-      <span>{{dueDate}}</span>
-      </span> -->
       <div class="ui image label assignment">
-        <img v-if="task.assignee && task.assignee.headimgurl" :src="task.assignee.headimgurl" />
-        <span v-else>{{ assignee }}</span> {{ dueDate }}
+        <img v-if="newTask.assignee && newTask.assignee.headimgurl" :src="newTask.assignee.headimgurl" />
+        <span v-else>未指派</span> {{ taskDueDate() }}
       </div>
       <assignment-editor :ref="assignmentEditorId" :name="assignmentEditorId"></assignment-editor>
     </div>
@@ -169,7 +161,11 @@ export default {
     return {
       editable: false,
       switched: false,
-      dirty: false
+      dirty: false,
+      newTask: {
+        assignee: undefined,
+        deadline: undefined
+      }
     }
   },
   components: {
@@ -198,6 +194,7 @@ export default {
   mounted() {
     if (!this.disabled && !this.task.checked) {
       this.setupPopups()
+      console.log(this.task)
     }
   },
   updated() {
@@ -226,6 +223,10 @@ export default {
         return
       }
       $(this.$el).addClass('active')
+    },
+    taskDueDate() {
+      if (!this.newTask.deadline) return '未限期'
+      return DateTime.DateMonth(this.newTask.deadline)
     },
     deactive() {
       $(this.$el).removeClass('active')
@@ -269,9 +270,6 @@ export default {
       this.task.assignee = task.assignee
       this.task.title = task.title
       this.task.deadline = task.deadline
-      let ass = $(this.$el).find('.assignment')
-      ass.find('span:first-child').text(this.task.assignee.nickname)
-      ass.find('span:last-child').text(DateTime.DateFromNow(this.task.deadline))
     },
     edit() {
       this.editable = true
@@ -307,21 +305,16 @@ export default {
         onHide() {
           function updateAssignment() {
             let assignment = self.$refs[self.assignmentEditorId].getData()
-            if (self.task.deadline && assignment.deadline && assignment.deadline.diff(self.task.deadline, 'days') === 0) {
+            if (self.task.deadline && assignment.deadline && DateTime.DateMonth(self.task.deadline) === DateTime.DateMonth(assignment.deadline)) {
               assignment.deadline = undefined
             }
             if (assignment.deadline) {
               self.task.deadline = assignment.deadline.format()
               self.dirty = true
             }
-            if (!self.task.assignee || (assignment.assignee && assignment.assignee.id !== self.task.assignee.id)) {
+            if ((!self.task.assignee && assignment.assignee && assignment.assignee.id !== 'unassigned') || (assignment.assignee && assignment.assignee.id !== self.task.assignee.id)) {
               self.task.assignee = assignment.assignee
               self.dirty = true
-            } else {
-              if (!assignment.assignee && self.task.assignee) {
-                self.task.assignee = undefined
-                self.dirty = true
-              }
             }
             return self.dirty
           }
@@ -332,9 +325,12 @@ export default {
             }
           } else {
             if (updateAssignment()) {
-              let ass = $(self.$el).find('.assignment')
-              if (self.task.assignee) ass.find('span:first-child').text(self.task.assignee.nickname)
-              if (self.task.deadline) ass.find('span:last-child').text(DateTime.DateFromNow(self.task.deadline))
+              if (self.task.assignee) self.newTask.assignee = self.task.assignee
+              if (self.task.deadline) {
+                self.newTask.deadline = self.task.deadline
+              } else {
+                self.newTask.deadline = '未限期'
+              }
             }
           }
           return true
