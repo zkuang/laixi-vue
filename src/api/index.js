@@ -248,10 +248,14 @@ function makeAuthRequest(url, method, data) {
   if (data) {
     return request.send(data).then(res => {
       return res.body
+    }).catch(err => {
+      console.log(err)
     })
   } else {
     return request.then(res => {
       return res.body
+    }).catch(err => {
+      console.log(err)
     })
   }
 }
@@ -295,7 +299,7 @@ export const Posts = {
     return makeAuthRequest(URL, 'POST', post)
   },
   getPostsByTaskId(taskId) {
-    const URL = `${BASE_URL}/task/${taskId}/posts/`
+    const URL = `${BASE_URL}/tasks/${taskId}/posts/`
     return makeAuthRequest(URL, 'GET')
   },
   getById(id) {
@@ -318,19 +322,36 @@ export const Tasks = {
     return makeAuthRequest(URL, 'GET')
   },
   addTaskToDraft(draftId, task) {
-    const URL = `${BASE_URL}/drafts/${draftId}/posts/`
-    return makeAuthRequest(URL, 'POST', task)
+    let data = {
+      draft_id: draftId,
+      title: task.title
+    }
+    if (task.assignee) {
+      data.assignee_id = task.assignee.id
+    }
+    if (task.deadline) {
+      data.deadline = task.deadline
+    }
+    const URL = `${BASE_URL}/tasks/`
+    return makeAuthRequest(URL, 'POST', data)
   },
   getById(id) {
-    const URL = `${BASE_URL}/drafts/${id}/`
+    const URL = `${BASE_URL}/tasks/${id}/`
     return makeAuthRequest(URL, 'GET')
   },
   updateById(id, task) {
-    const URL = `${BASE_URL}/drafts/${id}/`
-    return makeAuthRequest(URL, 'PUT', task)
+    let URL = `${BASE_URL}/tasks/${id}/`
+    const data = {
+      title: task.title,
+      description: task.description,
+      assignee_id: task.assignee.id,
+      deadline: task.deadline
+    }
+    if (task.title) URL += ``
+    return makeAuthRequest(URL, 'PUT', data)
   },
   deleteById(id) {
-    const URL = `${BASE_URL}/drafts/${id}/`
+    const URL = `${BASE_URL}/tasks/${id}/`
     return makeAuthRequest(URL, 'DELETE')
   },
   checkById(id) {

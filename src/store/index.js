@@ -101,26 +101,32 @@ const store = new Vuex.Store({
         return dispatch('getDraftPosts', task.draft_id)
       })
     },
-    createTask({ dispatch, commit, getters }, { draftId, task }) {
+    createTask({ dispatch, commit, getters, state }, { draftId, task }) {
       return Tasks.addTaskToDraft(draftId, task).then(res => {
+        console.log(res.task)
+        const assignee = state.users.find(user => {
+          return res.task.assignee.id === user.id
+        })
+        res.task.assignee = assignee
         return commit('createTask', res.task)
       }).then(() => {
         return dispatch('getDraftPosts', draftId)
       })
     },
     delTask({ dispatch, commit, state }, task) {
-      return Tasks.deleteById(task.id).then(() => {
-        let posts = state.posts.filter(post => {
-          return post.task && post.task.id === task.id
+      return Tasks.deleteById(task.id)
+        .then(() => {
+          // let posts = state.posts.filter(post => {
+          //   return post.task && post.task.id === task.id
+          // })
+          return commit('removeOneTask', task)
+          // let promises = []
+          // posts.forEach(p => {
+          //   commit('removePost', p)
+          //   promises.push(dispatch('delPost', p))
+          // })
+          // return Promise.all(promises)
         })
-        commit('removeOneTask', task)
-        let promises = []
-        posts.forEach(p => {
-          commit('removePost', p)
-          promises.push(dispatch('delPost', p))
-        })
-        return Promise.all(promises)
-      })
     },
     delPost({ commit }, post) {
       return Posts.deleteById(post.id).then(() => {
@@ -167,6 +173,7 @@ const store = new Vuex.Store({
     },
     setTasks(state, tasks) {
       state.tasks.splice(1, state.tasks.length - 1, ...tasks)
+      state.tasks.reverse()
     },
     setCurrentUser(state, user) {
       state.currentUser = user
@@ -189,6 +196,7 @@ const store = new Vuex.Store({
       state.tasks.splice(index, 1)
     },
     setPosts(state, posts) {
+      posts.reverse()
       state.posts = posts
     },
     addPost(state, post) {
