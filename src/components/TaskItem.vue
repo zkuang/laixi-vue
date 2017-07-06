@@ -303,34 +303,36 @@ export default {
           return true
         },
         onHide() {
-          function updateAssignment() {
+          function updateAssignment(task) {
+            let dirty = false
             let assignment = self.$refs[self.assignmentEditorId].getData()
-            if (self.task.deadline && assignment.deadline && DateTime.DateMonth(self.task.deadline) === DateTime.DateMonth(assignment.deadline)) {
+            if (task.deadline && assignment.deadline && DateTime.DateMonth(task.deadline) === DateTime.DateMonth(assignment.deadline)) {
               assignment.deadline = undefined
             }
             if (assignment.deadline) {
-              self.task.deadline = assignment.deadline.format()
-              self.dirty = true
+              task.deadline = assignment.deadline.format()
+              dirty = true
             }
-            if ((!self.task.assignee && assignment.assignee && assignment.assignee.id !== 'unassigned') || (assignment.assignee && assignment.assignee.id !== self.task.assignee.id)) {
-              self.task.assignee = assignment.assignee
-              self.dirty = true
+            if ((!task.assignee && assignment.assignee && assignment.assignee.id !== 'unassigned') || (assignment.assignee && assignment.assignee.id !== task.assignee.id)) {
+              task.assignee = assignment.assignee
+              dirty = true
             }
-            return self.dirty
+            return dirty
           }
 
           if (!self.editable) {
-            if (updateAssignment()) {
+            if (updateAssignment(self.task)) {
               self.$store.dispatch('updateTask', self.task)
+              self.dirty = true
             }
           } else {
-            if (updateAssignment()) {
-              if (self.task.assignee) self.newTask.assignee = self.task.assignee
-              if (self.task.deadline) {
+            if (updateAssignment(self.newTask)) {
+              if (self.newTask.deadline) {
                 self.newTask.deadline = self.task.deadline
               } else {
                 self.newTask.deadline = '未限期'
               }
+              self.dirty = true
             }
           }
           return true

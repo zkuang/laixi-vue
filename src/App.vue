@@ -2,6 +2,14 @@
 <div id="app">
   <router-view></router-view>
   <discussion-editor v-show="!draft.removed && !draftEditing" ref="editor" :user="getCurrentUser" class="discussion-editor"></discussion-editor>
+  <div class="ui small modal" id="api-error-modal">
+    <div class="content">
+      <p>与服务器通信发生错误，请重试。</p>
+    </div>
+    <div class="actions">
+      <div class="ui approve button">确定</div>
+    </div>
+  </div>
 </div>
 </template>
 
@@ -23,6 +31,12 @@ export default {
   mounted() {
     EventBus.$on('reply', item => {
       this.$refs.editor.updateContent(item)
+    })
+
+    EventBus.$on('api:error', response => {
+      $(this.$el).find('#api-error-modal').modal({
+        closable: true
+      }).modal('show')
     })
   },
   beforeCreate() {

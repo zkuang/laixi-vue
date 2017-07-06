@@ -232,6 +232,7 @@ export const currentUser = {
 import { Base64 } from 'js-base64'
 var Promise = this.Promise || require('promise')
 var agent = require('superagent-promise')(require('superagent'), Promise)
+import EventBus from '../EventBus'
 
 const config = {
   type: 'http',
@@ -246,18 +247,13 @@ function makeAuthRequest(url, method, data) {
   let encode = Base64.encode(`${currentUser.id}:${config.key}`)
   let request = agent(method, url).set('Authorization', `Basic ${encode}`).accept('application/json')
   if (data) {
-    return request.send(data).then(res => {
-      return res.body
-    }).catch(err => {
-      console.log(err)
-    })
-  } else {
-    return request.then(res => {
-      return res.body
-    }).catch(err => {
-      console.log(err)
-    })
+    request = request.send(data)
   }
+  return request.then(res => {
+    return res.body
+  }, err => {
+    EventBus.$emit('api:error', err.response)
+  })
 }
 
 export const Users = {
