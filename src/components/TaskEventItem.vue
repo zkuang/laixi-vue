@@ -9,7 +9,10 @@
   <span v-if="hasBeenAssigned" class="username">{{item.task.assignee.nickname}}</span>
   <span>{{content}}</span>
   <a class="task-link" @click="navigateToTask">{{item.task.title}}</a>
-  <span class="emphasized-date">{{dueDate}}</span>
+  <!-- <span class="emphasized-date">{{dueDate}}</span> -->
+  <div class="ui image label">
+    <img v-if="item.task.assignee.headimgurl" :src="item.task.assignee.headimgurl" /> {{ dueDate }}
+  </div>
 </div>
 </template>
 

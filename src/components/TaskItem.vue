@@ -15,10 +15,14 @@
       </span>
     <label>{{task.title}}</label>
     <div class="task-content">
-      <span class="assignment" :class="{diasbled: task.checked}">
+      <!-- <span class="assignment" :class="{diasbled: task.checked}">
           <span>{{assignee}}</span>
       <span>{{dueDate}}</span>
-      </span>
+      </span> -->
+      <div class="ui image label assignment">
+        <img v-if="task.assignee && task.assignee.headimgurl" :src="task.assignee.headimgurl" />
+        <span v-else>{{ assignee }}</span> {{ dueDate }}
+      </div>
       <assignment-editor :ref="assignmentEditorId" :name="assignmentEditorId"></assignment-editor>
     </div>
   </div>
@@ -29,10 +33,14 @@
           </span>
     <input type="text">
     <div class="task-content">
-      <span class="assignment" :class="{diasbled: task.checked}">
+      <!-- <span class="assignment" :class="{diasbled: task.checked}">
               <span>{{assignee}}</span>
       <span>{{dueDate}}</span>
-      </span>
+      </span> -->
+      <div class="ui image label assignment">
+        <img v-if="task.assignee && task.assignee.headimgurl" :src="task.assignee.headimgurl" />
+        <span v-else>{{ assignee }}</span> {{ dueDate }}
+      </div>
       <assignment-editor :ref="assignmentEditorId" :name="assignmentEditorId"></assignment-editor>
     </div>
   </div>
@@ -171,7 +179,7 @@ export default {
     ...mapGetters(['tasks']),
     dueDate() {
       if (!this.task.deadline) return ''
-      else return DateTime.DateFromNow(this.task.deadline)
+      else return DateTime.DateMonth(this.task.deadline)
     },
     assignee() {
       if (this.task.assignee && this.task.assignee.id) return this.task.assignee.nickname
@@ -310,9 +318,12 @@ export default {
               self.task.assignee = assignment.assignee
               self.dirty = true
             } else {
-              assignment.assignee = undefined
+              if (!assignment.assignee && self.task.assignee) {
+                self.task.assignee = undefined
+                self.dirty = true
+              }
             }
-            return (assignment.assignee || assignment.deadline)
+            return self.dirty
           }
 
           if (!self.editable) {
