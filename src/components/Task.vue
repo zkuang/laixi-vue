@@ -163,8 +163,9 @@ export default {
       let task = Object.assign({}, this.task)
       let self = this
       task.description = description
-      this.$store.dispatch('updateTask', task).then(() => {
+      this.$store.dispatch('updateTask', task).then(task => {
         self.editing = false
+        this.$store.dispatch('getTaskPosts', task.id)
       })
     },
     cancel() {

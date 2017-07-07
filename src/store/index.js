@@ -80,37 +80,38 @@ const store = new Vuex.Store({
       if (!oTask && getters.task.id === task.id) {
         oTask = getters.task
       }
-      let operation
       if (oTask.checked !== task.checked) {
         if (task.checked) {
-          operation = Tasks.checkById(task.id).then(() => {
+          return Tasks.checkById(task.id).then(() => {
             commit('setOneTask', task)
+            return task
           })
         } else {
-          operation = Tasks.uncheckById(task.id).then(() => {
+          return Tasks.uncheckById(task.id).then(() => {
             commit('setOneTask', task)
+            return task
           })
         }
       } else {
-        console.log(task)
-        operation = Tasks.updateById(task.id, task).then(res => {
+        return Tasks.updateById(task.id, task).then(res => {
           commit('setTask', res.task)
           commit('setOneTask', res.task)
+          return res.task
         })
       }
-      return operation.then(() => {
-        return dispatch('getDraftPosts', task.draft_id)
-      })
     },
     createTask({ dispatch, commit, getters, state }, { draftId, task }) {
       return Tasks.addTaskToDraft(draftId, task).then(res => {
-        const assignee = state.users.find(user => {
-          return res.task.assignee.id === user.id
-        })
-        res.task.assignee = assignee
-        return commit('createTask', res.task)
-      }).then(() => {
-        return dispatch('getDraftPosts', draftId)
+        console.log('added task to draft')
+        if (res.task.assignee) {
+          const assignee = state.users.find(user => {
+            return res.task.assignee.id === user.id
+          })
+          res.task.assignee = assignee
+        }
+        commit('createTask', res.task)
+        console.log(res.task)
+        return res.task
       })
     },
     delTask({ dispatch, commit, state }, task) {

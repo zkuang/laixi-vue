@@ -240,8 +240,9 @@ export default {
       }
       if (this.dirty) {
         if (!this.create) {
-          this.$store.dispatch('updateTask', this.task).then(() => {
+          this.$store.dispatch('updateTask', this.task).then(task => {
             self.dirty = false
+            self.$store.dispatch('getDraftPosts', task.draft_id)
           }).catch(() => {
             self.dirty = false
           })
@@ -249,8 +250,9 @@ export default {
           this.$store.dispatch('createTask', {
             draftId: this.$route.params.did,
             task: this.task
-          }).then(() => {
+          }).then(task => {
             self.dirty = false
+            return this.$store.dispatch('getDraftPosts', task.draft_id)
           }).catch(() => {
             self.dirty = false
           })
@@ -285,7 +287,9 @@ export default {
       let isCheck = $(this.$el).find(`#${this.inputId}`).is(':checked')
       if (isCheck !== this.task.checked) {
         this.task.checked = isCheck
-        this.$store.dispatch('updateTask', this.task)
+        this.$store.dispatch('updateTask', this.task).then(task => {
+          this.$store.dispatch('getDraftPosts', task.draft_id)
+        })
       }
     },
     setupPopups() {
@@ -321,7 +325,9 @@ export default {
 
           if (!self.editable) {
             if (updateAssignment(self.task)) {
-              self.$store.dispatch('updateTask', self.task)
+              self.$store.dispatch('updateTask', self.task).then(task => {
+                return self.$store.dispatch('getDraftPosts', task.draft_id)
+              })
               self.dirty = true
             }
           } else {
