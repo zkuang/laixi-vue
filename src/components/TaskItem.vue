@@ -194,7 +194,6 @@ export default {
   mounted() {
     if (!this.disabled && !this.task.checked) {
       this.setupPopups()
-      console.log(this.task)
     }
   },
   updated() {
@@ -345,8 +344,6 @@ export default {
         closable: true,
         onApprove: function() {
           self.$store.dispatch('delTask', self.task).then(() => {
-            console.log('deleting ')
-            console.log(self.$route.params.did)
             self.$store.dispatch('getDraftPosts', self.$route.params.did)
           })
         }

@@ -23,7 +23,7 @@ const getters = {
   },
   posts: state => state.posts,
   users: state => state.users,
-  getCurrentUser: state => { console.log(state.currrentUser); return state.currentUser }
+  getCurrentUser: state => state.currentUser
 }
 
 const store = new Vuex.Store({
@@ -103,7 +103,6 @@ const store = new Vuex.Store({
     },
     createTask({ dispatch, commit, getters, state }, { draftId, task }) {
       return Tasks.addTaskToDraft(draftId, task).then(res => {
-        console.log(res.task)
         const assignee = state.users.find(user => {
           return res.task.assignee.id === user.id
         })
@@ -141,7 +140,6 @@ const store = new Vuex.Store({
       })
     },
     getDraftPosts({ commit }, draftId) {
-      console.log('getting posts')
       return Posts.getPostsByDraftId(draftId).then(res => {
         commit('setPosts', res.posts)
         return res.posts
@@ -172,8 +170,8 @@ const store = new Vuex.Store({
       state.project = project
     },
     setTasks(state, tasks) {
+      tasks.reverse()
       state.tasks.splice(1, state.tasks.length - 1, ...tasks)
-      state.tasks.reverse()
     },
     setCurrentUser(state, user) {
       state.currentUser = user

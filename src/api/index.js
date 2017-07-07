@@ -343,7 +343,6 @@ export const Tasks = {
       assignee_id: task.assignee.id,
       deadline: task.deadline
     }
-    console.log(data)
     if (task.title) URL += ``
     return makeAuthRequest(URL, 'PUT', data)
   },
