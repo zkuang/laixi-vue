@@ -92,6 +92,7 @@ const store = new Vuex.Store({
           })
         }
       } else {
+        console.log(task)
         operation = Tasks.updateById(task.id, task).then(res => {
           commit('setTask', res.task)
           commit('setOneTask', res.task)

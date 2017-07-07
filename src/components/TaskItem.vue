@@ -174,7 +174,7 @@ export default {
   computed: {
     ...mapGetters(['tasks']),
     dueDate() {
-      if (!this.task.deadline) return ''
+      if (!this.task.deadline) return '未限期'
       else return DateTime.DateMonth(this.task.deadline)
     },
     assignee() {

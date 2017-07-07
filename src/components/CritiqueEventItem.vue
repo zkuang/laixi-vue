@@ -131,8 +131,11 @@ export default {
       } else {
         let content
         if (!this.$route.params.tid) {
+          let deadline
+          if (this.item.task.deadline) deadline = DateTime.DateMonth(this.item.task.deadline)
+          else deadline = '未限期'
           content =
-            `> <span>任务 <a href="http://localhost:8080/projects/${this.$route.params.pid}/drafts/${this.item.task.draft_id}/tasks/${this.item.task.id}">${this.item.task.title}</a> <span class="emphasized-date">${DateTime.DateMonth(this.item.task.deadline)}</span></span>`
+            `> <span>任务 <a href="http://localhost:8080/projects/${this.$route.params.pid}/drafts/${this.item.task.draft_id}/tasks/${this.item.task.id}">${this.item.task.title}</a> <span class="emphasized-date">${deadline}</span></span>`
           if (!this.item.content.startsWith('>')) {
             content += `\n> [@${this.item.task.creator.nickname}](http://localhost:8080)\n`
           }
