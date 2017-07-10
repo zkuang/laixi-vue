@@ -224,6 +224,7 @@ export default {
       $(this.$el).addClass('active')
     },
     taskDueDate() {
+      console.log(this.newTask)
       if (!this.newTask.deadline) return '未限期'
       return DateTime.DateMonth(this.newTask.deadline)
     },

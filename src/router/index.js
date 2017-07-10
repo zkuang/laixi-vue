@@ -13,7 +13,7 @@ export default new Router({
   mode: 'history',
   routes: [
     {
-      path: '/projects/:pid/drafts/:did',
+      path: '/draft/:did',
       name: 'DraftDiscussion',
       component: DocDiscussion,
       beforeEnter(to, from, next) {
@@ -21,18 +21,23 @@ export default new Router({
         Promise.all(
           [
             store.dispatch('getDraftById', to.params.did),
-            store.dispatch('getProjectById', to.params.pid),
-            store.dispatch('getProjectMembers', to.params.pid),
             store.dispatch('getDraftTasks', to.params.did),
             store.dispatch('getDraftPosts', to.params.did)
           ]
-        ).then(() => {
+        ).then((res) => {
+          return Promise.all(
+            [
+              store.dispatch('getProjectById', res[0].project_id),
+              store.dispatch('getProjectMembers', res[0].project_id)
+            ]
+          )
+        }).then(() => {
           next()
         })
       }
     },
     {
-      path: '/projects/:pid/drafts/:did/tasks/:tid',
+      path: '/draft/:did/tasks/:tid',
       name: 'TaskDiscussion',
       component: TaskDiscussion,
       beforeEnter(to, from, next) {
@@ -40,28 +45,38 @@ export default new Router({
         Promise.all(
           [
             store.dispatch('getDraftById', to.params.did),
-            store.dispatch('getProjectById', to.params.pid),
-            store.dispatch('getProjectMembers', to.params.pid),
             store.dispatch('getTaskById', to.params.tid),
             store.dispatch('getTaskPosts', to.params.tid)
           ]
-        ).then(() => {
+        ).then((res) => {
+          return Promise.all(
+            [
+              store.dispatch('getProjectById', res[0].project_id),
+              store.dispatch('getProjectMembers', res[0].project_id)
+            ]
+          )
+        }).then(() => {
           next()
         })
       }
     },
     {
-      path: '/projects/:pid/drafts/:did/edit',
+      path: '/draft/:did/edit',
       name: 'DraftEdit',
-      component: DraftEditor
+      component: DraftEditor,
+      beforeEnter(to, from, next) {
+        store.dispatch('getDraftById', to.params.did).then(() => {
+          next()
+        })
+      }
     },
     {
-      path: '/projects/:pid/drafts/edit',
+      path: '/draft/edit',
       name: 'DraftCreate',
       component: DraftEditor
     },
     {
-      path: '/projects/:pid/drafts/:did/tasks',
+      path: '/drafts/:did/tasks',
       name: 'TaskList',
       component: TaskList,
       beforeEnter(to, from, next) {

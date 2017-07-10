@@ -51,10 +51,6 @@
   height: 3.5rem;
 }
 
-.ui.grid.discussion-editor {
-  margin-bottom: 15rem;
-}
-
 .discussion-editor .discussion-item-avatar {
   display: inline-block;
   position: absolute;
