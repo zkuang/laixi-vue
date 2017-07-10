@@ -18,9 +18,6 @@ import DiscussionEditor from './components/DiscussionEditor'
 import {
   mapGetters
 } from 'vuex'
-import {
-  currentUser
-} from './api/index'
 import EventBus from './EventBus'
 
 export default {
@@ -39,31 +36,13 @@ export default {
       }).modal('show')
     })
   },
-  beforeCreate() {
-    console.log(currentUser)
-    this.$store.commit('setCurrentUser', currentUser)
-    this.$store.dispatch('getDraftById', this.$route.params.did)
-      .then(() => {
-        return this.$store.dispatch('getProjectById', this.$route.params.pid)
-      })
-      .then(() => {
-        return this.$store.dispatch('getProjectMembers', this.$route.params.pid)
-      })
-      .then(() => {
-        if (this.$route.params.tid) {
-          return this.$store.dispatch('getTaskById', this.$route.params.tid)
-        } else {
-          return undefined
-        }
-      })
-  },
   computed: {
     ...mapGetters([
       'draft',
       'getCurrentUser'
     ]),
     draftEditing() {
-      return this.$route.name === 'DraftEdit' || this.$route.name === 'DraftCreate' || this.$route.name === 'TaskList'
+      return this.$route.name === 'DraftEdit' || this.$route.name === 'DraftCreate'
     }
   }
 }
