@@ -148,12 +148,13 @@ export default {
       hoverable: true,
       on: 'click',
       onShow() {
+        console.log(self.task)
         if (self.task && self.task.assignee) {
           self.$refs[self.assignmentEditorId].setSelection(self.task.assignee.id)
         } else {
           self.$refs[self.assignmentEditorId].setSelection('unknown')
         }
-        if (self.task && self.task.deadline) {
+        if (self.task && self.task.deadline && self.task.deadline !== 'null') {
           self.$refs[self.assignmentEditorId].setDate(self.task.deadline)
         } else {
           self.$refs[self.assignmentEditorId].setDate()
@@ -162,7 +163,7 @@ export default {
       },
       onHide() {
         let assignment = self.$refs[self.assignmentEditorId].getData()
-        if ((assignment.assignee || assignment.deadline)) {
+        if ((assignment.assignee.id || assignment.deadline)) {
           self.task = assignment
         }
         return true
@@ -256,6 +257,8 @@ export default {
         this.$store.dispatch('createTask', {
           draftId,
           task
+        }).then(task => {
+          return this.$store.dispatch('getDraftPosts', task.draft_id)
         })
       }
       this.$refs[this.assignmentEditorId].reset()
