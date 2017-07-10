@@ -102,11 +102,15 @@ export default {
   },
   methods: {
     createTask() {
-      console.log(this.$refs)
       this.$refs['task-create-form'][0].setEditable(true)
     },
     allTasks() {
-      this.$router.push(`/projects/${this.$route.params.pid}/drafts/${this.$route.params.did}/tasks`)
+      this.$router.push({
+        name: 'TaskList',
+        params: {
+          did: this.$route.params.did
+        }
+      })
     }
   }
 }

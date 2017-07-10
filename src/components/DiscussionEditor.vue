@@ -148,7 +148,6 @@ export default {
       hoverable: true,
       on: 'click',
       onShow() {
-        console.log(self.task)
         if (self.task && self.task.assignee) {
           self.$refs[self.assignmentEditorId].setSelection(self.task.assignee.id)
         } else {

@@ -48,7 +48,7 @@ export default new Router({
             store.dispatch('getTaskById', to.params.tid),
             store.dispatch('getTaskPosts', to.params.tid)
           ]
-        ).then((res) => {
+        ).then(res => {
           return Promise.all(
             [
               store.dispatch('getProjectById', res[0].project_id),
@@ -83,12 +83,17 @@ export default new Router({
         Promise.all(
           [
             store.dispatch('getDraftById', to.params.did),
-            store.dispatch('getProjectById', to.params.pid),
-            store.dispatch('getProjectMembers', to.params.pid),
             store.dispatch('getDraftTasks', to.params.did),
             store.dispatch('getDraftPosts', to.params.did)
           ]
-        ).then(() => {
+        ).then(res => {
+          return Promise.all(
+            [
+              store.dispatch('getProjectById', res[0].project_id),
+              store.dispatch('getProjectMembers', res[0].project_id)
+            ]
+          )
+        }).then(() => {
           next()
         })
       }
