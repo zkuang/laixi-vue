@@ -20,8 +20,6 @@ module.exports = {
   },
   plugins: [
     new webpack.ProvidePlugin({
-      $: 'jquery',
-      jQuery: 'jquery',
       markdownit: 'markdown-it'
     })
   ],
@@ -30,7 +28,6 @@ module.exports = {
     alias: {
       'vue$': 'vue/dist/vue.esm.js',
       '@': resolve('src'),
-      'semantic': resolve('semantic/dist'),
       'semantic-calendar': resolve('semantic-ui-calendar/dist')
     }
   },

@@ -339,11 +339,10 @@ export const Tasks = {
     let URL = `${BASE_URL}/tasks/${id}/`
     const data = {
       title: task.title,
-      description: task.description,
-      assignee_id: task.assignee.id,
-      deadline: task.deadline
+      description: task.description
     }
-    if (task.title) URL += ``
+    if (task.assignee) data.assignee_id = task.assignee.id
+    if (task.deadline) data.deadline = task.deadline
     return makeAuthRequest(URL, 'PUT', data)
   },
   deleteById(id) {

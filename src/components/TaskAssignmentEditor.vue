@@ -32,7 +32,7 @@ export default {
   data() {
     return {
       assignment: {
-        assignee: undefined,
+        assignee: {},
         deadline: undefined
       }
     }
@@ -44,6 +44,8 @@ export default {
       onChange: function(date, text, mode) {
         if (date) {
           assignment.deadline = moment(date)
+        } else {
+          assignment.deadline = 'null'
         }
       }
     })
@@ -62,18 +64,17 @@ export default {
       return Object.assign({}, this.assignment)
     },
     setAssignee(e) {
+      console.log(e)
       if (e.target.value === 'null') {
-        this.assignment.assignee = {
-          id: e.target.value
-        }
+        this.assignment.assignee.id = 'null'
       } else {
-        this.assignment.assignee = this.users.find(user => {
+        this.assignment.assignee = JSON.parse(JSON.stringify(this.users.find(user => {
           return user.id === e.target.value
-        })
+        })))
       }
     },
     reset() {
-      this.assignment.assignee = undefined
+      this.assignment.assignee = {}
       this.assignment.deadline = undefined
     },
     setDate(date) {

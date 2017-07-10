@@ -93,12 +93,12 @@ export default {
     }
   },
   mounted() {
-    $(this.$el).find('.assignment').popup({
-      lastResort: 'right center',
-      position: 'right center',
-      hoverable: true,
-      on: 'click'
-    })
+    // $(this.$el).find('.assignment').popup({
+    //   lastResort: 'right center',
+    //   position: 'right center',
+    //   hoverable: true,
+    //   on: 'click'
+    // })
   },
   methods: {
     createTask() {

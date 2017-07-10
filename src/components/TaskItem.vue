@@ -12,7 +12,7 @@
     <span class="checkbox-wrapper" :class="{disabled}">
         <input type="checkbox" :checked="task.checked" :id="inputId" :disabled="disabled" @change="taskStateChange">
         <label class="disable-checkbox" :for="inputId"></label>
-      </span>
+    </span>
     <label>{{task.title}}</label>
     <div class="task-content">
       <div class="ui image label assignment">
@@ -24,13 +24,13 @@
   </div>
   <div class="task-detail" v-if="editable">
     <span class="checkbox-wrapper disabled">
-            <input type="checkbox" id="create-task-input" disabled="true">
-            <label class="disable-checkbox" for="create-task-input"></label>
-          </span>
+      <input type="checkbox" id="create-task-input" disabled="true">
+      <label class="disable-checkbox" for="create-task-input"></label>
+    </span>
     <input type="text">
     <div class="task-content">
       <div class="ui image label assignment">
-        <img v-if="newTask.assignee && newTask.assignee.headimgurl" :src="newTask.assignee.headimgurl" />
+        <img v-if="taskAssignee()" :src="newTask.assignee.headimgurl" />
         <span v-else>未指派</span> {{ taskDueDate() }}
       </div>
       <assignment-editor :ref="assignmentEditorId" :name="assignmentEditorId"></assignment-editor>
@@ -163,7 +163,7 @@ export default {
       switched: false,
       dirty: false,
       newTask: {
-        assignee: undefined,
+        assignee: {},
         deadline: undefined
       }
     }
@@ -224,9 +224,13 @@ export default {
       $(this.$el).addClass('active')
     },
     taskDueDate() {
-      console.log(this.newTask)
       if (!this.newTask.deadline) return '未限期'
-      return DateTime.DateMonth(this.newTask.deadline)
+      else return DateTime.DateMonth(this.newTask.deadline)
+    },
+    taskAssignee() {
+      console.log(this.newTask.assignee.id)
+      if (this.newTask.assignee.id) return this.newTask.assignee.nickname
+      else return undefined
     },
     deactive() {
       $(this.$el).removeClass('active')
@@ -261,6 +265,10 @@ export default {
       }
       this.editable = false
       this.switched = true
+      this.newTask = {
+        assignee: {},
+        deadline: undefined
+      }
     },
     dismiss() {
       let self = this
@@ -272,10 +280,17 @@ export default {
       this.task.assignee = task.assignee
       this.task.title = task.title
       this.task.deadline = task.deadline
+      this.newTask = {
+        assignee: {},
+        deadline: undefined
+      }
     },
     edit() {
       this.editable = true
       this.switched = true
+      this.newTask = JSON.parse(JSON.stringify(this.task))
+      if (!this.task.assignee) this.newTask.assignee = {}
+      if (!this.task.deadline) this.newTask.deadline = undefined
       $(this.$el).removeClass('active')
     },
     setEditable(editable) {
@@ -310,20 +325,39 @@ export default {
           function updateAssignment(task) {
             let dirty = false
             let assignment = self.$refs[self.assignmentEditorId].getData()
-            if (task.deadline && assignment.deadline && DateTime.DateMonth(task.deadline) === DateTime.DateMonth(assignment.deadline)) {
-              assignment.deadline = undefined
-            }
-            if (assignment.deadline) {
-              task.deadline = assignment.deadline.format()
-              dirty = true
-            }
-            if ((!task.assignee && assignment.assignee && assignment.assignee.id !== 'unassigned') || (assignment.assignee && assignment.assignee.id !== task.assignee.id)) {
-              task.assignee = assignment.assignee
-              dirty = true
-            }
+            if (assignment.deadline === 'null') {
+              // deadline cleared
+              if (task.deadline) {
+                // origin task has deadline, this will not be null if it's from server
+                task.deadline = 'null'
+                dirty = true
+              }
+            } else if (assignment.deadline && assignment.deadline !== 'null') {
+              // deadline has value, update the task when task has no deadline or they are not the same
+              if (!task.deadline || DateTime.DateMonth(task.deadline) !== DateTime.DateMonth(assignment.deadline)) {
+                task.deadline = assignment.deadline.format()
+                dirty = true
+              }
+            } // else leave the deadline unchanged
+
+            // console.log(task.assignee)
+            // console.log(assignment.assignee)
+            if (assignment.assignee.id === 'null') {
+              // assignee cleared
+              if (task.assignee) {
+                // origin task has assignee, this will not be null if it's from server
+                task.assignee = assignment.assignee
+                dirty = true
+              }
+            } else if (assignment.assignee.id && assignment.assignee.id !== 'null') {
+              // assignee has value, update the task when task has no assignee or they not the same
+              if (!task.assignee || task.assignee.id !== assignment.assignee.id) {
+                task.assignee = assignment.assignee
+                dirty = true
+              }
+            } // else leave the assignee unchanged
             return dirty
           }
-
           if (!self.editable) {
             if (updateAssignment(self.task)) {
               self.$store.dispatch('updateTask', self.task).then(task => {
@@ -334,10 +368,11 @@ export default {
           } else {
             if (updateAssignment(self.newTask)) {
               if (self.newTask.deadline) {
-                self.newTask.deadline = self.task.deadline
+                self.task.deadline = self.newTask.deadline
               } else {
-                self.newTask.deadline = '未限期'
+                self.newTask.deadline = undefined
               }
+              if (self.newTask.assignee.id) self.task.assignee = self.newTask.assignee
               self.dirty = true
             }
           }
