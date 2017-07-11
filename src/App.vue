@@ -25,9 +25,6 @@ export default {
   components: {
     'discussion-editor': DiscussionEditor
   },
-  beforeMount() {
-    console.log($('input[name="project_id"]').val())
-  },
   mounted() {
     EventBus.$on('reply', item => {
       this.$refs.editor.updateContent(item)

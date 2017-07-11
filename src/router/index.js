@@ -66,6 +66,7 @@ export default new Router({
       name: 'DraftEdit',
       component: DraftEditor,
       beforeEnter(to, from, next) {
+        store.commit('setCurrentUser', currentUser)
         store.dispatch('getDraftById', to.params.did).then(() => {
           next()
         })
