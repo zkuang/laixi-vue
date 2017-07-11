@@ -292,6 +292,8 @@ export const Posts = {
   },
   addPostsToDraft(post) {
     const URL = `${BASE_URL}/drafts/${post.draft_id}/posts/`
+    console.log('api')
+    console.log(post)
     return makeAuthRequest(URL, 'POST', post)
   },
   getPostsByTaskId(taskId) {

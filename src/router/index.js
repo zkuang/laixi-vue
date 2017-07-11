@@ -13,7 +13,7 @@ export default new Router({
   mode: 'history',
   routes: [
     {
-      path: '/draft/:did',
+      path: '/draft/:did/',
       name: 'DraftDiscussion',
       component: DocDiscussion,
       beforeEnter(to, from, next) {
@@ -37,22 +37,23 @@ export default new Router({
       }
     },
     {
-      path: '/draft/:did/tasks/:tid',
+      path: '/task/:tid/',
       name: 'TaskDiscussion',
       component: TaskDiscussion,
       beforeEnter(to, from, next) {
         store.commit('setCurrentUser', currentUser)
         Promise.all(
           [
-            store.dispatch('getDraftById', to.params.did),
             store.dispatch('getTaskById', to.params.tid),
             store.dispatch('getTaskPosts', to.params.tid)
           ]
         ).then(res => {
+          return store.dispatch('getDraftById', res[0].draft_id)
+        }).then(draft => {
           return Promise.all(
             [
-              store.dispatch('getProjectById', res[0].project_id),
-              store.dispatch('getProjectMembers', res[0].project_id)
+              store.dispatch('getProjectById', draft.project_id),
+              store.dispatch('getProjectMembers', draft.project_id)
             ]
           )
         }).then(() => {
@@ -61,7 +62,7 @@ export default new Router({
       }
     },
     {
-      path: '/draft/:did/edit',
+      path: '/draft/:did/edit/',
       name: 'DraftEdit',
       component: DraftEditor,
       beforeEnter(to, from, next) {
@@ -76,7 +77,7 @@ export default new Router({
       component: DraftEditor
     },
     {
-      path: '/drafts/:did/tasks',
+      path: '/drafts/:did/tasks/',
       name: 'TaskList',
       component: TaskList,
       beforeEnter(to, from, next) {

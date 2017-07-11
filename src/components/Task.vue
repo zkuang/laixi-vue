@@ -142,7 +142,12 @@ export default {
         closable: true,
         onApprove: function() {
           self.$store.dispatch('delTask', self.task)
-          self.$router.push(`/projects/${self.$route.params.pid}/drafts/${self.task.draft_id}`)
+          self.$router.push({
+            name: 'DraftDiscussion',
+            params: {
+              did: self.task.draft_id
+            }
+          })
         }
       }).modal('show')
     },

@@ -172,7 +172,7 @@ export default {
     'assignment-editor': TaskAssignmentEditor
   },
   computed: {
-    ...mapGetters(['tasks']),
+    ...mapGetters(['tasks', 'draft']),
     dueDate() {
       if (!this.task.deadline) return '未限期'
       else return DateTime.DateMonth(this.task.deadline)
@@ -253,7 +253,7 @@ export default {
           })
         } else {
           this.$store.dispatch('createTask', {
-            draftId: this.$route.params.did,
+            draftId: this.draft.id,
             task: this.task
           }).then(task => {
             self.dirty = false
@@ -386,7 +386,7 @@ export default {
         closable: true,
         onApprove: function() {
           self.$store.dispatch('delTask', self.task).then(() => {
-            self.$store.dispatch('getDraftPosts', self.$route.params.did)
+            self.$store.dispatch('getDraftPosts', self.draft.id)
           })
         }
       }).modal('show')

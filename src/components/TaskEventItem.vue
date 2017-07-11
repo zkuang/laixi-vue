@@ -39,7 +39,13 @@ export default {
           CKEDITOR.remove(instance)
         }
       }
-      this.$router.push(`/projects/${this.$route.params.pid}/drafts/${this.item.task.draft_id}/tasks/${this.item.task.id}`)
+      console.log('pushing to task discussion')
+      this.$router.push({
+        name: 'TaskDiscussion',
+        params: {
+          tid: this.item.task.id
+        }
+      })
     }
   },
   computed: {

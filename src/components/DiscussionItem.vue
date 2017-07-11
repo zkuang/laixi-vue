@@ -7,12 +7,12 @@
   <critiqueitem v-else :ref="id" :item="item" @critique-save="save" @critique-dismiss="dismiss">
   </critiqueitem>
   <div class="right floated ui icon buttons">
-    <button class="ui button" @click="reply">
-        <i class="reply icon"></i>
-      </button>
+    <button v-show="showReply" class="ui button" @click="reply">
+      <i class="reply icon"></i>
+    </button>
     <button :class="{hidden: !assignable}" class="ui button has-popup">
-        <i class="content icon"></i>
-      </button>
+      <i class="content icon"></i>
+    </button>
     <div class="ui popup">
       <button class="ui button in-popup" @click="modify">修改</button>
       <button class="ui button in-popup" @click="del">删除</button>
@@ -242,6 +242,11 @@ export default {
     })
   },
   computed: {
+    showReply() {
+      if (this.$route.name !== 'TaskDiscussion') return true
+      else if (!this.isTask) return true
+      else return false
+    },
     isTask() {
       return this.item.type === 'task-created' || this.item.type === 'task-edited' ||
         this.item.type === 'task-checked' || this.item.type === 'task-unchecked'

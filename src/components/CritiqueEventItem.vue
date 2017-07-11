@@ -59,8 +59,8 @@ export default {
   methods: {
     save() {
       let data = toMD(CKEDITOR.instances[this.id].getData())
-      const regex = />.*\(http:\/\/.*\/projects\/.*\/drafts\/.*\/tasks\/(.*)\).*$/gm
-      const draftId = this.$route.params.did
+      const regex = />.*\(http:\/\/.*\/task\/(.*)\).*$/gm
+      const draftId = this.draft.id
       let match = regex.exec(data)
       let taskId
       if (match !== null) {
@@ -114,7 +114,8 @@ export default {
   },
   computed: {
     ...mapGetters([
-      'getCurrentUser'
+      'getCurrentUser',
+      'draft'
     ]),
     editable() {
       return (this.getCurrentUser && this.getCurrentUser.id === this.item.user.id)
@@ -135,9 +136,10 @@ export default {
           if (this.item.task.deadline) deadline = DateTime.DateMonth(this.item.task.deadline)
           else deadline = '未限期'
           content =
-            `> <span>任务 <a href="http://localhost:8080/projects/${this.$route.params.pid}/drafts/${this.item.task.draft_id}/tasks/${this.item.task.id}">${this.item.task.title}</a> <span class="emphasized-date">${deadline}</span></span>`
+            `> <span>任务 <a href="http://localhost:5000/task/${this.item.task.id}/">${this.item.task.title}</a> <span class="emphasized-date">${deadline}</span></span>`
           if (!this.item.content.startsWith('>')) {
-            content += `\n> [@${this.item.task.creator.nickname}](http://localhost:8080)\n`
+            // [@${this.item.task.creator.nickname}](http://localhost:5000)\n`
+            content += `\n> [@creator](http://localhost:5000/user/)\n`
           }
           content += `\n${this.item.content}`
         } else {

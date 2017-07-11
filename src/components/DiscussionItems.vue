@@ -1,7 +1,7 @@
 <template>
 <section class="ui grid discussion-items">
   <ul class="fourteen wide column">
-    <discussion-item v-for="post in posts" key="post.id" :item="post" @reply="onReply" :disabled="draft.removed" :assignable="(post.type === 'critique' && (currentUser && currentUser.id === post.user.id))">
+    <discussion-item v-for="post in posts" key="post.id" :item="post" :disabled="draft.removed" :assignable="(post.type === 'critique' && (currentUser && currentUser.id === post.user.id))">
     </discussion-item>
   </ul>
   <div class="ui small modal" id="post-deletion-modal">
@@ -44,11 +44,6 @@ export default {
       posts: 'posts',
       draft: 'draft'
     })
-  },
-  methods: {
-    onReply(item) {
-      this.$emit('reply', item)
-    }
   }
 }
 </script>

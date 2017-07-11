@@ -92,14 +92,6 @@ export default {
       return this.$route.name === 'TaskList'
     }
   },
-  mounted() {
-    // $(this.$el).find('.assignment').popup({
-    //   lastResort: 'right center',
-    //   position: 'right center',
-    //   hoverable: true,
-    //   on: 'click'
-    // })
-  },
   methods: {
     createTask() {
       this.$refs['task-create-form'][0].setEditable(true)
@@ -108,7 +100,7 @@ export default {
       this.$router.push({
         name: 'TaskList',
         params: {
-          did: this.$route.params.did
+          did: this.draft.id
         }
       })
     }

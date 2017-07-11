@@ -25,9 +25,13 @@ export default {
   components: {
     'discussion-editor': DiscussionEditor
   },
+  beforeMount() {
+    console.log($('input[name="project_id"]').val())
+  },
   mounted() {
     EventBus.$on('reply', item => {
       this.$refs.editor.updateContent(item)
+      console.log(this.posts)
     })
 
     EventBus.$on('api:error', response => {
@@ -39,7 +43,8 @@ export default {
   computed: {
     ...mapGetters([
       'draft',
-      'getCurrentUser'
+      'getCurrentUser',
+      'posts'
     ]),
     draftEditing() {
       return this.$route.name === 'DraftEdit' || this.$route.name === 'DraftCreate'

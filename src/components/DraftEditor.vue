@@ -4,7 +4,7 @@
   <textarea type="text" name="draft-content" placeholder="文档内容" :value="content"></textarea>
   <div class="draft-editor-toolbar">
     <button class="ui positive button" @click.prevent="save">保存</button>
-    <button class="ui basic button" @click="dismiss">取消</button>
+    <button class="ui basic button" @click.prevent="dismiss">取消</button>
   </div>
 </form>
 </template>
@@ -66,11 +66,6 @@ import {
 } from 'vuex'
 export default {
   name: 'draft-editor',
-  beforeMount() {
-    if (this.$route.name === 'DraftEdit') {
-      this.$store.dispatch('getDraftById', this.$route.params.did)
-    }
-  },
   computed: {
     title() {
       if (this.$route.name === 'DraftEdit') {
@@ -107,14 +102,19 @@ export default {
           this.$router.push({
             name: 'DraftDiscussion',
             params: {
-              did: this.$route.params.did
+              did: this.draft.id
             }
           })
         })
       }
     },
     dismiss() {
-      console.log('dismiss')
+      this.$router.push({
+        name: 'DraftDiscussion',
+        params: {
+          did: this.draft.id
+        }
+      })
     }
   }
 }

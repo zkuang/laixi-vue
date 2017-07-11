@@ -70,7 +70,7 @@ export default {
       this.$router.push({
         name: 'DraftEdit',
         params: {
-          did: this.$route.params.did
+          did: this.draft.id
         }
       })
     },
@@ -93,7 +93,7 @@ export default {
   },
   computed: {
     historyLink() {
-      return `/document/history/${this.$route.params.did}`
+      return `/draft/history/${this.draft.id}`
     },
     ...mapGetters([
       'draft'

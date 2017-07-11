@@ -15,7 +15,7 @@
           <i class="check circle large icon"></i>
           <a>分配任务</a>
         </div>
-        <assignment-editor :ref="assignmentEditorId" :name="assignmentEditorId"></assignment-editor>
+        <assignment-editor v-show="" :ref="assignmentEditorId" :name="assignmentEditorId"></assignment-editor>
         <div class="editor-buttons">
           <button class="ui secondary basic button" @click="cancel">取消</button>
           <button class="ui teal basic button" @click="publish">发布</button>
@@ -121,6 +121,10 @@ import {
 } from '../utils'
 import toMD from 'to-markdown'
 import TaskAssignmentEditor from './TaskAssignmentEditor'
+import {
+  mapGetters
+} from 'vuex'
+
 export default {
   name: 'DiscussionEditor',
   props: ['user'],
@@ -176,7 +180,13 @@ export default {
   computed: {
     assignmentEditorId() {
       return 'editor'
-    }
+    },
+    showTaskAssignment() {
+      return this.$route.name !== 'TaskDiscussion'
+    },
+    ...mapGetters([
+      'draft'
+    ])
   },
   methods: {
     showEditor(content) {
@@ -205,13 +215,13 @@ export default {
           if (item.task.deadline) deadline = DateTime.DateMonth(item.task.deadline)
           else deadline = '未限期'
           quote +=
-            `<span>任务</span>&nbsp;&nbsp;<a href="http://localhost:8080/projects/${this.$route.params.pid}/drafts/${item.task.draft_id}/tasks/${item.task.id}" class="task-link">${item.task.title}</a>&nbsp;&nbsp;&nbsp;&nbsp;<span class="emphasized-date">${deadline}</span>`
+            `<span>任务</span>&nbsp;&nbsp;<a href="http://localhost:5000/task/${item.task.id}/" class="task-link">${item.task.title}</a>&nbsp;&nbsp;&nbsp;&nbsp;<span class="emphasized-date">${deadline}</span>`
         }
         if (item.content) {
           let content = item.content.replace(/(^> .*$)/gm, '').trim()
           quote += `<p>${content.replace(/(?:\r\n|\r|\n)/g, '<br />')}</p>`
         }
-        quote += `<p><a href="http://localhost:8080/users/${author.id}">@${author.nickname}</a></p>`
+        quote += `<p><a href="http://localhost:5000/user/${author.id}/">@${author.nickname}</a></p>`
       }
       quote = '<blockquote>' + quote + '</blockquote><p></p>'
       this.showEditor(quote)
@@ -221,14 +231,14 @@ export default {
       $(this.$el).find('.fake-textarea').show()
     },
     publish() {
-      const draftId = this.$route.params.did
+      const draftId = this.draft.id
       if (!this.task) {
         let data = toMD(CKEDITOR.instances['discussion-editor'].getData())
         let taskId
         if (this.$route.params.tid) {
           taskId = this.$route.params.tid
         }
-        const regex = />.*\(http:\/\/.*\/projects\/.*\/drafts\/.*\/tasks\/(.*)\).*$/gm
+        const regex = />.*\(http:\/\/.*\/task\/(.*)\/\).*$/gm
         let match = regex.exec(data)
         if (match !== null) {
           if (!taskId) {
