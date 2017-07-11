@@ -223,17 +223,11 @@
 //   }
 // ]
 
-export const currentUser = {
-  headimgurl: 'http://via.placeholder.com/128x128?text=W1',
-  id: 'b916e0d8871348f4bd4080ef11544315',
-  nickname: 'WriterOne'
-}
-
 import { Base64 } from 'js-base64'
 var Promise = this.Promise || require('promise')
 var agent = require('superagent-promise')(require('superagent'), Promise)
 import EventBus from '../EventBus'
-
+import store from '../store'
 const config = {
   type: 'http',
   host: 'localhost:5000',
@@ -244,7 +238,9 @@ const config = {
 const BASE_URL = `${config.type}://${config.host}${config.url}`
 
 function makeAuthRequest(url, method, data) {
-  let encode = Base64.encode(`${currentUser.id}:${config.key}`)
+  console.log('making request')
+  console.log(store.getters.authString)
+  let encode = Base64.encode(`${store.getters.authString}:${config.key}`)
   let request = agent(method, url).set('Authorization', `Basic ${encode}`).accept('application/json')
   if (data) {
     request = request.send(data)

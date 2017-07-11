@@ -5,6 +5,7 @@ import { Drafts, Projects, Tasks, Posts, Users } from '@/api'
 Vue.use(Vuex)
 
 const getters = {
+  authString: state => state.authString,
   draft: state => {
     let draft = Object.assign({}, state.draft)
     if (draft.content) {
@@ -34,7 +35,8 @@ const store = new Vuex.Store({
     tasks: [],
     posts: [],
     task: { assignee: {} },
-    currentUser: undefined
+    currentUser: undefined,
+    authstring: undefined
   },
   actions: {
     createDraft({ commit }, draft) {
@@ -170,6 +172,9 @@ const store = new Vuex.Store({
     }
   },
   mutations: {
+    setAuthString(state, authString) {
+      state.authString = authString
+    },
     setDraft(state, draft) {
       state.draft = draft
     },

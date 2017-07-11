@@ -4,7 +4,6 @@ import DocDiscussion from '@/components/DocDiscussion'
 import TaskDiscussion from '@/components/TaskDiscussion'
 import DraftEditor from '@/components/DraftEditor'
 import TaskList from '@/components/TaskList'
-import { currentUser } from '../api/index'
 import store from '../store'
 
 Vue.use(Router)
@@ -17,7 +16,7 @@ export default new Router({
       name: 'DraftDiscussion',
       component: DocDiscussion,
       beforeEnter(to, from, next) {
-        store.commit('setCurrentUser', currentUser)
+        store.commit('setAuthString', $('#spa>input[name="authstring"]').val())
         Promise.all(
           [
             store.dispatch('getDraftById', to.params.did),
@@ -41,7 +40,7 @@ export default new Router({
       name: 'TaskDiscussion',
       component: TaskDiscussion,
       beforeEnter(to, from, next) {
-        store.commit('setCurrentUser', currentUser)
+        store.commit('setAuthString', $('#spa>input[name="authstring"]').val())
         Promise.all(
           [
             store.dispatch('getTaskById', to.params.tid),
@@ -66,7 +65,7 @@ export default new Router({
       name: 'DraftEdit',
       component: DraftEditor,
       beforeEnter(to, from, next) {
-        store.commit('setCurrentUser', currentUser)
+        store.commit('setAuthString', $('#spa>input[name="authstring"]').val())
         store.dispatch('getDraftById', to.params.did).then(res => {
           return store.dispatch('getProjectById', res.project_id)
         }).then(() => {
@@ -79,7 +78,7 @@ export default new Router({
       name: 'DraftCreate',
       component: DraftEditor,
       beforeEnter(to, from, next) {
-        store.commit('setCurrentUser', currentUser)
+        store.commit('setAuthString', $('#spa>input[name="authstring"]').val())
         store.dispatch('getProjectById', to.params.pid).then(() => {
           store.commit('setDraft', {})
           next()
@@ -91,6 +90,7 @@ export default new Router({
       name: 'TaskList',
       component: TaskList,
       beforeEnter(to, from, next) {
+        store.commit('setAuthString', $('#spa>input[name="authstring"]').val())
         Promise.all(
           [
             store.dispatch('getDraftById', to.params.did),
