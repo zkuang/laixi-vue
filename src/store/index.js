@@ -24,7 +24,9 @@ const getters = {
   },
   posts: state => state.posts,
   users: state => state.users,
-  getCurrentUser: state => state.currentUser
+  getCurrentUser: state => state.currentUser,
+  totalPosts: state => state.totalPosts,
+  showPostNumber: state => state.showPostNumber
 }
 
 const store = new Vuex.Store({
@@ -36,7 +38,9 @@ const store = new Vuex.Store({
     posts: [],
     task: { assignee: {} },
     currentUser: undefined,
-    authstring: undefined
+    authstring: undefined,
+    totalPosts: 0,
+    showPostNumber: 250
   },
   actions: {
     createDraft({ commit }, draft) {
@@ -146,14 +150,16 @@ const store = new Vuex.Store({
         return res.post
       })
     },
-    getDraftPosts({ commit }, draftId) {
-      return Posts.getPostsByDraftId(draftId).then(res => {
+    getDraftPosts({ commit, state }, draftId) {
+      return Posts.getPostsByDraftId(draftId, state.showPostNumber).then(res => {
+        commit('setTotalPosts', res.pagination.total)
         commit('setPosts', res.posts)
         return res.posts
       })
     },
-    getTaskPosts({ commit }, taskId) {
-      Posts.getPostsByTaskId(taskId).then(res => {
+    getTaskPosts({ commit, state }, taskId) {
+      Posts.getPostsByTaskId(taskId, state.showPostNumber).then(res => {
+        commit('setTotalPosts', res.pagination.total)
         commit('setPosts', res.posts)
         return res.posts
       })
@@ -236,6 +242,15 @@ const store = new Vuex.Store({
     },
     setUsers(state, users) {
       state.users = users
+    },
+    initShowPostNumber(state) {
+      state.showPostNumber = 250
+    },
+    setShowPostNumber(state, number) {
+      state.showPostNumber = number
+    },
+    setTotalPosts(state, number) {
+      state.totalPosts = number
     }
   },
   getters

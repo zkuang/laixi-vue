@@ -284,16 +284,16 @@ export const Drafts = {
 }
 
 export const Posts = {
-  getPostsByDraftId(draftId) {
-    const URL = `${BASE_URL}/drafts/${draftId}/posts/`
+  getPostsByDraftId(draftId, number) {
+    const URL = `${BASE_URL}/drafts/${draftId}/posts/?per_page=${number}`
     return makeAuthRequest(URL, 'GET')
   },
   addPostsToDraft(post) {
     const URL = `${BASE_URL}/drafts/${post.draft_id}/posts/`
     return makeAuthRequest(URL, 'POST', post)
   },
-  getPostsByTaskId(taskId) {
-    const URL = `${BASE_URL}/tasks/${taskId}/posts/`
+  getPostsByTaskId(taskId, number) {
+    const URL = `${BASE_URL}/tasks/${taskId}/posts/?per_page=${number}`
     return makeAuthRequest(URL, 'GET')
   },
   getById(id) {
