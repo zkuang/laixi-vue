@@ -1,6 +1,6 @@
 <template>
 <div class="ui breadcrumb">
-  <router-link :to="projLink" class="section">{{project.name}}</router-link>
+  <a :href="projLink" class="section">{{project.name}}</a>
   <div class="divider"> / </div>
   <router-link :to="draftLink" class="section">{{draft.title}}</router-link>
   <div v-if="hasTask" class="divider"> / </div>
@@ -24,7 +24,7 @@ export default {
       return this.$route.params.tid || this.$route.name === 'TaskList'
     },
     projLink() {
-      return `/project/${this.project.id}`
+      return `/project/${this.project.id}/drafts`
     },
     draftLink() {
       return `/draft/${this.draft.id}`

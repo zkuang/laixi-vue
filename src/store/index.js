@@ -37,6 +37,11 @@ const store = new Vuex.Store({
     currentUser: undefined
   },
   actions: {
+    createDraft({ commit }, draft) {
+      return Drafts.create(draft).then(res => {
+        return res.draft
+      })
+    },
     getDraftById({ commit }, draftId) {
       return Drafts.getById(draftId).then(res => {
         commit('setDraft', res.draft)

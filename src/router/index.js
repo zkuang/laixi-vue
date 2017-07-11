@@ -67,15 +67,24 @@ export default new Router({
       component: DraftEditor,
       beforeEnter(to, from, next) {
         store.commit('setCurrentUser', currentUser)
-        store.dispatch('getDraftById', to.params.did).then(() => {
+        store.dispatch('getDraftById', to.params.did).then(res => {
+          return store.dispatch('getProjectById', res.project_id)
+        }).then(() => {
           next()
         })
       }
     },
     {
-      path: '/draft/edit',
+      path: '/project/:pid/drafts/create/',
       name: 'DraftCreate',
-      component: DraftEditor
+      component: DraftEditor,
+      beforeEnter(to, from, next) {
+        store.commit('setCurrentUser', currentUser)
+        store.dispatch('getProjectById', to.params.pid).then(() => {
+          store.commit('setDraft', {})
+          next()
+        })
+      }
     },
     {
       path: '/drafts/:did/tasks/',

@@ -77,7 +77,7 @@ export default {
         return this.draft.rawContent
       }
     },
-    ...mapGetters(['draft'])
+    ...mapGetters(['draft', 'project'])
   },
   methods: {
     save() {
@@ -93,7 +93,7 @@ export default {
         console.log('no changes......')
         return
       }
-      let draft
+      let draft = {}
       if (this.$route.name === 'DraftEdit') {
         draft = Object.assign({}, this.draft)
         draft.content = contentTxt
@@ -106,15 +106,31 @@ export default {
             }
           })
         })
+      } else {
+        draft.content = contentTxt
+        draft.title = titleTxt
+        draft.project_id = this.project.id
+        this.$store.dispatch('createDraft', draft).then(res => {
+          this.$router.push({
+            name: 'DraftDiscussion',
+            params: {
+              did: res.id
+            }
+          })
+        })
       }
     },
     dismiss() {
-      this.$router.push({
-        name: 'DraftDiscussion',
-        params: {
-          did: this.draft.id
-        }
-      })
+      if (this.$route.name === 'DraftEdit') {
+        this.$router.push({
+          name: 'DraftDiscussion',
+          params: {
+            did: this.draft.id
+          }
+        })
+      } else {
+        window.location.href = `/project/${this.project.id}/drafts`
+      }
     }
   }
 }

@@ -271,6 +271,10 @@ export const Projects = {
 }
 
 export const Drafts = {
+  create(draft) {
+    const URL = `${BASE_URL}/drafts/`
+    return makeAuthRequest(URL, 'POST', draft)
+  },
   getById(id) {
     const URL = `${BASE_URL}/drafts/${id}/`
     return makeAuthRequest(URL, 'GET')
