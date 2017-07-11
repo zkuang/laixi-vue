@@ -174,7 +174,7 @@ export default {
   computed: {
     ...mapGetters(['tasks', 'draft']),
     dueDate() {
-      if (!this.task.deadline) return '未限期'
+      if (!this.task.deadline || this.task.deadline == null) return '未限期'
       else return DateTime.DateMonth(this.task.deadline)
     },
     assignee() {
@@ -225,6 +225,7 @@ export default {
     },
     taskDueDate() {
       if (!this.newTask.deadline) return '未限期'
+      if (this.newTask.deadline === 'null') return '未限期'
       else return DateTime.DateMonth(this.newTask.deadline)
     },
     taskAssignee() {
@@ -367,7 +368,10 @@ export default {
             }
           } else {
             if (updateAssignment(self.newTask)) {
-              if (self.newTask.deadline) {
+              console.log(self.newTask)
+              if (self.newTask.deadline === 'null') {
+                self.task.deadline = null
+              }else if (self.newTask.deadline) {
                 self.task.deadline = self.newTask.deadline
               } else {
                 self.newTask.deadline = undefined
