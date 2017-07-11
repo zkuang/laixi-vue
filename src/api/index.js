@@ -238,8 +238,6 @@ const config = {
 const BASE_URL = `${config.type}://${config.host}${config.url}`
 
 function makeAuthRequest(url, method, data) {
-  console.log('making request')
-  console.log(store.getters.authString)
   let encode = Base64.encode(`${store.getters.authString}:${config.key}`)
   let request = agent(method, url).set('Authorization', `Basic ${encode}`).accept('application/json')
   if (data) {
@@ -292,8 +290,6 @@ export const Posts = {
   },
   addPostsToDraft(post) {
     const URL = `${BASE_URL}/drafts/${post.draft_id}/posts/`
-    console.log('api')
-    console.log(post)
     return makeAuthRequest(URL, 'POST', post)
   },
   getPostsByTaskId(taskId) {

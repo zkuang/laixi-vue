@@ -109,7 +109,6 @@ const store = new Vuex.Store({
     },
     createTask({ dispatch, commit, getters, state }, { draftId, task }) {
       return Tasks.addTaskToDraft(draftId, task).then(res => {
-        console.log('added task to draft')
         if (res.task.assignee) {
           const assignee = state.users.find(user => {
             return res.task.assignee.id === user.id
@@ -117,7 +116,6 @@ const store = new Vuex.Store({
           res.task.assignee = assignee
         }
         commit('createTask', res.task)
-        console.log(res.task)
         return res.task
       })
     },
