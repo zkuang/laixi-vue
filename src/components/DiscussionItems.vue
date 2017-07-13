@@ -1,7 +1,7 @@
 <template>
 <section class="ui grid discussion-items">
   <ul class="fourteen wide column">
-    <div v-if="!showAll" class="show-more-post" @click="showMorePost">
+    <div v-if="!noMore" class="show-more-post" @click="showMorePost">
       <i class="comment icon icon-posts-style"></i>
       <span class="show-post-txt">显示更多的{{ moreNumber }}条评论</span>
     </div>
@@ -89,7 +89,7 @@ export default {
       if (number < 0) return 0
       else return number
     },
-    showAll () {
+    noMore () {
       let isAll = (this.totalPosts - this.showPostNumber) > 0
       if (isAll) return false
       else return true

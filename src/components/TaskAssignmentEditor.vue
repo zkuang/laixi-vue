@@ -1,6 +1,6 @@
 <template>
 <form class="task-assignment ui popup form">
-  <div class="field" style="position: relative;">
+  <div class="field set-position-relative">
     <label>将任务指派给</label>
     <select name="assignment" @change="setAssignee">
       <option value="null" :selected="assignment.assignee == null || assignment.assignee == undefined">未指派</option>
@@ -12,7 +12,7 @@
   </div>
   <div class="field">
     <label>任务截止时间</label>
-    <div class="ui calendar" :id="datePickerId" style="position: relative;">
+    <div class="ui calendar set-position-relative" :id="datePickerId">
       <div class="ui input left icon">
         <i class="calendar icon"></i>
         <input type="text" placeholder="Date">
@@ -35,6 +35,9 @@
   position: absolute;
   bottom: 7px;
   right: 12px;
+}
+.set-position-relative{
+  position:relative!important;
 }
 </style>
 
