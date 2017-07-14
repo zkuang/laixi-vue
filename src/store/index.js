@@ -152,7 +152,7 @@ const store = new Vuex.Store({
     },
     getDraftPosts({ commit, state }, draftId) {
       let getCount = state.showPostNumber + 250
-      return Posts.getPostsByDraftId(draftId, state.showPostNumber).then(res => {
+      return Posts.getPostsByDraftId(draftId, getCount).then(res => {
         commit('setShowPostNumber', getCount)
         commit('setTotalPosts', res.pagination.total)
         commit('setPosts', res.posts)
