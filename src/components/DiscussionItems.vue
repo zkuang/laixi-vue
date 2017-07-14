@@ -77,10 +77,9 @@ export default {
   methods: {
     showMorePost () {
       if (this.totalPosts - this.showPostNumber <= 0) return
-      this.$store.commit('setShowPostNumber', this.showPostNumber += 250)
       let routeName = this.$route.name
-      if (routeName.includes('Draft')) this.$store.dispatch('getDraftPosts', this.$route.params.did)
-      if (routeName.includes('Task')) this.$store.dispatch('getTaskPosts', this.$route.params.tid)
+      if (routeName === 'DraftDiscussion') this.$store.dispatch('getDraftPosts', this.$route.params.did)
+      if (routeName === 'TaskDiscussion') this.$store.dispatch('getTaskPosts', this.$route.params.tid)
     }
   },
   computed: {

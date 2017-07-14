@@ -40,7 +40,7 @@ const store = new Vuex.Store({
     currentUser: undefined,
     authstring: undefined,
     totalPosts: 0,
-    showPostNumber: 250
+    showPostNumber: 0
   },
   actions: {
     createDraft({ commit }, draft) {
@@ -151,14 +151,18 @@ const store = new Vuex.Store({
       })
     },
     getDraftPosts({ commit, state }, draftId) {
+      let getCount = state.showPostNumber + 250
       return Posts.getPostsByDraftId(draftId, state.showPostNumber).then(res => {
+        commit('setShowPostNumber', getCount)
         commit('setTotalPosts', res.pagination.total)
         commit('setPosts', res.posts)
         return res.posts
       })
     },
     getTaskPosts({ commit, state }, taskId) {
-      Posts.getPostsByTaskId(taskId, state.showPostNumber).then(res => {
+      let getCount = state.showPostNumber + 250
+      Posts.getPostsByTaskId(taskId, getCount).then(res => {
+        commit('setShowPostNumber', getCount)
         commit('setTotalPosts', res.pagination.total)
         commit('setPosts', res.posts)
         return res.posts
