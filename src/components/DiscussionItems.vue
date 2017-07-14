@@ -71,13 +71,16 @@ export default {
   components: {
     'discussion-item': DiscussionItem
   },
-  created () {
-    this.$store.commit('initShowPostNumber')
+  mounted () {
+    this.$nextTick(() => {
+      this.$store.commit('initShowPostNumber')
+    })
   },
   methods: {
     showMorePost () {
       if (this.totalPosts - this.showPostNumber <= 0) return
       let routeName = this.$route.name
+      this.$store.commit('setShowPostNumber', this.showPostNumber + 250)
       if (routeName === 'DraftDiscussion') this.$store.dispatch('getDraftPosts', this.$route.params.did)
       if (routeName === 'TaskDiscussion') this.$store.dispatch('getTaskPosts', this.$route.params.tid)
     }
