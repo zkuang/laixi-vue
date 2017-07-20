@@ -1,7 +1,7 @@
 <template>
 <section class="ui grid discussion-items">
   <ul class="fourteen wide column">
-    <div v-if="!noMore" class="show-more-post" @click="showMorePost">
+    <div v-if="hasNextPage" class="show-more-post" @click="showMorePost">
       <i class="comment icon icon-posts-style"></i>
       <span class="show-post-txt">显示更多的{{ moreNumber }}条评论</span>
     </div>
@@ -90,10 +90,6 @@ export default {
       let number = this.totalPosts - this.showPostNumber
       if (number < 0) return 0
       else return number
-    },
-    noMore () {
-      if (this.hasNextPage) return false
-      else return true
     },
     ...mapGetters({
       currentUser: 'getCurrentUser',
