@@ -92,8 +92,7 @@ export default {
       else return number
     },
     noMore () {
-      let isAll = (this.totalPosts - this.showPostNumber) > 0
-      if (isAll) return false
+      if (this.hasNextPage) return false
       else return true
     },
     ...mapGetters({
@@ -101,7 +100,8 @@ export default {
       posts: 'posts',
       draft: 'draft',
       totalPosts: 'totalPosts',
-      showPostNumber: 'showPostNumber'
+      showPostNumber: 'showPostNumber',
+      hasNextPage: 'hasNextPage'
     })
   }
 }
