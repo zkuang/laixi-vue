@@ -248,7 +248,8 @@ export default {
         if (!this.create) {
           this.$store.dispatch('updateTask', this.task).then(task => {
             self.dirty = false
-            self.$store.dispatch('getLatestPost', task.draft_id)
+            if (self.$route.name === 'DraftDiscussion') return self.$store.dispatch('getLatestDraftPost', {draftId: task.draft_id, refresh: true})
+            if (self.$route.name === 'TaskDiscussion') return self.$store.dispatch('getLatestTaskPost', {taskId: task.id, refresh: true})
           }).catch(() => {
             self.dirty = false
           })
@@ -258,7 +259,7 @@ export default {
             task: this.task
           }).then(task => {
             self.dirty = false
-            return this.$store.dispatch('getLatestPost', task.draft_id)
+            return self.$store.dispatch('getLatestDraftPost', {draftId: task.draft_id, refresh: false})
           }).catch(() => {
             self.dirty = false
           })
@@ -305,7 +306,8 @@ export default {
       if (isCheck !== this.task.checked) {
         this.task.checked = isCheck
         this.$store.dispatch('updateTask', this.task).then(task => {
-          this.$store.dispatch('getLatestPost', task.draft_id)
+          if (self.$route.name === 'DraftDiscussion') return self.$store.dispatch('getLatestDraftPost', {draftId: task.draft_id, refresh: true})
+          if (self.$route.name === 'TaskDiscussion') return self.$store.dispatch('getLatestTaskPost', {taskId: task.id, refresh: true})
         })
       }
     },
@@ -359,10 +361,12 @@ export default {
             } // else leave the assignee unchanged
             return dirty
           }
+          console.log(self.$route)
           if (!self.editable) {
             if (updateAssignment(self.task)) {
               self.$store.dispatch('updateTask', self.task).then(task => {
-                return self.$store.dispatch('getLatestPost', task.draft_id)
+                if (self.$route.name === 'DraftDiscussion') return self.$store.dispatch('getLatestDraftPost', {draftId: task.draft_id, refresh: true})
+                if (self.$route.name === 'TaskDiscussion') return self.$store.dispatch('getLatestTaskPost', {taskId: task.id, refresh: true})
               })
               self.dirty = true
             }

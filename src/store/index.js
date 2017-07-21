@@ -177,11 +177,30 @@ const store = new Vuex.Store({
         return res.post
       })
     },
-    getLatestPost({ commit }, draftId) {
-      Posts.getPostsByDraftId(draftId, 1, 1).then(res => {
+    getLatestDraftPost({ commit, state }, {draftId, refresh}) {
+      let getCount = 1
+      if (refresh) getCount = state.posts.length
+      Posts.getPostsByDraftId(draftId, getCount, 1).then(res => {
         console.log(res)
         commit('setTotalPosts', res.pagination.total)
-        commit('addNewPost', res.posts[0])
+        if (!refresh) commit('addNewPost', res.posts[0])
+        else {
+          commit('setPosts', res.posts)
+          commit('setHasNextPage', res.pagination.has_next)
+        }
+      })
+    },
+    getLatestTaskPost({ commit, state }, {taskId, refresh}) {
+      let getCount = 1
+      if (refresh) getCount = state.posts.length
+      Posts.getPostsByTaskId(taskId, getCount, 1).then(res => {
+        console.log(res)
+        commit('setTotalPosts', res.pagination.total)
+        if (!refresh) commit('addNewPost', res.posts[0])
+        else {
+          commit('setPosts', res.posts)
+          commit('setHasNextPage', res.pagination.has_next)
+        }
       })
     }
   },

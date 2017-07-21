@@ -176,7 +176,7 @@ export default {
       task.description = description
       this.$store.dispatch('updateTask', task).then(task => {
         self.editing = false
-        this.$store.dispatch('getLatestPost', task.draft_id)
+        this.$store.dispatch('getLatestTaskPost', {trakId: task.id, refresh: true})
       })
     },
     cancel() {
