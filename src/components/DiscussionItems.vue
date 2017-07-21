@@ -71,23 +71,17 @@ export default {
   components: {
     'discussion-item': DiscussionItem
   },
-  mounted () {
-    this.$nextTick(() => {
-      this.$store.commit('initShowPostNumber')
-    })
-  },
   methods: {
     showMorePost () {
-      if (this.totalPosts - this.showPostNumber <= 0) return
+      if (this.totalPosts - this.posts.length <= 0) return
       let routeName = this.$route.name
-      this.$store.commit('setShowPostNumber', this.showPostNumber + 250)
       if (routeName === 'DraftDiscussion') this.$store.dispatch('getDraftPosts', this.$route.params.did)
       if (routeName === 'TaskDiscussion') this.$store.dispatch('getTaskPosts', this.$route.params.tid)
     }
   },
   computed: {
     moreNumber() {
-      let number = this.totalPosts - this.showPostNumber
+      let number = this.totalPosts - this.posts.length
       if (number < 0) return 0
       else return number
     },
@@ -96,7 +90,6 @@ export default {
       posts: 'posts',
       draft: 'draft',
       totalPosts: 'totalPosts',
-      showPostNumber: 'showPostNumber',
       hasNextPage: 'hasNextPage'
     })
   }

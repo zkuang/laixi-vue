@@ -236,6 +236,7 @@ const config = {
 }
 
 const BASE_URL = `${config.type}://${config.host}${config.url}`
+const PER_PAGE_NUM = 250
 
 function makeAuthRequest(url, method, data) {
   let encode = Base64.encode(`${store.getters.authString}:${config.key}`)
@@ -284,16 +285,16 @@ export const Drafts = {
 }
 
 export const Posts = {
-  getPostsByDraftId(draftId, number) {
-    const URL = `${BASE_URL}/drafts/${draftId}/posts/?per_page=${number}`
+  getPostsByDraftId(draftId, page) {
+    const URL = `${BASE_URL}/drafts/${draftId}/posts/?per_page=${PER_PAGE_NUM}&page=${page}`
     return makeAuthRequest(URL, 'GET')
   },
   addPostsToDraft(post) {
     const URL = `${BASE_URL}/drafts/${post.draft_id}/posts/`
     return makeAuthRequest(URL, 'POST', post)
   },
-  getPostsByTaskId(taskId, number) {
-    const URL = `${BASE_URL}/tasks/${taskId}/posts/?per_page=${number}`
+  getPostsByTaskId(taskId, page) {
+    const URL = `${BASE_URL}/tasks/${taskId}/posts/?per_page=${PER_PAGE_NUM}&page=${page}`
     return makeAuthRequest(URL, 'GET')
   },
   getById(id) {

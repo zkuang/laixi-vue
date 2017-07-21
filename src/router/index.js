@@ -16,6 +16,7 @@ export default new Router({
       name: 'DraftDiscussion',
       component: DocDiscussion,
       beforeEnter(to, from, next) {
+        store.commit('setPosts', [])
         store.commit('setAuthString', $('#spa>input[name="authstring"]').val())
         Promise.all(
           [
@@ -40,6 +41,7 @@ export default new Router({
       name: 'TaskDiscussion',
       component: TaskDiscussion,
       beforeEnter(to, from, next) {
+        store.commit('setPosts', [])
         store.commit('setAuthString', $('#spa>input[name="authstring"]').val())
         Promise.all(
           [

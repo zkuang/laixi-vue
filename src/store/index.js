@@ -26,9 +26,7 @@ const getters = {
   users: state => state.users,
   getCurrentUser: state => state.currentUser,
   totalPosts: state => state.totalPosts,
-  showPostNumber: state => state.showPostNumber,
-  hasNextPage: state => state.hasNextPage,
-  hasPrevPage: state => state.hasPrevPage
+  hasNextPage: state => state.hasNextPage
 }
 
 const store = new Vuex.Store({
@@ -42,9 +40,7 @@ const store = new Vuex.Store({
     currentUser: undefined,
     authstring: undefined,
     totalPosts: 0,
-    showPostNumber: 250,
-    hasNextPage: false,
-    hasPrevPage: false
+    hasNextPage: false
   },
   actions: {
     createDraft({ commit }, draft) {
@@ -155,29 +151,25 @@ const store = new Vuex.Store({
       })
     },
     getDraftPosts({ commit, state }, draftId) {
-      let getCount = state.showPostNumber
-      return Posts.getPostsByDraftId(draftId, getCount).then(res => {
-        commit('setShowPostNumber', res.posts.length)
+      let pageNumber
+      if (state.posts.length === 0) pageNumber = 1
+      else pageNumber = Math.ceil((state.posts.length / 250)) + 1
+      return Posts.getPostsByDraftId(draftId, pageNumber).then(res => {
         commit('setHasNextPage', res.pagination.has_next)
-        commit('setHasPrevPage', res.pagination.has_prev)
         commit('setTotalPosts', res.pagination.total)
-        commit('setPosts', res.posts)
+        commit('setPosts', state.posts.concat(res.posts))
         return res.posts
-      }).catch(() => {
-        commit('setShowPostNumber', state.showPostNumber - 250)
       })
     },
     getTaskPosts({ commit, state }, taskId) {
-      let getCount = state.showPostNumber
-      Posts.getPostsByTaskId(taskId, getCount).then(res => {
-        commit('setShowPostNumber', res.posts.length)
+      let pageNumber
+      if (state.posts.length === 0) pageNumber = 1
+      else pageNumber = Math.ceil((state.posts.length / 250)) + 1
+      Posts.getPostsByTaskId(taskId, pageNumber).then(res => {
         commit('setHasNextPage', res.pagination.has_next)
-        commit('setHasPrevPage', res.pagination.has_prev)
         commit('setTotalPosts', res.pagination.total)
-        commit('setPosts', res.posts)
+        commit('setPosts', state.posts.concat(res.posts))
         return res.posts
-      }).catch(() => {
-        commit('setShowPostNumber', state.showPostNumber - 250)
       })
     },
     addPostToDraft({ commit }, { post, origin }) {
@@ -259,20 +251,11 @@ const store = new Vuex.Store({
     setUsers(state, users) {
       state.users = users
     },
-    initShowPostNumber(state) {
-      state.showPostNumber = 250
-    },
-    setShowPostNumber(state, number) {
-      state.showPostNumber = number
-    },
     setTotalPosts(state, number) {
       state.totalPosts = number
     },
     setHasNextPage(state, hasNext) {
       state.hasNextPage = hasNext
-    },
-    setHasPrevPage(state, hasPrev) {
-      state.hasPrevPage = hasPrev
     }
   },
   getters
