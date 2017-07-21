@@ -22,7 +22,7 @@ export default new Router({
           [
             store.dispatch('getDraftById', to.params.did),
             store.dispatch('getDraftTasks', to.params.did),
-            store.dispatch('getDraftPosts', to.params.did)
+            store.dispatch('getDraftPosts', {draftId: to.params.did, pageNumber: 1})
           ]
         ).then((res) => {
           return Promise.all(
@@ -46,7 +46,7 @@ export default new Router({
         Promise.all(
           [
             store.dispatch('getTaskById', to.params.tid),
-            store.dispatch('getTaskPosts', to.params.tid)
+            store.dispatch('getTaskPosts', {taskId: to.params.tid, pageNumber: 1})
           ]
         ).then(res => {
           return store.dispatch('getDraftById', res[0].draft_id)
@@ -97,7 +97,7 @@ export default new Router({
           [
             store.dispatch('getDraftById', to.params.did),
             store.dispatch('getDraftTasks', to.params.did),
-            store.dispatch('getDraftPosts', to.params.did)
+            store.dispatch('getDraftPosts', {draftId: to.params.did, pageNumber: 1})
           ]
         ).then(res => {
           return Promise.all(

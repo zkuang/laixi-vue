@@ -65,6 +65,7 @@
 import {
   mapGetters
 } from 'vuex'
+import { Page } from '@/utils.js'
 import DiscussionItem from './DiscussionItem'
 export default {
   name: 'DiscussionItems',
@@ -75,8 +76,8 @@ export default {
     showMorePost () {
       if (this.totalPosts - this.posts.length <= 0) return
       let routeName = this.$route.name
-      if (routeName === 'DraftDiscussion') this.$store.dispatch('getDraftPosts', this.$route.params.did)
-      if (routeName === 'TaskDiscussion') this.$store.dispatch('getTaskPosts', this.$route.params.tid)
+      if (routeName === 'DraftDiscussion') this.$store.dispatch('getDraftPosts', {draftId: this.$route.params.did, pageNumber: this.pageNumber + 1})
+      if (routeName === 'TaskDiscussion') this.$store.dispatch('getTaskPosts', {draftId: this.$route.params.tid, pageNumber: this.pageNumber + 1})
     }
   },
   computed: {
@@ -84,6 +85,9 @@ export default {
       let number = this.totalPosts - this.posts.length
       if (number < 0) return 0
       else return number
+    },
+    pageNumber() {
+      return Page.getPageNumber(this.posts.length)
     },
     ...mapGetters({
       currentUser: 'getCurrentUser',

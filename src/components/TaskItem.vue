@@ -248,7 +248,7 @@ export default {
         if (!this.create) {
           this.$store.dispatch('updateTask', this.task).then(task => {
             self.dirty = false
-            self.$store.dispatch('getDraftPosts', task.draft_id)
+            self.$store.dispatch('getLatestPost', task.draft_id)
           }).catch(() => {
             self.dirty = false
           })
@@ -258,7 +258,7 @@ export default {
             task: this.task
           }).then(task => {
             self.dirty = false
-            return this.$store.dispatch('getDraftPosts', task.draft_id)
+            return this.$store.dispatch('getLatestPost', task.draft_id)
           }).catch(() => {
             self.dirty = false
           })
@@ -305,7 +305,7 @@ export default {
       if (isCheck !== this.task.checked) {
         this.task.checked = isCheck
         this.$store.dispatch('updateTask', this.task).then(task => {
-          this.$store.dispatch('getDraftPosts', task.draft_id)
+          this.$store.dispatch('getLatestPost', task.draft_id)
         })
       }
     },
@@ -362,7 +362,7 @@ export default {
           if (!self.editable) {
             if (updateAssignment(self.task)) {
               self.$store.dispatch('updateTask', self.task).then(task => {
-                return self.$store.dispatch('getDraftPosts', task.draft_id)
+                return self.$store.dispatch('getLatestPost', task.draft_id)
               })
               self.dirty = true
             }
@@ -390,7 +390,7 @@ export default {
         closable: true,
         onApprove: function() {
           self.$store.dispatch('delTask', self.task).then(() => {
-            self.$store.dispatch('getDraftPosts', self.draft.id)
+            self.$store.dispatch('getDraftPosts', {draftId: self.draft.id, pageNumber: 1})
           })
         }
       }).modal('show')

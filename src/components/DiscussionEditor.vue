@@ -267,7 +267,7 @@ export default {
           draftId,
           task
         }).then(task => {
-          return this.$store.dispatch('getDraftPosts', task.draft_id)
+          return this.$store.dispatch('getLatestPost', task.draft_id)
         })
       }
       this.$refs[this.assignmentEditorId].reset()

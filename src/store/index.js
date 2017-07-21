@@ -150,25 +150,20 @@ const store = new Vuex.Store({
         return res.post
       })
     },
-    getDraftPosts({ commit, state }, draftId) {
-      let pageNumber
-      if (state.posts.length === 0) pageNumber = 1
-      else pageNumber = Math.ceil((state.posts.length / 250)) + 1
-      return Posts.getPostsByDraftId(draftId, pageNumber).then(res => {
+    getDraftPosts({ commit, state }, {draftId, pageNumber}) {
+      return Posts.getPostsByDraftId(draftId, 250, pageNumber).then(res => {
         commit('setHasNextPage', res.pagination.has_next)
         commit('setTotalPosts', res.pagination.total)
-        commit('setPosts', state.posts.concat(res.posts))
+        if (pageNumber === 1) commit('setPosts', [])
+        commit('setPosts', state.posts.reverse().concat(res.posts))
         return res.posts
       })
     },
-    getTaskPosts({ commit, state }, taskId) {
-      let pageNumber
-      if (state.posts.length === 0) pageNumber = 1
-      else pageNumber = Math.ceil((state.posts.length / 250)) + 1
-      Posts.getPostsByTaskId(taskId, pageNumber).then(res => {
+    getTaskPosts({ commit, state }, {taskId, pageNumber}) {
+      Posts.getPostsByTaskId(taskId, 250, pageNumber).then(res => {
         commit('setHasNextPage', res.pagination.has_next)
         commit('setTotalPosts', res.pagination.total)
-        commit('setPosts', state.posts.concat(res.posts))
+        commit('setPosts', state.posts.reverse().concat(res.posts))
         return res.posts
       })
     },
@@ -180,6 +175,13 @@ const store = new Vuex.Store({
           commit('updatePost', { origin: origin, updated: res.post })
         }
         return res.post
+      })
+    },
+    getLatestPost({ commit }, draftId) {
+      Posts.getPostsByDraftId(draftId, 1, 1).then(res => {
+        console.log(res)
+        commit('setTotalPosts', res.pagination.total)
+        commit('addNewPost', res.posts[0])
       })
     }
   },
@@ -256,6 +258,9 @@ const store = new Vuex.Store({
     },
     setHasNextPage(state, hasNext) {
       state.hasNextPage = hasNext
+    },
+    addNewPost(state, post) {
+      state.posts.push(post)
     }
   },
   getters

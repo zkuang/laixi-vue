@@ -16,3 +16,9 @@ export const DateTime = {
     return moment(string).fromNow()
   }
 }
+
+export const Page = {
+  getPageNumber (length) {
+    return Math.floor(length / 250)
+  }
+}
