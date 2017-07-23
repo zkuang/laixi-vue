@@ -236,7 +236,6 @@ const config = {
 }
 
 const BASE_URL = `${config.type}://${config.host}${config.url}`
-const PRE_PAGE_NUM = 250
 
 function makeAuthRequest(url, method, data) {
   let encode = Base64.encode(`${store.getters.authString}:${config.key}`)
@@ -286,7 +285,6 @@ export const Drafts = {
 
 export const Posts = {
   getPostsByDraftId(draftId, getCount, page) {
-    if (getCount < PRE_PAGE_NUM) getCount = 250
     const URL = `${BASE_URL}/drafts/${draftId}/posts/?per_page=${getCount}&page=${page}`
     return makeAuthRequest(URL, 'GET')
   },

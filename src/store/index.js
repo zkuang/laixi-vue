@@ -179,7 +179,7 @@ const store = new Vuex.Store({
     },
     getLatestDraftPost({ commit, state }, {draftId, refresh}) {
       let getCount = 1
-      if (refresh) getCount = state.posts.length
+      if (refresh) getCount = (state.posts.length < 250) ? 250 : state.posts.length
       Posts.getPostsByDraftId(draftId, getCount, 1).then(res => {
         console.log(res)
         commit('setTotalPosts', res.pagination.total)
@@ -192,7 +192,7 @@ const store = new Vuex.Store({
     },
     getLatestTaskPost({ commit, state }, {taskId, refresh}) {
       let getCount = 1
-      if (refresh) getCount = state.posts.length
+      if (refresh) getCount = (state.posts.length < 250) ? 250 : state.posts.length
       Posts.getPostsByTaskId(taskId, getCount, 1).then(res => {
         console.log(res)
         commit('setTotalPosts', res.pagination.total)
