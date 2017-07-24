@@ -305,9 +305,11 @@ export default {
       let isCheck = $(this.$el).find(`#${this.inputId}`).is(':checked')
       if (isCheck !== this.task.checked) {
         this.task.checked = isCheck
-        this.$store.dispatch('updateTask', this.task).then(task => {
-          if (self.$route.name === 'DraftDiscussion') return self.$store.dispatch('getLatestDraftPost', task.draft_id)
-          if (self.$route.name === 'TaskDiscussion') return self.$store.dispatch('getLatestTaskPost', task.id)
+        this.$store.dispatch('updateTask', this.task).then((task) => {
+          console.log('here', task)
+          console.log('here route', this.$route.name)
+          if (this.$route.name === 'DraftDiscussion') return this.$store.dispatch('getLatestDraftPost', task.draft_id)
+          if (this.$route.name === 'TaskDiscussion') return this.$store.dispatch('getLatestTaskPost', task.id)
         })
       }
     },
