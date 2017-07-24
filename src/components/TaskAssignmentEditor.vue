@@ -109,7 +109,7 @@ export default {
     },
     clearAssignee () {
       this.setSelection('null')
-      this.assignment.assignee.id = null
+      this.assignment.assignee.id = 'null'
     },
     clearDeadline () {
       this.setDate(false)

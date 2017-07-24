@@ -152,6 +152,12 @@ const store = new Vuex.Store({
     },
     getDraftPosts({ commit, state }, {draftId, pageNumber}) {
       return Posts.getPostsByDraftId(draftId, 250, pageNumber).then(res => {
+        for (let post of res.posts) {
+          if (post.task === null) continue
+          for (let task of state.tasks) {
+            if (task.id === post.task.id) post.task = task
+          }
+        }
         commit('setHasNextPage', res.pagination.has_next)
         commit('setTotalPosts', res.pagination.total)
         if (pageNumber === 1) commit('setPosts', [])
@@ -161,6 +167,13 @@ const store = new Vuex.Store({
     },
     getTaskPosts({ commit, state }, {taskId, pageNumber}) {
       Posts.getPostsByTaskId(taskId, 250, pageNumber).then(res => {
+        console.log(state.tasks, res.posts)
+        for (let post of res.posts) {
+          if (post.task === null) continue
+          for (let task of state.tasks) {
+            if (task.id === post.task.id) post.task = task
+          }
+        }
         commit('setHasNextPage', res.pagination.has_next)
         commit('setTotalPosts', res.pagination.total)
         commit('setPosts', state.posts.reverse().concat(res.posts))
@@ -177,30 +190,35 @@ const store = new Vuex.Store({
         return res.post
       })
     },
-    getLatestDraftPost({ commit, state }, {draftId, refresh}) {
+    getLatestDraftPost({ commit, state }, draftId) {
       let getCount = 1
-      if (refresh) getCount = (state.posts.length < 250) ? 250 : state.posts.length
       Posts.getPostsByDraftId(draftId, getCount, 1).then(res => {
         console.log(res)
         commit('setTotalPosts', res.pagination.total)
-        if (!refresh) commit('addNewPost', res.posts[0])
-        else {
-          commit('setPosts', res.posts)
-          commit('setHasNextPage', res.pagination.has_next)
+        if (res.posts[0].task !== null) {
+          for (let task of state.tasks) {
+            if (task.id === res.posts[0].task.id) {
+              res.posts[0].task = task
+              break
+            }
+          }
         }
+        commit('addNewPost', res.posts[0])
       })
     },
-    getLatestTaskPost({ commit, state }, {taskId, refresh}) {
-      let getCount = 1
-      if (refresh) getCount = (state.posts.length < 250) ? 250 : state.posts.length
-      Posts.getPostsByTaskId(taskId, getCount, 1).then(res => {
+    getLatestTaskPost({ commit, state }, taskId) {
+      Posts.getPostsByTaskId(taskId, 1, 1).then(res => {
         console.log(res)
         commit('setTotalPosts', res.pagination.total)
-        if (!refresh) commit('addNewPost', res.posts[0])
-        else {
-          commit('setPosts', res.posts)
-          commit('setHasNextPage', res.pagination.has_next)
+        if (res.posts[0].task !== null) {
+          for (let task of state.tasks) {
+            if (task.id === res.posts[0].task.id) {
+              res.posts[0].task = task
+              break
+            }
+          }
         }
+        commit('addNewPost', res.posts[0])
       })
     }
   },
@@ -229,7 +247,14 @@ const store = new Vuex.Store({
         return task.id === t.id
       })
       if (index === -1) return
-      state.tasks.splice(index, 1, task)
+      let thatTask = state.tasks[index]
+      if (thatTask.title !== task.title) thatTask.title = thatTask.title = task.title
+      if (thatTask.deadline !== task.deadline) thatTask.deadline = task.deadline
+      if (thatTask.assignee !== task.assignee || thatTask.assignee.id !== task.assignee.id) thatTask.assignee = task.assignee
+      if (thatTask.description !== task.description) thatTask.description = task.description
+      if (thatTask.checked !== task.checked) thatTask.checked = task.checked
+      if (thatTask.checked_at !== task.checked_at) thatTask.checked_at = task.checked_at
+      // state.tasks.splice(index, 1, task)
     },
     removeOneTask(state, task) {
       const index = state.tasks.findIndex(t => {

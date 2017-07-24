@@ -248,8 +248,8 @@ export default {
         if (!this.create) {
           this.$store.dispatch('updateTask', this.task).then(task => {
             self.dirty = false
-            if (self.$route.name === 'DraftDiscussion') return self.$store.dispatch('getLatestDraftPost', {draftId: task.draft_id, refresh: true})
-            if (self.$route.name === 'TaskDiscussion') return self.$store.dispatch('getLatestTaskPost', {taskId: task.id, refresh: true})
+            if (self.$route.name === 'DraftDiscussion') return self.$store.dispatch('getLatestDraftPost', task.draft_id)
+            if (self.$route.name === 'TaskDiscussion') return self.$store.dispatch('getLatestTaskPost', task.id)
           }).catch(() => {
             self.dirty = false
           })
@@ -259,7 +259,7 @@ export default {
             task: this.task
           }).then(task => {
             self.dirty = false
-            return self.$store.dispatch('getLatestDraftPost', {draftId: task.draft_id, refresh: false})
+            return self.$store.dispatch('getLatestDraftPost', task.draft_id)
           }).catch(() => {
             self.dirty = false
           })
@@ -306,8 +306,8 @@ export default {
       if (isCheck !== this.task.checked) {
         this.task.checked = isCheck
         this.$store.dispatch('updateTask', this.task).then(task => {
-          if (self.$route.name === 'DraftDiscussion') return self.$store.dispatch('getLatestDraftPost', {draftId: task.draft_id, refresh: true})
-          if (self.$route.name === 'TaskDiscussion') return self.$store.dispatch('getLatestTaskPost', {taskId: task.id, refresh: true})
+          if (self.$route.name === 'DraftDiscussion') return self.$store.dispatch('getLatestDraftPost', task.draft_id)
+          if (self.$route.name === 'TaskDiscussion') return self.$store.dispatch('getLatestTaskPost', task.id)
         })
       }
     },
@@ -361,18 +361,16 @@ export default {
             } // else leave the assignee unchanged
             return dirty
           }
-          console.log(self.$route)
           if (!self.editable) {
             if (updateAssignment(self.task)) {
               self.$store.dispatch('updateTask', self.task).then(task => {
-                if (self.$route.name === 'DraftDiscussion') return self.$store.dispatch('getLatestDraftPost', {draftId: task.draft_id, refresh: true})
-                if (self.$route.name === 'TaskDiscussion') return self.$store.dispatch('getLatestTaskPost', {taskId: task.id, refresh: true})
+                if (self.$route.name === 'DraftDiscussion') return self.$store.dispatch('getLatestDraftPost', task.draft_id)
+                if (self.$route.name === 'TaskDiscussion') return self.$store.dispatch('getLatestTaskPost', task.id)
               })
               self.dirty = true
             }
           } else {
             if (updateAssignment(self.newTask)) {
-              console.log(self.newTask)
               if (self.newTask.deadline === 'null') {
                 self.task.deadline = null
               } else if (self.newTask.deadline) {

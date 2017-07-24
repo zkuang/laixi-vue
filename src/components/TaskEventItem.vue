@@ -11,7 +11,9 @@
   <a class="task-link" @click="navigateToTask">{{item.task.title}}</a>
   <!-- <span class="emphasized-date">{{dueDate}}</span> -->
   <div class="ui image label">
-    <img v-if="item.task.assignee.headimgurl" :src="item.task.assignee.headimgurl" /> {{ dueDate }}
+    <img v-if="hasBeenAssigned" :src="item.task.assignee.headimgurl" /> 
+    <span v-if="!hasBeenAssigned">未指派</span>
+    {{ dueDate }}
   </div>
 </div>
 </template>
@@ -50,7 +52,9 @@ export default {
   },
   computed: {
     hasBeenAssigned() {
-      return this.item.type === 'task-created' && this.item.task.assignee
+      if (this.item.task.assignee === null) return false
+      else return true
+      // return this.item.type === 'task-created' && this.item.task.assignee
     },
     dueDate() {
       if (this.item.task.deadline) {
