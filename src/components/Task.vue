@@ -14,7 +14,7 @@
       </span>
     </div>
     <div class="task-detail">
-      <div v-if="task.description && !editing" v-html="task.description.replace(/(?:\r\n|\r|\n)/g, '<br />')">
+      <div class="break-word" v-if="task.description && !editing" v-html="task.description.replace(/(?:\r\n|\r|\n)/g, '<br />')">
 
       </div>
       <div v-show="editing" class="task-description-editor">
@@ -117,6 +117,9 @@
   width: 100%;
   height: auto;
   overflow: hidden;
+}
+.break-word{
+  overflow-wrap: break-word;
 }
 </style>
 

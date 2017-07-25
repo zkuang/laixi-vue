@@ -80,7 +80,8 @@ export default {
       return `date-picker-${this.name}`
     },
     calendarTime () {
-      if (this.task) return DateTime.DateGetCalendarEn(this.task.deadline)
+      if (!this.task) return ''
+      if (this.task.deadline) return DateTime.DateGetCalendarEn(this.task.deadline)
       else return ''
     }
   },
