@@ -19,7 +19,7 @@
         <img v-if="task.assignee && task.assignee.headimgurl" :src="task.assignee.headimgurl" />
         <span v-else>{{ assignee }}</span> {{ dueDate }}
       </div>
-      <assignment-editor :ref="assignmentEditorId" :name="assignmentEditorId"></assignment-editor>
+      <assignment-editor :ref="assignmentEditorId" :name="assignmentEditorId" :task="task"></assignment-editor>
     </div>
   </div>
   <div class="task-detail" v-if="editable">
