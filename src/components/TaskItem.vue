@@ -19,7 +19,7 @@
         <img v-if="task.assignee && task.assignee.headimgurl" :src="task.assignee.headimgurl" />
         <span v-else>{{ assignee }}</span> {{ dueDate }}
       </div>
-      <assignment-editor :ref="assignmentEditorId" :name="assignmentEditorId"></assignment-editor>
+      <assignment-editor :ref="assignmentEditorId" :name="assignmentEditorId" :task="task"></assignment-editor>
     </div>
   </div>
   <div class="task-detail" v-if="editable">
@@ -248,7 +248,8 @@ export default {
         if (!this.create) {
           this.$store.dispatch('updateTask', this.task).then(task => {
             self.dirty = false
-            self.$store.dispatch('getDraftPosts', task.draft_id)
+            if (self.$route.name === 'DraftDiscussion') return self.$store.dispatch('getLatestDraftPost', task.draft_id)
+            if (self.$route.name === 'TaskDiscussion') return self.$store.dispatch('getLatestTaskPost', task.id)
           }).catch(() => {
             self.dirty = false
           })
@@ -258,7 +259,7 @@ export default {
             task: this.task
           }).then(task => {
             self.dirty = false
-            return this.$store.dispatch('getDraftPosts', task.draft_id)
+            return self.$store.dispatch('getLatestDraftPost', task.draft_id)
           }).catch(() => {
             self.dirty = false
           })
@@ -304,8 +305,11 @@ export default {
       let isCheck = $(this.$el).find(`#${this.inputId}`).is(':checked')
       if (isCheck !== this.task.checked) {
         this.task.checked = isCheck
-        this.$store.dispatch('updateTask', this.task).then(task => {
-          this.$store.dispatch('getDraftPosts', task.draft_id)
+        this.$store.dispatch('updateTask', this.task).then((task) => {
+          console.log('here', task)
+          console.log('here route', this.$route.name)
+          if (this.$route.name === 'DraftDiscussion') return this.$store.dispatch('getLatestDraftPost', task.draft_id)
+          if (this.$route.name === 'TaskDiscussion') return this.$store.dispatch('getLatestTaskPost', task.id)
         })
       }
     },
@@ -362,13 +366,13 @@ export default {
           if (!self.editable) {
             if (updateAssignment(self.task)) {
               self.$store.dispatch('updateTask', self.task).then(task => {
-                return self.$store.dispatch('getDraftPosts', task.draft_id)
+                if (self.$route.name === 'DraftDiscussion') return self.$store.dispatch('getLatestDraftPost', task.draft_id)
+                if (self.$route.name === 'TaskDiscussion') return self.$store.dispatch('getLatestTaskPost', task.id)
               })
               self.dirty = true
             }
           } else {
             if (updateAssignment(self.newTask)) {
-              console.log(self.newTask)
               if (self.newTask.deadline === 'null') {
                 self.task.deadline = null
               } else if (self.newTask.deadline) {
@@ -390,7 +394,7 @@ export default {
         closable: true,
         onApprove: function() {
           self.$store.dispatch('delTask', self.task).then(() => {
-            self.$store.dispatch('getDraftPosts', self.draft.id)
+            self.$store.dispatch('getDraftPosts', {draftId: self.draft.id, pageNumber: 1})
           })
         }
       }).modal('show')

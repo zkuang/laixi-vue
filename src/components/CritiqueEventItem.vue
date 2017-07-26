@@ -59,7 +59,7 @@ export default {
   methods: {
     save() {
       let data = toMD(CKEDITOR.instances[this.id].getData())
-      const regex = />.*\(http:\/\/.*\/task\/(.*)\).*$/gm
+      const regex = />.*\(http:\/\/.*\/task\/(.*)\/\).*$/gm
       const draftId = this.draft.id
       let match = regex.exec(data)
       let taskId

@@ -1,7 +1,7 @@
 <template>
 <section class="ui grid discussion-items">
   <ul class="fourteen wide column">
-    <div v-if="!noMore" class="show-more-post" @click="showMorePost">
+    <div v-if="hasNextPage" class="show-more-post" @click="showMorePost">
       <i class="comment icon icon-posts-style"></i>
       <span class="show-post-txt">显示更多的{{ moreNumber }}条评论</span>
     </div>
@@ -65,42 +65,35 @@
 import {
   mapGetters
 } from 'vuex'
+import { Page } from '@/utils.js'
 import DiscussionItem from './DiscussionItem'
 export default {
   name: 'DiscussionItems',
   components: {
     'discussion-item': DiscussionItem
   },
-  mounted () {
-    this.$nextTick(() => {
-      this.$store.commit('initShowPostNumber')
-    })
-  },
   methods: {
     showMorePost () {
-      if (this.totalPosts - this.showPostNumber <= 0) return
+      if (this.totalPosts - this.posts.length <= 0) return
       let routeName = this.$route.name
-      this.$store.commit('setShowPostNumber', this.showPostNumber + 250)
-      if (routeName === 'DraftDiscussion') this.$store.dispatch('getDraftPosts', this.$route.params.did)
-      if (routeName === 'TaskDiscussion') this.$store.dispatch('getTaskPosts', this.$route.params.tid)
+      if (routeName === 'DraftDiscussion') this.$store.dispatch('getDraftPosts', {draftId: this.$route.params.did, pageNumber: this.pageNumber + 1})
+      if (routeName === 'TaskDiscussion') this.$store.dispatch('getTaskPosts', {draftId: this.$route.params.tid, pageNumber: this.pageNumber + 1})
     }
   },
   computed: {
     moreNumber() {
-      let number = this.totalPosts - this.showPostNumber
+      let number = this.totalPosts - this.posts.length
       if (number < 0) return 0
       else return number
     },
-    noMore () {
-      if (this.hasNextPage) return false
-      else return true
+    pageNumber() {
+      return Page.getPageNumber(this.posts.length)
     },
     ...mapGetters({
       currentUser: 'getCurrentUser',
       posts: 'posts',
       draft: 'draft',
       totalPosts: 'totalPosts',
-      showPostNumber: 'showPostNumber',
       hasNextPage: 'hasNextPage'
     })
   }

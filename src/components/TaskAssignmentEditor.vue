@@ -15,7 +15,10 @@
     <div class="ui calendar set-position-relative" :id="datePickerId">
       <div class="ui input left icon">
         <i class="calendar icon"></i>
-        <input type="text" placeholder="Date">
+        <input type="text" :value="calendarTime" placeholder="Date">
+      </div>
+      <div class="clear-deadline">
+        <i class="remove icon" @click="clearDeadline"></i>
       </div>
       <div class="clear-deadline">
         <i class="remove icon" @click="clearDeadline"></i>
@@ -49,9 +52,10 @@ import {
   mapGetters
 } from 'vuex'
 import moment from 'moment'
+import { DateTime } from '@/utils.js'
 export default {
   name: 'TaskAssignmentEditor',
-  props: ['name'],
+  props: ['name', 'task'],
   data() {
     return {
       assignment: {
@@ -77,6 +81,11 @@ export default {
     ...mapGetters(['users']),
     datePickerId() {
       return `date-picker-${this.name}`
+    },
+    calendarTime () {
+      if (!this.task) return ''
+      if (this.task.deadline) return DateTime.DateGetCalendarEn(this.task.deadline)
+      else return ''
     }
   },
   methods: {
@@ -109,7 +118,7 @@ export default {
     },
     clearAssignee () {
       this.setSelection('null')
-      this.assignment.assignee.id = null
+      this.assignment.assignee.id = 'null'
     },
     clearDeadline () {
       this.setDate(false)
