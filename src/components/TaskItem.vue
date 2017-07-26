@@ -10,7 +10,7 @@
   </div>
   <div class="task-detail" v-if="!create && !editable">
     <span class="checkbox-wrapper" :class="{disabled}">
-        <input type="checkbox" :checked="task.checked" :id="inputId" :disabled="disabled" @change="taskStateChange">
+        <input type="checkbox" :checked="task.checked" :id="inputId" :disabled="disabled" @change.once="taskStateChange">
         <label class="disable-checkbox" :for="inputId"></label>
     </span>
     <label>{{task.title}}</label>
@@ -27,13 +27,13 @@
       <input type="checkbox" id="create-task-input" disabled="true">
       <label class="disable-checkbox" for="create-task-input"></label>
     </span>
-    <input type="text">
+    <input type="text" maxlength="500" placeholder="任务名称">
     <div class="task-content">
       <div class="ui image label assignment">
         <img v-if="taskAssignee()" :src="newTask.assignee.headimgurl" />
         <span v-else>未指派</span> {{ taskDueDate() }}
       </div>
-      <assignment-editor :ref="assignmentEditorId" :name="assignmentEditorId"></assignment-editor>
+      <assignment-editor :ref="assignmentEditorId" :name="assignmentEditorId" :task="task"></assignment-editor>
     </div>
   </div>
   <div v-if="editable" class="task-edit-actions">
@@ -306,8 +306,6 @@ export default {
       if (isCheck !== this.task.checked) {
         this.task.checked = isCheck
         this.$store.dispatch('updateTask', this.task).then((task) => {
-          console.log('here', task)
-          console.log('here route', this.$route.name)
           if (this.$route.name === 'DraftDiscussion') return this.$store.dispatch('getLatestDraftPost', task.draft_id)
           if (this.$route.name === 'TaskDiscussion') return this.$store.dispatch('getLatestTaskPost', task.id)
         })
@@ -394,7 +392,7 @@ export default {
         closable: true,
         onApprove: function() {
           self.$store.dispatch('delTask', self.task).then(() => {
-            self.$store.dispatch('getDraftPosts', {draftId: self.draft.id, pageNumber: 1})
+            return self.$store.dispatch('getDraftPosts', {draftId: self.draft.id, pageNumber: 1})
           })
         }
       }).modal('show')
