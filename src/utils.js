@@ -14,5 +14,19 @@ export const DateTime = {
   },
   DateFromNow (string) {
     return moment(string).fromNow()
+  },
+  DateGetCalendarEn (string) {
+    let months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
+    let datetime = new Date(moment(string))
+    let month = months[datetime.getMonth()]
+    let date = datetime.getDate()
+    let year = datetime.getFullYear()
+    return `${month} ${date}, ${year}`
+  }
+}
+
+export const Page = {
+  getPageNumber (length) {
+    return Math.floor(length / 250)
   }
 }

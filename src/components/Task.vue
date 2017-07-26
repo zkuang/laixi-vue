@@ -8,12 +8,13 @@
     <span class="task-title">{{task.title}}</span>
     <div class="task-content">
       <span>
-        <span>{{task.assignee.nickname}}</span>
+        <span v-if="isAssigned">{{task.assignee.nickname}}</span>
+        <span v-if="!isAssigned">未指派</span>
       <span>{{dueDate}}</span>
       </span>
     </div>
     <div class="task-detail">
-      <div v-if="task.description && !editing" v-html="task.description.replace(/(?:\r\n|\r|\n)/g, '<br />')">
+      <div class="break-word" v-if="task.description && !editing" v-html="task.description.replace(/(?:\r\n|\r|\n)/g, '<br />')">
 
       </div>
       <div v-show="editing" class="task-description-editor">
@@ -117,6 +118,9 @@
   height: auto;
   overflow: hidden;
 }
+.break-word{
+  overflow-wrap: break-word;
+}
 </style>
 
 <script>
@@ -135,6 +139,11 @@ export default {
     }
   },
   props: ['task'],
+  mounted () {
+    this.$nextTick(() => {
+      console.log(this.task)
+    })
+  },
   methods: {
     delTask() {
       let self = this
@@ -170,7 +179,7 @@ export default {
       task.description = description
       this.$store.dispatch('updateTask', task).then(task => {
         self.editing = false
-        this.$store.dispatch('getTaskPosts', task.id)
+        this.$store.dispatch('getLatestTaskPost', task.id)
       })
     },
     cancel() {
@@ -180,6 +189,10 @@ export default {
   computed: {
     dueDate() {
       return DateTime.DateMonth(this.task.deadline)
+    },
+    isAssigned () {
+      if (this.task.assignee && this.task.assignee.id != null) return true
+      return false
     },
     ...mapGetters([
       'draft'
