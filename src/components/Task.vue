@@ -18,7 +18,7 @@
 
       </div>
       <div v-show="editing" class="task-description-editor">
-        <textarea @keyup="autoGrow" :value="task.description">
+        <textarea maxlength="5000" placeholder="任务描述" @keyup="autoGrow" :value="task.description">
         </textarea>
       </div>
     </div>

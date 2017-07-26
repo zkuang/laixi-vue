@@ -1,7 +1,7 @@
 <template>
 <form class="ui form draft-editor">
-  <input type="text" name="draft-title" placeholder="文档标题" :value="title">
-  <textarea type="text" name="draft-content" placeholder="文档内容" :value="content"></textarea>
+  <input type="text" name="draft-title" maxlength="20" placeholder="文档标题" :value="title">
+  <textarea type="text" name="draft-content" maxlength="10000" placeholder="文档内容" :value="content"></textarea>
   <div class="draft-editor-toolbar">
     <button class="ui positive button" @click.prevent="save">保存</button>
     <button class="ui basic button" @click.prevent="dismiss">取消</button>
