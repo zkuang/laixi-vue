@@ -54,6 +54,12 @@ const store = new Vuex.Store({
         return res.draft
       })
     },
+    delDraft({ commit }, draftId) {
+      return Drafts.deleteById(draftId).then(res => {
+        console.log(res)
+        return res
+      })
+    },
     updateDraft({ commit }, draft) {
       Drafts.updateById(draft.id, draft).then(res => {
         commit('setDraft', res.draft)
@@ -150,7 +156,7 @@ const store = new Vuex.Store({
         return res.post
       })
     },
-    getDraftPosts({ commit, state }, {draftId, pageNumber}) {
+    getDraftPosts({ commit, state }, { draftId, pageNumber }) {
       return Posts.getPostsByDraftId(draftId, 250, pageNumber).then(res => {
         for (let post of res.posts) {
           if (post.task === null) continue
@@ -165,7 +171,7 @@ const store = new Vuex.Store({
         return res.posts
       })
     },
-    getTaskPosts({ commit, state }, {taskId, pageNumber}) {
+    getTaskPosts({ commit, state }, { taskId, pageNumber }) {
       Posts.getPostsByTaskId(taskId, 250, pageNumber).then(res => {
         console.log(state.tasks, res.posts)
         for (let post of res.posts) {
@@ -189,7 +195,7 @@ const store = new Vuex.Store({
           let pageNumber = Math.ceil(length / 250)
           let extraNumber = state.posts.length - (pageNumber * 250)
           if (extraNumber > 0) {
-            commit('removeSomePosts', {begin: 0, removeNumber: extraNumber})
+            commit('removeSomePosts', { begin: 0, removeNumber: extraNumber })
             commit('setHasNextPage', true)
           }
         } else {
@@ -215,7 +221,7 @@ const store = new Vuex.Store({
         let pageNumber = Math.ceil(length / 250)
         let extraNumber = state.posts.length - (pageNumber * 250)
         if (extraNumber > 0) {
-          commit('removeSomePosts', {begin: 0, removeNumber: extraNumber})
+          commit('removeSomePosts', { begin: 0, removeNumber: extraNumber })
           commit('setHasNextPage', true)
         }
       })
@@ -236,7 +242,7 @@ const store = new Vuex.Store({
         let pageNumber = Math.ceil(length / 250)
         let extraNumber = state.posts.length - (pageNumber * 250)
         if (extraNumber > 0) {
-          commit('removeSomePosts', {begin: 0, removeNumber: extraNumber})
+          commit('removeSomePosts', { begin: 0, removeNumber: extraNumber })
           commit('setHasNextPage', true)
         }
       })
@@ -317,7 +323,7 @@ const store = new Vuex.Store({
       }
       state.posts.splice(i, 1, updated)
     },
-    removeSomePosts(state, {begin, removeNumber}) {
+    removeSomePosts(state, { begin, removeNumber }) {
       state.posts.splice(begin, removeNumber)
     },
     setTask(state, task) {
