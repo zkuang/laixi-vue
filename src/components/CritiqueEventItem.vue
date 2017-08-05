@@ -6,7 +6,7 @@
   <div class="discussion-item-content">
     <div class="critique-content">
       <p><span class="username">{{item.user.nickname}}</span> <span class="time-span">{{createdDate}}</span></p>
-      <div v-html="markdownContent"></div>
+      <p v-html="markdownContent"></p>
     </div>
     <div class="critique-editor">
       <textarea :name="id" :id="id" rows="4" cols="120"></textarea>
@@ -34,13 +34,9 @@ blockquote>p>span {
 
 <script>
 import VueMarkdown from 'vue-markdown'
-import {
-  DateTime
-} from '../utils'
+import { Html, DateTime } from '../utils'
 import toMD from 'to-markdown'
-import {
-  mapGetters
-} from 'vuex'
+import { mapGetters } from 'vuex'
 
 export default {
   name: 'CritiqueItem',
@@ -88,7 +84,7 @@ export default {
     },
     showEditor() {
       let md = markdownit({
-        html: true,
+        html: false,
         breaks: true
       })
       let content = md.render(this.content)
@@ -150,10 +146,11 @@ export default {
     },
     markdownContent() {
       let md = markdownit({
-        html: true,
+        html: false,
         breaks: true
       })
-      return md.render(this.content)
+      console.log(this.content)
+      return Html.unescapeHTML(md.render(this.content))
     },
     id() {
       return `critique-${this.item.id}`

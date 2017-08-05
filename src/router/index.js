@@ -31,6 +31,7 @@ export default new Router({
       name: 'DraftDiscussion',
       component: DocDiscussion,
       beforeEnter(to, from, next) {
+        console.log('')
         store.commit('setPosts', [])
         console.log(to.params)
         Promise.all(
