@@ -5,8 +5,8 @@
   </div>
   <div class="discussion-item-content">
     <div class="critique-content">
-      <p><span class="username">{{item.user.nickname}}</span> <span class="time-span">{{createdDate}}</span></p>
-      <p v-html="markdownContent"></p>
+      <p class="critique-meta"><span class="username">{{item.user.nickname}}</span> <span class="time-span">{{createdDate}}</span></p>
+      <p v-html="markdownContent" class="critique-detail"></p>
     </div>
     <div class="critique-editor">
       <textarea :name="id" :id="id" rows="4" cols="120"></textarea>
@@ -30,11 +30,20 @@ blockquote>p>span {
   display: none;
   width: 100%;
 }
+
+.critique-content .critique-meta span {
+  font-weight: bold;
+  font-size: 14px;
+}
+
+.critique-content .critique-detail {
+  font-size: 14px;
+}
 </style>
 
 <script>
 import VueMarkdown from 'vue-markdown'
-import { Html, DateTime } from '../utils'
+import { DateTime } from '../utils'
 import toMD from 'to-markdown'
 import { mapGetters } from 'vuex'
 
@@ -132,10 +141,9 @@ export default {
           if (this.item.task.deadline) deadline = DateTime.DateMonth(this.item.task.deadline)
           else deadline = '未限期'
           content =
-            `> <span>任务 <a href="http://localhost:5000/task/${this.item.task.id}/">${this.item.task.title}</a> <span class="emphasized-date">${deadline}</span></span>`
+            `> <span>任务 <a href="http://ilaixi.net/task/${this.item.task.id}/">${this.item.task.title}</a> <span class="emphasized-date">${deadline}</span></span>`
           if (!this.item.content.startsWith('>')) {
-            // [@${this.item.task.creator.nickname}](http://localhost:5000)\n`
-            content += `\n> [@creator](http://localhost:5000/user/)\n`
+            content += `\n> [@creator](http://ilaixi.net/user/)\n`
           }
           content += `\n${this.item.content}`
         } else {
@@ -146,11 +154,11 @@ export default {
     },
     markdownContent() {
       let md = markdownit({
-        html: false,
+        html: true,
         breaks: true
       })
       console.log(this.content)
-      return Html.unescapeHTML(md.render(this.content))
+      return md.render(this.content)
     },
     id() {
       return `critique-${this.item.id}`

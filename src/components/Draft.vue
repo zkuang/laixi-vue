@@ -39,13 +39,13 @@
 <style>
 .draft-description>h2 {
   font-weight: normal;
-  font-size: 1.65em;
   margin-bottom: 1.15em;
 }
 
 .draft-description>p {
-  font-size: 1.2em;
+  /*font-size: 1.2em;*/
   text-align: justify;
+  min-height: 140px;
 }
 
 .ui.grid>.draft-description {
@@ -112,7 +112,7 @@ export default {
   },
   computed: {
     historyLink() {
-      return `/draft/history/${this.draft.id}`
+      return `/drafts/${this.draft.id}/versions/`
     },
     ...mapGetters([
       'draft',

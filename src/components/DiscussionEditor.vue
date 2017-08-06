@@ -47,8 +47,8 @@
 
 .discussion-editor .discussion-item-avatar .ui.avatar.image {
   margin-left: .8rem;
-  width: 3.5rem;
-  height: 3.5rem;
+  width: 35px;
+  height: 35px;
 }
 
 .discussion-editor .discussion-item-avatar {
@@ -214,6 +214,7 @@ export default {
             `<span>任务</span>&nbsp;&nbsp;<a href="http://ilaixi.net/task/${item.task.id}/" class="task-link">${item.task.title}</a>&nbsp;&nbsp;&nbsp;&nbsp;<span class="emphasized-date">${deadline}</span>`
         }
         if (item.content) {
+          console.log(item.content)
           let content = item.content.replace(/(^> .*$)/gm, '').trim()
           quote += `<p>${content.replace(/(?:\r\n|\r|\n)/g, '<br />')}</p>`
         }
@@ -229,7 +230,8 @@ export default {
     publish() {
       const draftId = this.draft.id
       if (!this.task) {
-        let data = toMD(CKEDITOR.instances['discussion-editor'].getData())
+        console.log(`whitelist ${Html.whileListEscapeHTML(CKEDITOR.instances['discussion-editor'].getData())}`)
+        let data = toMD(Html.whileListEscapeHTML(CKEDITOR.instances['discussion-editor'].getData()))
         let taskId
         if (this.$route.params.tid) {
           taskId = this.$route.params.tid
@@ -244,19 +246,19 @@ export default {
         }
         let post = {
           draft_id: draftId,
-          content: Html.escapeHTML(data),
+          content: data,
           task_id: taskId,
           user: this.user,
           type: 'critique'
         }
-        console.log(data)
+        console.log(`toMd: ${data}`)
         this.$store.dispatch('addPostToDraft', {
           post
         })
       } else {
-        let data = toMD(CKEDITOR.instances['discussion-editor'].getData())
+        let data = toMD(Html.whileListEscapeHTML(CKEDITOR.instances['discussion-editor'].getData()))
         let task = {
-          title: Html.escapeHTML(data),
+          title: data,
           assignee: this.task.assignee,
           deadline: this.task.deadline
         }

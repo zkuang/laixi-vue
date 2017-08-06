@@ -26,12 +26,11 @@
 }
 
 .discussion-items>ul>li {
-  line-height: 3rem;
   list-style: none;
   margin-bottom: 1rem;
 }
 
-.discussion-items > ul > .show-more-post {
+.discussion-items>ul>.show-more-post {
   display: flex;
   flex-direction: row;
   align-items: baseline;
@@ -40,23 +39,23 @@
   cursor: pointer;
 }
 
-.discussion-items > ul > .show-more-post > .icon-posts-style{
+.discussion-items>ul>.show-more-post>.icon-posts-style {
   font-size: 1.5em;
   color: #4183C4;
   transition: color .5s;
 }
 
-.discussion-items > ul > .show-more-post:hover > .icon-posts-style{
+.discussion-items>ul>.show-more-post:hover>.icon-posts-style {
   color: #1e70bf;
 }
 
-.discussion-items > ul > .show-more-post > .show-post-txt {
+.discussion-items>ul>.show-more-post>.show-post-txt {
   font-size: 1.25em;
   color: #4183C4;
   transition: color .5s;
 }
 
-.discussion-items > ul > .show-more-post:hover > .show-post-txt{
+.discussion-items>ul>.show-more-post:hover>.show-post-txt {
   color: #1e70bf;
 }
 </style>
@@ -73,11 +72,11 @@ export default {
     'discussion-item': DiscussionItem
   },
   methods: {
-    showMorePost () {
+    showMorePost() {
       if (this.totalPosts - this.posts.length <= 0) return
       let routeName = this.$route.name
-      if (routeName === 'DraftDiscussion') this.$store.dispatch('getDraftPosts', {draftId: this.$route.params.did, pageNumber: this.pageNumber + 1})
-      if (routeName === 'TaskDiscussion') this.$store.dispatch('getTaskPosts', {draftId: this.$route.params.tid, pageNumber: this.pageNumber + 1})
+      if (routeName === 'DraftDiscussion') this.$store.dispatch('getDraftPosts', { draftId: this.$route.params.did, pageNumber: this.pageNumber + 1 })
+      if (routeName === 'TaskDiscussion') this.$store.dispatch('getTaskPosts', { draftId: this.$route.params.tid, pageNumber: this.pageNumber + 1 })
     }
   },
   computed: {

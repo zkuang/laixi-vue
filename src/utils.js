@@ -43,6 +43,15 @@ export const Html = {
   unescapeHTML(text) {
     var doc = new DOMParser().parseFromString(text, 'text/html')
     return doc.documentElement.textContent
-  }
+  },
 
+  whileListEscapeHTML(html) {
+    return Html.escapeHTML(
+        html.replace('<br>', '%br%')
+        .replace('<blockquote>', '%blockquote%')
+        .replace('</blockquote>', '%/blockquote%')
+      ).replace('%br%', '<br>')
+      .replace('%blockquote%', '<blockquote>')
+      .replace('%/blockquote%', '</blockquote>')
+  }
 }

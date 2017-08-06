@@ -11,7 +11,9 @@
 </template>
 
 <style>
-
+.doc-log span {
+  font-weight: bold;
+}
 </style>
 
 
