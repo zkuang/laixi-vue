@@ -112,7 +112,7 @@ export default {
   },
   computed: {
     historyLink() {
-      return `/drafts/${this.draft.id}/versions/`
+      return `/draft/${this.draft.id}/versions/`
     },
     ...mapGetters([
       'draft',
