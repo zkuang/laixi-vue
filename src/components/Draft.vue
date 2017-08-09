@@ -24,19 +24,28 @@
     </div>
   </div>
   <iframe name="print-frame" width="0" height="0" frameborder="0" src="about:blank"></iframe>
+  <div class="ui small modal" id="draft-deletion-modal">
+    <div class="content">
+      <p>你确定要{{modalAction}}这个文档吗？</p>
+    </div>
+    <div class="actions">
+      <div class="ui approve button">确定</div>
+      <div class="ui cancel button">取消</div>
+    </div>
+  </div>
 </section>
 </template>
 
 <style>
 .draft-description>h2 {
   font-weight: normal;
-  font-size: 1.65em;
   margin-bottom: 1.15em;
 }
 
 .draft-description>p {
-  font-size: 1.2em;
+  /*font-size: 1.2em;*/
   text-align: justify;
+  min-height: 140px;
 }
 
 .ui.grid>.draft-description {
@@ -75,29 +84,45 @@ export default {
       })
     },
     print() {
-      let printDivCSS = '<link href="/static/print-draft.css" rel="stylesheet" type="text/css">'
+      let printDivCSS = '<link href="/css/print-draft.css" rel="stylesheet" type="text/css">'
       window.frames['print-frame'].document.body.innerHTML = printDivCSS + document.getElementById('draft').innerHTML
       window.frames['print-frame'].window.focus()
       window.frames['print-frame'].window.print()
     },
     del() {
-      let draft = Object.assign({}, this.draft)
-      draft.removed = true
-      this.$store.dispatch('updateDraft', draft)
+      let self = this
+      $('#draft-deletion-modal').modal({
+        closable: true,
+        onApprove: function () {
+          self.$store.dispatch('delDraft', self.draft.id)
+          window.location.replace(`/project/${self.project.id}/drafts`)
+        }
+      }).modal('show')
     },
     undel() {
-      let draft = Object.assign({}, this.draft)
-      draft.removed = false
-      this.$store.dispatch('updateDraft', draft)
+      let self = this
+      $('#draft-deletion-modal').modal({
+        closable: true,
+        onApprove: function () {
+          self.$store.dispatch('delDraft', self.draft.id)
+          window.location.replace(`/project/${self.project.id}/drafts`)
+        }
+      }).modal('show')
     }
   },
   computed: {
     historyLink() {
-      return `/draft/history/${this.draft.id}`
+      return `/draft/${this.draft.id}/versions/`
     },
     ...mapGetters([
-      'draft'
-    ])
+      'draft',
+      'project'
+    ]),
+    modalAction() {
+      console.log(this.draft.removed)
+      if (this.draft.removed) return '恢复'
+      else return '删除'
+    }
   }
 }
 </script>

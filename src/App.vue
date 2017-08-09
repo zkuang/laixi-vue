@@ -55,13 +55,15 @@ export default {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  color: #2c3e50;
   padding: .9rem;
-  width: 100%;
+
+  max-width: 1150px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-right: 3em;
 }
 
 #app .ui.breadcrumb {
-  font-size: 1.12em;
   margin-bottom: 1.8em;
 }
 </style>

@@ -47,8 +47,8 @@
 
 .discussion-editor .discussion-item-avatar .ui.avatar.image {
   margin-left: .8rem;
-  width: 3.5rem;
-  height: 3.5rem;
+  width: 35px;
+  height: 35px;
 }
 
 .discussion-editor .discussion-item-avatar {
@@ -116,14 +116,10 @@ a.cke_button {
 </style>
 
 <script>
-import {
-  DateTime
-} from '../utils'
+import { Html, DateTime } from '../utils'
 import toMD from 'to-markdown'
 import TaskAssignmentEditor from './TaskAssignmentEditor'
-import {
-  mapGetters
-} from 'vuex'
+import { mapGetters } from 'vuex'
 
 export default {
   name: 'DiscussionEditor',
@@ -216,13 +212,14 @@ export default {
           if (item.task.deadline) deadline = DateTime.DateMonth(item.task.deadline)
           else deadline = '未限期'
           quote +=
-            `<span>任务</span>&nbsp;&nbsp;<a href="http://localhost:5000/task/${item.task.id}/" class="task-link">${item.task.title}</a>&nbsp;&nbsp;&nbsp;&nbsp;<span class="emphasized-date">${deadline}</span>`
+            `<span>任务</span>&nbsp;&nbsp;<a href="http://ilaixi.net/task/${item.task.id}/" class="task-link">${item.task.title}</a>&nbsp;&nbsp;&nbsp;&nbsp;<span class="emphasized-date">${deadline}</span>`
         }
         if (item.content) {
+          console.log(item.content)
           let content = item.content.replace(/(^> .*$)/gm, '').trim()
           quote += `<p>${content.replace(/(?:\r\n|\r|\n)/g, '<br />')}</p>`
         }
-        quote += `<p><a href="http://localhost:5000/user/${author.id}/">@${author.nickname}</a></p>`
+        quote += `<p><a href="http://ilaixi.net/user/${author.id}/">@${author.nickname}</a></p>`
       }
       quote = '<blockquote>' + quote + '</blockquote><p></p>'
       this.showEditor(quote)
@@ -235,7 +232,8 @@ export default {
       const draftId = this.draft.id
       console.log(this.task)
       if (!this.task) {
-        let data = toMD(CKEDITOR.instances['discussion-editor'].getData())
+        console.log(`whitelist ${Html.whileListEscapeHTML(CKEDITOR.instances['discussion-editor'].getData())}`)
+        let data = toMD(Html.whileListEscapeHTML(CKEDITOR.instances['discussion-editor'].getData()))
         let taskId
         if (this.$route.params.tid) {
           taskId = this.$route.params.tid
@@ -255,11 +253,12 @@ export default {
           user: this.user,
           type: 'critique'
         }
+        console.log(`toMd: ${data}`)
         this.$store.dispatch('addPostToDraft', {
           post
         })
       } else {
-        let data = toMD(CKEDITOR.instances['discussion-editor'].getData())
+        let data = toMD(Html.whileListEscapeHTML(CKEDITOR.instances['discussion-editor'].getData()))
         let task = {
           title: data,
           assignee: this.task.assignee,

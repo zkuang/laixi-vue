@@ -24,7 +24,7 @@
 
 <style>
 .discussion-item {
-  font-size: 1.5em;
+  font-size: 14px;
   color: gray;
 }
 
@@ -55,27 +55,17 @@
   color: black;
 }
 
-.discussion-item>div>span {
-  font-size: .8em;
-}
-
 .discussion-item>div.task-log .time-span,
 .discussion-item>div.doc-log .time-span {
   color: gray;
-  font-size: 1.2rem;
-  margin-left: 5rem;
+  margin-left: 4em;
 }
 
 .discussion-item>div.task-log .username {
   font-weight: bold;
 }
 
-.discussion-item>div.comment .username {
-  font-size: 1.1em;
-}
-
 .discussion-item>div .task-link {
-  font-size: 1.1rem;
   font-weight: bold;
 }
 
@@ -89,22 +79,24 @@
 
 .discussion-item>div>span.discussion-item-avatar>i {
   margin: 0 .5rem 0 2rem;
+  font-size: 1.2em;
 }
 
 .discussion-item .discussion-item-avatar .ui.avatar.image {
-  width: 3.5rem;
-  height: 3.5rem;
+  width: 2em;
+  height: 2em;
   margin-left: .8rem;
 }
 
 .discussion-item .discussion-item-avatar {
   display: inline-block;
   position: absolute;
+  left: 0;
 }
 
 .discussion-item .discussion-item-content {
   display: inline-block;
-  margin-left: 5.5rem;
+  margin-left: 4rem;
   width: 90%;
 }
 
@@ -215,7 +207,7 @@ export default {
       $(this.$el).find('.has-popup').popup('hide')
       $('#post-deletion-modal').modal({
         closable: true,
-        onApprove: function() {
+        onApprove: function () {
           self.$store.dispatch('delPost', self.item)
         }
       }).modal('show')

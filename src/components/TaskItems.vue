@@ -30,7 +30,6 @@
 }
 
 .taskitem-list>li {
-  line-height: 2.5rem;
   list-style: none;
   padding-top: auto;
   padding-bottom: auto;
@@ -39,19 +38,22 @@
 .taskitem-list-header {
   color: gray;
   font-weight: normal;
-  padding-left: .25em;
+  padding-left: 4px;
 }
 
 .task-items p>a:last-child {
   float: right;
 }
 
-.task-items p {
-  font-size: 1.1em;
-}
+.task-items p {}
 
 .ui.grid.task-items>.section>.task-actions {
   padding-bottom: 0;
+  padding-left: 4px;
+}
+
+.ui.grid.task-items>.section::after {
+  padding-top: 0em !important;
 }
 </style>
 

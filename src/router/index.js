@@ -7,20 +7,15 @@ import TaskList from '@/components/TaskList'
 import store from '../store'
 
 Vue.use(Router)
+const MY_ID = $('#api-auth-info>input[name="user_id"]').val()
 
-function prepare() {
-  let authstring = $('#spa>input[name="authstring"]').val()
-  store.commit('setAuthString', authstring)
-  return authstring
-}
-
-function fetchProjectUser(pid, authstring) {
+function fetchProjectUser(pid) {
   return Promise.all(
     [
       store.dispatch('getProjectById', pid),
       store.dispatch('getProjectMembers', pid).then(users => {
         const me = users.find(user => {
-          return user.id === authstring
+          return user.id === MY_ID
         })
         store.commit('setCurrentUser', me)
       })
@@ -36,16 +31,16 @@ export default new Router({
       name: 'DraftDiscussion',
       component: DocDiscussion,
       beforeEnter(to, from, next) {
-        const authstring = prepare()
         store.commit('setPosts', [])
+        console.log(to.params)
         Promise.all(
           [
             store.dispatch('getDraftById', to.params.did),
             store.dispatch('getDraftTasks', to.params.did),
-            store.dispatch('getDraftPosts', {draftId: to.params.did, pageNumber: 1})
+            store.dispatch('getDraftPosts', { draftId: to.params.did, pageNumber: 1 })
           ]
         ).then((res) => {
-          return fetchProjectUser(res[0].project_id, authstring)
+          return fetchProjectUser(res[0].project_id)
         }).then(() => {
           next()
         })
@@ -56,17 +51,16 @@ export default new Router({
       name: 'TaskDiscussion',
       component: TaskDiscussion,
       beforeEnter(to, from, next) {
-        const authstring = prepare()
         store.commit('setPosts', [])
         Promise.all(
           [
             store.dispatch('getTaskById', to.params.tid),
-            store.dispatch('getTaskPosts', {taskId: to.params.tid, pageNumber: 1})
+            store.dispatch('getTaskPosts', { taskId: to.params.tid, pageNumber: 1 })
           ]
         ).then(res => {
           return store.dispatch('getDraftById', res[0].draft_id)
         }).then(draft => {
-          return fetchProjectUser(draft.project_id, authstring)
+          return fetchProjectUser(draft.project_id)
         }).then(() => {
           next()
         })
@@ -77,9 +71,8 @@ export default new Router({
       name: 'DraftEdit',
       component: DraftEditor,
       beforeEnter(to, from, next) {
-        const authstring = prepare()
         store.dispatch('getDraftById', to.params.did).then(res => {
-          return fetchProjectUser(res.project_id, authstring)
+          return fetchProjectUser(res.project_id)
         }).then(() => {
           next()
         })
@@ -90,8 +83,7 @@ export default new Router({
       name: 'DraftCreate',
       component: DraftEditor,
       beforeEnter(to, from, next) {
-        const authstring = prepare()
-        return fetchProjectUser(to.params.pid, authstring).then(() => {
+        return fetchProjectUser(to.params.pid).then(() => {
           store.commit('setDraft', {})
           next()
         })
@@ -102,15 +94,14 @@ export default new Router({
       name: 'TaskList',
       component: TaskList,
       beforeEnter(to, from, next) {
-        const authstring = prepare()
         Promise.all(
           [
             store.dispatch('getDraftById', to.params.did),
             store.dispatch('getDraftTasks', to.params.did),
-            store.dispatch('getDraftPosts', {draftId: to.params.did, pageNumber: 1})
+            store.dispatch('getDraftPosts', { draftId: to.params.did, pageNumber: 1 })
           ]
         ).then(res => {
-          return fetchProjectUser(res[0].project_id, authstring)
+          return fetchProjectUser(res[0].project_id)
         }).then(() => {
           next()
         })

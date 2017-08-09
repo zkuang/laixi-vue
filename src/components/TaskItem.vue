@@ -45,7 +45,6 @@
 
 <style>
 .taskitem {
-  font-size: 1.15em;
   width: 100%;
 }
 
@@ -74,6 +73,7 @@
 .taskitem .task-detail>label {
   display: inline-block;
   min-width: 14em;
+  margin-left: 1.2em;
 }
 
 .taskitem .task-edit-actions {
@@ -390,9 +390,9 @@ export default {
       let self = this
       $('#task-deletion-modal').modal({
         closable: true,
-        onApprove: function() {
+        onApprove: function () {
           self.$store.dispatch('delTask', self.task).then(() => {
-            return self.$store.dispatch('getDraftPosts', {draftId: self.draft.id, pageNumber: 1})
+            self.$store.dispatch('getDraftPosts', { draftId: self.draft.id, pageNumber: 1 })
           })
         }
       }).modal('show')
