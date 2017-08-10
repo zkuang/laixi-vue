@@ -4,7 +4,7 @@
     <div class="task-msg-detail">
       <div class="detail" @mouseover="activeCtrl = true" @mouseout="activeCtrl = false">
         <div v-show="activeCtrl" class="task-detail-ctrl">
-          <button class="ui button btn-style">
+          <button class="ui button btn-style" @click="editTitle">
             <i class="write icon"></i>
           </button>
           <button class="ui button btn-style">
@@ -15,7 +15,8 @@
           <input type="checkbox" :checked="task.checked" :id="taskId" :disabled="draft.removed">
           <label class="disable-checkbox" :for="taskId"></label>
         </span>
-        <span class="task-title">{{task.title}}</span>
+        <span v-show="!editTaskTitle" class="task-title">{{task.title}}</span>
+        <input v-show="editTaskTitle" class="task-title-input" type="text">
         <div class="task-content">
           <span>
             <span v-if="isAssigned">{{task.assignee.nickname}}</span>
@@ -24,6 +25,10 @@
           </span>
         </div>
       </div>
+    </div>
+    <div v-show="editTaskTitle" class="task-edit-actions">
+      <button class="ui positive button" @click="save">保存修改</button>
+      <button class="ui basic button" @click="editTaskTitle = false">取消</button>
     </div>
     <div class="task-detail">
       <div class="break-word" v-if="task.description && !editing" v-html="task.description.replace(/(?:\r\n|\r|\n)/g, '<br />')">
@@ -156,6 +161,16 @@
   padding: 0;
   padding-left:15px;
 }
+.task-description .task-msg-detail .task-title-input{
+  font-size: 1.2rem;
+  border: none;
+  border-bottom: 1px dashed black;
+  padding: 0;
+  margin: 0;
+}
+.task-description .task-msg-detail .task-title-input:focus{
+  outline: none;
+}
 .break-word{
   overflow-wrap: break-word;
 }
@@ -174,7 +189,8 @@ export default {
   data() {
     return {
       editing: false,
-      activeCtrl: false
+      activeCtrl: false,
+      editTaskTitle: false
     }
   },
   props: ['task'],
@@ -214,15 +230,24 @@ export default {
     save() {
       let description = $(this.$el).find('.task-description-editor > textarea').val()
       let task = Object.assign({}, this.task)
+      if (this.editTaskTitle) {
+        let taskTitle = $(`.task-title-input`).val()
+        if (task.title !== taskTitle) task.title = taskTitle
+      }
       let self = this
       task.description = description
       this.$store.dispatch('updateTask', task).then(task => {
+        self.editTaskTitle = false
         self.editing = false
         this.$store.dispatch('getLatestTaskPost', task.id)
       })
     },
     cancel() {
       this.editing = false
+    },
+    editTitle () {
+      this.editTaskTitle = true
+      $(`.task-title-input`).val(this.task.title)
     }
   },
   computed: {
