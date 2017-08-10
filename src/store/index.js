@@ -111,6 +111,7 @@ const store = new Vuex.Store({
         }
       } else {
         return Tasks.updateById(task.id, task).then(res => {
+          console.log('here', res.task)
           commit('setTask', res.task)
           commit('setOneTask', res.task)
           return res.task
@@ -173,12 +174,14 @@ const store = new Vuex.Store({
     },
     getTaskPosts({ commit, state }, { taskId, pageNumber }) {
       Posts.getPostsByTaskId(taskId, 250, pageNumber).then(res => {
-        console.log(state.tasks, res.posts)
+        let idx = state.tasks.findIndex((task) => task.id === taskId)
+        if (idx === -1) {
+          commit('createTask', res.posts[0].task)
+          idx = state.tasks.length - 1
+        }
+        // console.log(state.task, res.posts)
         for (let post of res.posts) {
-          if (post.task === null) continue
-          for (let task of state.tasks) {
-            if (task.id === post.task.id) post.task = task
-          }
+          if (idx !== -1) post.task = state.tasks[idx]
         }
         commit('setTotalPosts', res.pagination.total)
         commit('setHasNextPage', res.pagination.has_next)

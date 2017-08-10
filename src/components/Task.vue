@@ -200,8 +200,8 @@ export default {
   },
   props: ['task'],
   mounted () {
-    this.setupPopup()
     this.$nextTick(() => {
+      this.setupPopup()
       console.log(this.task)
     })
   },
@@ -257,18 +257,19 @@ export default {
     },
     setupPopup () {
       let self = this
-      $(this.$el).find('.assignment').popup({
+      $(this.$el).find(`.assignment`).popup({
         lastResort: 'right center',
         position: 'right center',
         hoverable: true,
         on: 'click',
-        onShow () {
+        onShow() {
           if (self.task.assignee) {
             self.$refs[self.assignmentEditorId].setSelection(self.task.assignee.id)
           }
           return true
         },
-        onHide () {
+        onHide() {
+          console.log('hide')
           function updateAssignment(task) {
             let dirty = false
             let assignment = self.$refs[self.assignmentEditorId].getData()
@@ -305,13 +306,14 @@ export default {
             } // else leave the assignee unchanged
             return dirty
           }
-          if (updateAssignment(self.task)) {
-            self.$store.dispatch('updateTask', self.task).then(task => {
-              if (self.$route.name === 'DraftDiscussion') return self.$store.dispatch('getLatestDraftPost', task.draft_id)
-              if (self.$route.name === 'TaskDiscussion') return self.$store.dispatch('getLatestTaskPost', task.id)
+          let selfTask = Object.assign({}, self.task)
+          if (updateAssignment(selfTask)) {
+            self.$store.dispatch('updateTask', selfTask).then(task => {
+              self.$store.dispatch('getLatestTaskPost', task.id)
             })
             self.dirty = true
           }
+          return true
         }
       })
     }

@@ -56,11 +56,8 @@ export default {
       // return this.item.type === 'task-created' && this.item.task.assignee
     },
     dueDate() {
-      if (this.item.task.deadline) {
-        return DateTime.DateMonth(this.item.task.deadline)
-      } else {
-        return '未限时'
-      }
+      if (!this.item.task.deadline) return '未限期'
+      return DateTime.DateMonth(this.item.task.deadline)
     },
     createdDate() {
       return DateTime.DateMonthYearTime(this.item.date)
