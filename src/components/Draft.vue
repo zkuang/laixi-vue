@@ -24,13 +24,13 @@
     </div>
   </div>
   <iframe name="print-frame" width="0" height="0" frameborder="0" src="about:blank"></iframe>
-  <div class="ui small modal" id="draft-deletion-modal">
+  <div class="ui basic modal" id="draft-deletion-modal">
     <div class="content">
       <p>你确定要{{modalAction}}这个文档吗？</p>
     </div>
     <div class="actions">
-      <div class="ui approve button">确定</div>
-      <div class="ui cancel button">取消</div>
+      <div class="ui red inverted ok approve button">确定</div>
+      <div class="ui inverted cancel button">取消</div>
     </div>
   </div>
 </section>
