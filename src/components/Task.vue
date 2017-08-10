@@ -1,17 +1,29 @@
 <template>
 <section class="ui stackable two column grid">
   <div class="thirteen wide column task-description section">
-    <span class="checkbox-wrapper" :class="{disabled: draft.removed}">
-        <input type="checkbox" :checked="task.checked" :id="taskId" :disabled="draft.removed">
-        <label class="disable-checkbox" :for="taskId"></label>
-      </span>
-    <span class="task-title">{{task.title}}</span>
-    <div class="task-content">
-      <span>
-        <span v-if="isAssigned">{{task.assignee.nickname}}</span>
-        <span v-if="!isAssigned">未指派</span>
-      <span>{{dueDate}}</span>
-      </span>
+    <div class="task-msg-detail">
+      <div class="detail" @mouseover="activeCtrl = true" @mouseout="activeCtrl = false">
+        <div v-show="activeCtrl" class="task-detail-ctrl">
+          <button class="ui button btn-style">
+            <i class="write icon"></i>
+          </button>
+          <button class="ui button btn-style">
+            <i class="trash outline icon"></i>
+          </button>
+        </div>
+        <span class="checkbox-wrapper" :class="{disabled: draft.removed}">
+          <input type="checkbox" :checked="task.checked" :id="taskId" :disabled="draft.removed">
+          <label class="disable-checkbox" :for="taskId"></label>
+        </span>
+        <span class="task-title">{{task.title}}</span>
+        <div class="task-content">
+          <span>
+            <span v-if="isAssigned">{{task.assignee.nickname}}</span>
+            <span v-if="!isAssigned">未指派</span>
+            <span>{{dueDate}}</span>
+          </span>
+        </div>
+      </div>
     </div>
     <div class="task-detail">
       <div class="break-word" v-if="task.description && !editing" v-html="task.description.replace(/(?:\r\n|\r|\n)/g, '<br />')">
@@ -118,6 +130,32 @@
   height: auto;
   overflow: hidden;
 }
+.task-description .task-msg-detail{
+  margin-left: -7rem;
+  position: relative;
+}
+.task-description .task-msg-detail .detail{
+  margin-left: 7rem;
+  position: relative;
+}
+.task-description .task-msg-detail .detail .task-detail-ctrl{
+  position: absolute;
+  display: inline-flex;
+  top: 0;
+  right: 100%;
+  height: 100%;
+  padding-left: 5px;
+  background-color: transparent;
+  border: 1px solid lightgray;
+  border-right: none;
+  border-bottom-left-radius: 10px;
+  border-top-left-radius: 10px;
+}
+.task-description .task-msg-detail .detail .task-detail-ctrl .btn-style{
+  background-color: transparent;
+  padding: 0;
+  padding-left:15px;
+}
 .break-word{
   overflow-wrap: break-word;
 }
@@ -135,7 +173,8 @@ export default {
   name: 'Task',
   data() {
     return {
-      editing: false
+      editing: false,
+      activeCtrl: false
     }
   },
   props: ['task'],
