@@ -7,7 +7,7 @@
           <button class="ui button btn-style" @click="editTitle">
             <i class="write icon"></i>
           </button>
-          <button class="ui button btn-style">
+          <button class="ui button btn-style" @click="delTask">
             <i class="trash outline icon"></i>
           </button>
         </div>
@@ -18,11 +18,12 @@
         <span v-show="!editTaskTitle" class="task-title">{{task.title}}</span>
         <input v-show="editTaskTitle" class="task-title-input" type="text">
         <div class="task-content">
-          <span>
+          <span class="ui assignment">
             <span v-if="isAssigned">{{task.assignee.nickname}}</span>
             <span v-if="!isAssigned">未指派</span>
             <span>{{dueDate}}</span>
           </span>
+          <assignment-editor :ref="TaskAssignmentId" :name="TaskAssignmentId" :task="task"></assignment-editor>
         </div>
       </div>
     </div>
@@ -184,8 +185,12 @@ import {
   DateTime
 } from '../utils'
 import Vue from 'vue'
+import TaskAssignmentEditor from './TaskAssignmentEditor'
 export default {
   name: 'Task',
+  components: {
+    'assignment-editor': TaskAssignmentEditor
+  },
   data() {
     return {
       editing: false,
@@ -195,6 +200,7 @@ export default {
   },
   props: ['task'],
   mounted () {
+    this.setupPopup()
     this.$nextTick(() => {
       console.log(this.task)
     })
@@ -248,11 +254,26 @@ export default {
     editTitle () {
       this.editTaskTitle = true
       $(`.task-title-input`).val(this.task.title)
+    },
+    setupPopup () {
+      $(this.$el).find('.assignment').popup({
+        lastResort: 'right center',
+        position: 'right center',
+        hoverable: true,
+        on: 'click',
+        onShow () {
+          console.log('show')
+        },
+        onHide () {
+          console.log('hide')
+        }
+      })
     }
   },
   computed: {
     dueDate() {
-      return DateTime.DateMonth(this.task.deadline)
+      if (!this.task.deadline) return '未限期'
+      else return DateTime.DateMonth(this.task.deadline)
     },
     isAssigned () {
       if (this.task.assignee && this.task.assignee.id != null) return true
@@ -263,6 +284,9 @@ export default {
     ]),
     taskId() {
       return `task${this.task.id}`
+    },
+    TaskAssignmentId () {
+      return `task-asssignments-${this.task.id}`
     }
   }
 }
