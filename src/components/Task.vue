@@ -23,7 +23,7 @@
             <span v-if="!isAssigned">未指派</span>
             <span>{{dueDate}}</span>
           </span>
-          <assignment-editor :ref="TaskAssignmentId" :name="TaskAssignmentId" :task="task"></assignment-editor>
+          <assignment-editor :ref="assignmentEditorId" :name="assignmentEditorId" :task="task"></assignment-editor>
         </div>
       </div>
     </div>
@@ -256,16 +256,62 @@ export default {
       $(`.task-title-input`).val(this.task.title)
     },
     setupPopup () {
+      let self = this
       $(this.$el).find('.assignment').popup({
         lastResort: 'right center',
         position: 'right center',
         hoverable: true,
         on: 'click',
         onShow () {
-          console.log('show')
+          if (self.task.assignee) {
+            self.$refs[self.assignmentEditorId].setSelection(self.task.assignee.id)
+          }
+          return true
         },
         onHide () {
-          console.log('hide')
+          function updateAssignment(task) {
+            let dirty = false
+            let assignment = self.$refs[self.assignmentEditorId].getData()
+            if (assignment.deadline === 'null') {
+              // deadline cleared
+              if (task.deadline) {
+                // origin task has deadline, this will not be null if it's from server
+                task.deadline = 'null'
+                dirty = true
+              }
+            } else if (assignment.deadline && assignment.deadline !== 'null') {
+              // deadline has value, update the task when task has no deadline or they are not the same
+              if (!task.deadline || DateTime.DateMonth(task.deadline) !== DateTime.DateMonth(assignment.deadline)) {
+                task.deadline = assignment.deadline.format()
+                dirty = true
+              }
+            } // else leave the deadline unchanged
+
+            // console.log(task.assignee)
+            // console.log(assignment.assignee)
+            if (assignment.assignee.id === 'null') {
+              // assignee cleared
+              if (task.assignee) {
+                // origin task has assignee, this will not be null if it's from server
+                task.assignee = assignment.assignee
+                dirty = true
+              }
+            } else if (assignment.assignee.id && assignment.assignee.id !== 'null') {
+              // assignee has value, update the task when task has no assignee or they not the same
+              if (!task.assignee || task.assignee.id !== assignment.assignee.id) {
+                task.assignee = assignment.assignee
+                dirty = true
+              }
+            } // else leave the assignee unchanged
+            return dirty
+          }
+          if (updateAssignment(self.task)) {
+            self.$store.dispatch('updateTask', self.task).then(task => {
+              if (self.$route.name === 'DraftDiscussion') return self.$store.dispatch('getLatestDraftPost', task.draft_id)
+              if (self.$route.name === 'TaskDiscussion') return self.$store.dispatch('getLatestTaskPost', task.id)
+            })
+            self.dirty = true
+          }
         }
       })
     }
@@ -285,7 +331,7 @@ export default {
     taskId() {
       return `task${this.task.id}`
     },
-    TaskAssignmentId () {
+    assignmentEditorId () {
       return `task-asssignments-${this.task.id}`
     }
   }
