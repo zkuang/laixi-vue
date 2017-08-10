@@ -51,7 +51,7 @@ export default {
   },
   computed: {
     hasBeenAssigned() {
-      if (this.item.task.assignee === null) return false
+      if (!this.item.task.assignee || this.item.task.assignee.id === null) return false
       else return true
       // return this.item.type === 'task-created' && this.item.task.assignee
     },
