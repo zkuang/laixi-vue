@@ -8,12 +8,12 @@
         <i class="trash outline icon"></i>
       </button>
   </div>
-  <div class="task-detail" v-if="!create && !editable">
+  <div class="task-detail" :class="{'checked-state': task.checked, 'over-deadline-state': overDeadline}" v-if="!create && !editable">
     <span class="checkbox-wrapper" :class="{disabled}">
         <input type="checkbox" :checked="task.checked" :id="inputId" :disabled="disabled" @change.once="taskStateChange">
         <label class="disable-checkbox" :for="inputId"></label>
     </span>
-    <label>{{task.title}}</label>
+    <label class="title-label">{{task.title}}</label>
     <div class="task-content">
       <div class="ui image label assignment">
         <img v-if="task.assignee && task.assignee.headimgurl" :src="task.assignee.headimgurl" />
@@ -46,6 +46,22 @@
 <style>
 .taskitem {
   width: 100%;
+}
+
+.taskitem .checked-state .disable-checkbox{
+  background-color: #2cbe4e;
+}
+
+.taskitem .checked-state .disable-checkbox:after{
+  border-color: black;
+}
+
+.taskitem .checked-state .title-label{
+  color: grey;
+}
+
+.taskitem .over-deadline-state .title-label{
+  color: #ffdf05;
 }
 
 .taskitem .task-actions {
@@ -165,8 +181,18 @@ export default {
       newTask: {
         assignee: {},
         deadline: undefined
-      }
+      },
+      overDeadline: false
     }
+  },
+  mounted () {
+    if (!this.disabled && !this.task.checked) {
+      this.setupPopups()
+    }
+    this.$nextTick(() => {
+      if (this.task.deadline && (new Date().getTime() - new Date(this.task.deadline).getTime() > 0) && !this.task.checked) this.overDeadline = true
+      else this.overDeadline = false
+    })
   },
   components: {
     'assignment-editor': TaskAssignmentEditor
@@ -189,11 +215,6 @@ export default {
     },
     assignmentEditorId() {
       return `taskitem-assignmenteditor-${this.task.id}`
-    }
-  },
-  mounted() {
-    if (!this.disabled && !this.task.checked) {
-      this.setupPopups()
     }
   },
   updated() {
