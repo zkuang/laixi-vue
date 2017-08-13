@@ -2,7 +2,7 @@
 <section class="ui stackable two column grid">
   <div class="thirteen wide column draft-description section" id="draft">
     <h2>{{draft.title}}</h2>
-    <p v-html="draft.content"></p>
+    <p v-html="content"></p>
   </div>
   <div v-if="draft.removed" class="three wide column ui secondary vertical menu buttons">
     <div class="item">
@@ -68,9 +68,8 @@
 </style>
 
 <script>
-import {
-  mapGetters
-} from 'vuex'
+import { mapGetters } from 'vuex'
+import { Html } from '../utils'
 
 export default {
   name: 'Draft',
@@ -122,6 +121,9 @@ export default {
       console.log(this.draft.removed)
       if (this.draft.removed) return '恢复'
       else return '删除'
+    },
+    content() {
+      return Html.whileListEscapeHTML(this.draft.content)
     }
   }
 }

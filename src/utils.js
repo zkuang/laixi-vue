@@ -41,16 +41,17 @@ export const Html = {
   },
 
   unescapeHTML(text) {
-    var doc = new DOMParser().parseFromString(text, 'text/html')
-    return doc.documentElement.textContent
+    var txt = document.createElement('textarea')
+    txt.innerHTML = text
+    return txt.value
   },
 
   whileListEscapeHTML(html) {
     return Html.escapeHTML(
-        html.replace('<br>', '%br%')
+        html.replace(/<br *\/>/g, '%br%')
         .replace('<blockquote>', '%blockquote%')
         .replace('</blockquote>', '%/blockquote%')
-      ).replace('%br%', '<br>')
+      ).replace(/%br%/g, '<br />')
       .replace('%blockquote%', '<blockquote>')
       .replace('%/blockquote%', '</blockquote>')
   }
