@@ -157,7 +157,7 @@ export default {
         html: true,
         breaks: true
       })
-      console.log(this.content)
+      // console.log(this.content)
       return md.render(this.content)
     },
     id() {

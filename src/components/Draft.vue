@@ -2,7 +2,7 @@
 <section class="ui stackable two column grid">
   <div class="thirteen wide column draft-description section" id="draft">
     <h2>{{draft.title}}</h2>
-    <p v-html="content"></p>
+    <pre v-html="content"></pre>
   </div>
   <div v-if="draft.removed" class="three wide column ui secondary vertical menu buttons">
     <div class="item">
@@ -118,12 +118,20 @@ export default {
       'project'
     ]),
     modalAction() {
-      console.log(this.draft.removed)
       if (this.draft.removed) return '恢复'
       else return '删除'
     },
     content() {
-      return Html.whileListEscapeHTML(this.draft.content)
+      if (this.draft.content.indexOf('>') > -1 || this.draft.content.indexOf('<') > -1) {
+        console.log(this.draft.content)
+        let a = Html.rawEscapeHTML(this.draft.content)
+        console.log(a)
+        let b = Html.rawUnescapeHTML(a).replace(/&lt;(br *\/)&gt;/g, '<$1>')
+        console.log(b)
+        return b
+      } else {
+        return Html.rawUnescapeHTML(this.draft.content)
+      }
     }
   }
 }

@@ -40,10 +40,11 @@ export const Html = {
     return escapeEl.innerHTML
   },
 
-  unescapeHTML(text) {
+  rawEditUnescapeHTML(text) {
     var txt = document.createElement('textarea')
     txt.innerHTML = text
-    return txt.value
+    return txt.value.replace(/<br *\/>/g, '\n')
+      .replace(/%%%(br *\/)%%%/g, '<$1>')
   },
 
   whileListEscapeHTML(html) {
@@ -54,5 +55,21 @@ export const Html = {
       ).replace(/%br%/g, '<br />')
       .replace('%blockquote%', '<blockquote>')
       .replace('%/blockquote%', '</blockquote>')
+  },
+
+  rawEscapeHTML(html) {
+    let data = html.replace(/<(br *\/)>/g, '%%%$1%%%').replace(/(?:\r\n|\r|\n)/g, '<br />')
+    escapeEl.textContent = data
+    return escapeEl.innerHTML
+  },
+  rawUnescapeHTML(data) {
+    let doc = new DOMParser().parseFromString(data, 'text/html')
+    return Html.whileListEscapeHTML(doc.documentElement.textContent).replace(/%%%(br *\/)%%%/g, '&lt;$1&gt;')
+  },
+  mdEscapeHTML(html) {
+
+  },
+  mdUnescapeHTML(md) {
+
   }
 }

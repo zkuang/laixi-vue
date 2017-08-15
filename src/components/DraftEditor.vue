@@ -77,7 +77,7 @@ export default {
     },
     content() {
       if (this.$route.name === 'DraftEdit') {
-        return Html.unescapeHTML(this.draft.rawContent)
+        return Html.rawEditUnescapeHTML(this.draft.rawContent)
       }
     },
     ...mapGetters(['draft', 'project'])
@@ -89,17 +89,15 @@ export default {
       let contentTxt = text.val()
       let titleTxt = title.val()
       if (!contentTxt || !titleTxt) {
-        console.log('should show error message')
         return
       }
       if (contentTxt === this.draft.title && titleTxt === this.draft.title) {
-        console.log('no changes......')
         return
       }
       let draft = {}
       if (this.$route.name === 'DraftEdit') {
         draft = Object.assign({}, this.draft)
-        draft.content = Html.escapeHTML(contentTxt)
+        draft.content = Html.rawEscapeHTML(contentTxt)
         draft.title = titleTxt
         this.$store.dispatch('updateDraft', draft).then(() => {
           this.$router.push({
@@ -110,7 +108,7 @@ export default {
           })
         })
       } else {
-        draft.content = Html.escapeHTML(contentTxt)
+        draft.content = Html.rawEscapeHTML(contentTxt)
         draft.title = titleTxt
         draft.project_id = this.project.id
         this.$store.dispatch('createDraft', draft).then(res => {

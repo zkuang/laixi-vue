@@ -216,7 +216,7 @@ export default {
         if (item.content) {
           console.log(item.content)
           let content = item.content.replace(/(^> .*$)/gm, '').trim()
-          quote += `<p>${content.replace(/(?:\r\n|\r|\n)/g, '<br />')}</p>`
+          quote += `${content.replace(/(?:\r\n|\r|\n)/g, '<br />')}`
         }
         quote += `<p><a href="http://ilaixi.net/user/${author.id}/">@${author.nickname}</a></p>`
       }
@@ -230,8 +230,10 @@ export default {
     publish() {
       const draftId = this.draft.id
       if (!this.task) {
-        console.log(`whitelist ${Html.whileListEscapeHTML(CKEDITOR.instances['discussion-editor'].getData())}`)
-        let data = toMD(Html.whileListEscapeHTML(CKEDITOR.instances['discussion-editor'].getData()))
+        console.log((`just to md: ${toMD(CKEDITOR.instances['discussion-editor'].getData())}`))
+        // console.log(`whitelist ${Html.whileListEscapeHTML(CKEDITOR.instances['discussion-editor'].getData())}`)
+        let data = toMD(CKEDITOR.instances['discussion-editor'].getData())
+        // let data = toMD(Html.whileListEscapeHTML(CKEDITOR.instances['discussion-editor'].getData()))
         let taskId
         if (this.$route.params.tid) {
           taskId = this.$route.params.tid
