@@ -214,8 +214,8 @@ export default {
             `<span>任务</span>&nbsp;&nbsp;<a href="http://ilaixi.net/task/${item.task.id}/" class="task-link">${item.task.title}</a>&nbsp;&nbsp;&nbsp;&nbsp;<span class="emphasized-date">${deadline}</span>`
         }
         if (item.content) {
-          console.log('quote ', item.content)
-          let content = item.content.replace(/(^> .*$)/gm, '').trim()
+          console.log('quote ', Html.unescapeHTML(item.content))
+          let content = Html.unescapeHTML(item.content).replace(/(^> .*$)/gm, '').trim()
           quote += `${content.replace(/(?:\r\n|\r|\n)/g, '<br />')}`
         }
         quote += `<p><a href="http://ilaixi.net/user/${author.id}/">@${author.nickname}</a></p>`
@@ -232,7 +232,7 @@ export default {
       const draftId = this.draft.id
       if (!this.task) {
         // let data = toMD(CKEDITOR.instances['discussion-editor'].getData())
-        let data = toMD(Html.mdEscapeHTML(CKEDITOR.instances['discussion-editor'].getData()))
+        let data = Html.escapeHTML(toMD(Html.mdEscapeHTML(CKEDITOR.instances['discussion-editor'].getData())))
         let taskId
         if (this.$route.params.tid) {
           taskId = this.$route.params.tid
@@ -252,11 +252,12 @@ export default {
           user: this.user,
           type: 'critique'
         }
+        console.log('actual content ', data)
         this.$store.dispatch('addPostToDraft', {
           post
         })
       } else {
-        let data = toMD(Html.mdEscapeHTML(CKEDITOR.instances['discussion-editor'].getData()))
+        let data = Html.escapeHTML(toMD(Html.mdEscapeHTML(CKEDITOR.instances['discussion-editor'].getData())))
         let task = {
           title: data,
           assignee: this.task.assignee,

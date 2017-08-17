@@ -163,11 +163,11 @@ export default {
         html: true,
         breaks: true
       })
-      console.log('content', this.content)
       if (this.content.indexOf('<') > -1) {
-        return md.render(Html.mdUnescapeHTML(this.content))
+        console.log('html ', this.content)
+        return Html.mdUnescapeHTML(md.render(this.content))
       } else {
-        return md.render(this.content)
+        return md.render(Html.unescapeHTML(this.content))
       }
     },
     id() {

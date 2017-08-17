@@ -51,30 +51,30 @@ function revertBqAndBr(data) {
   return data.replace(/%c%c%c(.*?)%c%c%c/g, '<$1>')
 }
 
-function escapeHTML(html) {
-  escapeEl.textContent = html
-  return escapeEl.innerHTML
-}
-
-function convertMDBq(data) {
-  return data.replace(/(^>( .*)$)/gm, '%c%c%cmdquote$1')
-}
-
-function revertMDBq(data) {
-  return data.replace(/(^%c%c%cmdquote( .*)$)/gm, '>$1')
-}
+// function convertMDBq(data) {
+//   return data.replace(/(^>( .*)$)/gm, '%c%c%cmdquote$1')
+// }
+//
+// function revertMDBq(data) {
+//   return data.replace(/(^%c%c%cmdquote( .*)$)/gm, '>$1')
+// }
 
 export const Html = {
-  whileListEscapeHTML(html) {
-    return revertBqAndBr(Html.escapeHTML(convertBqAndBr(html)))
+  escapeHTML(html) {
+    escapeEl.textContent = html
+    return escapeEl.innerHTML
+  },
+  unescapeHTML(data) {
+    let doc = new DOMParser().parseFromString(data, 'text/html')
+    return doc.documentElement.textContent
   },
   rawEscapeHTML(html) {
     let data = convertNewlineToBr(convertBqAndBr(html))
-    return escapeHTML(data)
+    return Html.escapeHTML(data)
   },
   rawUnescapeHTML(data) {
     let doc = new DOMParser().parseFromString(data, 'text/html')
-    return convertNewlineToBr(escapeHTML(revertBqAndBr(convertBrToNewline(doc.documentElement.textContent))))
+    return convertNewlineToBr(Html.escapeHTML(revertBqAndBr(convertBrToNewline(doc.documentElement.textContent))))
   },
   rawEditUnescapeHTML(text) {
     var txt = document.createElement('textarea')
@@ -82,10 +82,9 @@ export const Html = {
     return revertBqAndBr(txt.value.replace(/<br *\/>/g, '\n'))
   },
   mdEscapeHTML(html) {
-    return revertBqAndBr(convertNewlineToBr(escapeHTML(convertBqAndBr(html))))
+    return revertBqAndBr(convertNewlineToBr(Html.escapeHTML(convertBqAndBr(html))))
   },
-  mdUnescapeHTML(md) {
-    console.log('escape', convertMDBq(md))
-    return revertMDBq(escapeHTML(convertMDBq(md)))
+  mdUnescapeHTML(html) {
+    return revertBqAndBr(Html.escapeHTML(convertBqAndBr(html)))
   }
 }
