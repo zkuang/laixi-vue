@@ -28,7 +28,6 @@ export default {
   mounted() {
     EventBus.$on('reply', item => {
       this.$refs.editor.updateContent(item)
-      console.log(this.posts)
     })
 
     EventBus.$on('api:error', response => {

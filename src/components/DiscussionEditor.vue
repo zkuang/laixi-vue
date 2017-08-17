@@ -214,13 +214,14 @@ export default {
             `<span>任务</span>&nbsp;&nbsp;<a href="http://ilaixi.net/task/${item.task.id}/" class="task-link">${item.task.title}</a>&nbsp;&nbsp;&nbsp;&nbsp;<span class="emphasized-date">${deadline}</span>`
         }
         if (item.content) {
-          console.log(item.content)
+          console.log('quote ', item.content)
           let content = item.content.replace(/(^> .*$)/gm, '').trim()
           quote += `${content.replace(/(?:\r\n|\r|\n)/g, '<br />')}`
         }
         quote += `<p><a href="http://ilaixi.net/user/${author.id}/">@${author.nickname}</a></p>`
+        console.log('quote', quote)
       }
-      quote = '<blockquote>' + quote + '</blockquote><p></p>'
+      quote = '<blockquote>' + quote + '</blockquote>'
       this.showEditor(quote)
     },
     cancel() {
@@ -230,10 +231,8 @@ export default {
     publish() {
       const draftId = this.draft.id
       if (!this.task) {
-        console.log((`just to md: ${toMD(CKEDITOR.instances['discussion-editor'].getData())}`))
-        // console.log(`whitelist ${Html.whileListEscapeHTML(CKEDITOR.instances['discussion-editor'].getData())}`)
-        let data = toMD(CKEDITOR.instances['discussion-editor'].getData())
-        // let data = toMD(Html.whileListEscapeHTML(CKEDITOR.instances['discussion-editor'].getData()))
+        // let data = toMD(CKEDITOR.instances['discussion-editor'].getData())
+        let data = toMD(Html.mdEscapeHTML(CKEDITOR.instances['discussion-editor'].getData()))
         let taskId
         if (this.$route.params.tid) {
           taskId = this.$route.params.tid
@@ -253,12 +252,11 @@ export default {
           user: this.user,
           type: 'critique'
         }
-        console.log(`toMd: ${data}`)
         this.$store.dispatch('addPostToDraft', {
           post
         })
       } else {
-        let data = toMD(Html.whileListEscapeHTML(CKEDITOR.instances['discussion-editor'].getData()))
+        let data = toMD(Html.mdEscapeHTML(CKEDITOR.instances['discussion-editor'].getData()))
         let task = {
           title: data,
           assignee: this.task.assignee,

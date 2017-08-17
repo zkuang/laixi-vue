@@ -43,7 +43,7 @@ blockquote>p>span {
 
 <script>
 import VueMarkdown from 'vue-markdown'
-import { DateTime } from '../utils'
+import { DateTime, Html } from '../utils'
 import toMD from 'to-markdown'
 import { mapGetters } from 'vuex'
 
@@ -93,10 +93,16 @@ export default {
     },
     showEditor() {
       let md = markdownit({
-        html: false,
+        html: true,
         breaks: true
       })
-      let content = md.render(this.content)
+      let content
+      if (this.content.indexOf('<') > -1) {
+        content = md.render(Html.mdUnescapeHTML(this.content))
+      } else {
+        content = md.render(this.content)
+      }
+      console.log('render ', content)
       CKEDITOR.replace(this.id)
       setTimeout(() => {
         $(this.$el).find('.critique-content').hide()
@@ -157,8 +163,12 @@ export default {
         html: true,
         breaks: true
       })
-      // console.log(this.content)
-      return md.render(this.content)
+      console.log('content', this.content)
+      if (this.content.indexOf('<') > -1) {
+        return md.render(Html.mdUnescapeHTML(this.content))
+      } else {
+        return md.render(this.content)
+      }
     },
     id() {
       return `critique-${this.item.id}`

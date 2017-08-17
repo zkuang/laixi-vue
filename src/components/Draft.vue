@@ -123,13 +123,11 @@ export default {
     },
     content() {
       if (this.draft.content.indexOf('>') > -1 || this.draft.content.indexOf('<') > -1) {
-        console.log(this.draft.content)
         let a = Html.rawEscapeHTML(this.draft.content)
-        console.log(a)
         let b = Html.rawUnescapeHTML(a).replace(/&lt;(br *\/)&gt;/g, '<$1>')
-        console.log(b)
         return b
       } else {
+        console.log(Html.rawUnescapeHTML(this.draft.content))
         return Html.rawUnescapeHTML(this.draft.content)
       }
     }

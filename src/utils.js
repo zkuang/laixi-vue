@@ -33,43 +33,59 @@ export const Page = {
 
 let escapeEl = document.createElement('textarea')
 
+function convertNewlineToBr(data) {
+  return data.replace(/(?:\r\n|\r|\n)/g, '<br />')
+}
+
+function convertBrToNewline(data) {
+  return data.replace(/<br \/>/g, '\n')
+}
+
+function convertBqAndBr(data) {
+  return data.replace(/<(br *\/)>/g, '%c%c%c$1%c%c%c')
+    .replace(/<(blockquote *)>/g, '%c%c%c$1%c%c%c')
+    .replace(/<(\/blockquote *)>/g, '%c%c%c$1%c%c%c')
+}
+
+function revertBqAndBr(data) {
+  return data.replace(/%c%c%c(.*?)%c%c%c/g, '<$1>')
+}
+
+function escapeHTML(html) {
+  escapeEl.textContent = html
+  return escapeEl.innerHTML
+}
+
+function convertMDBq(data) {
+  return data.replace(/(^>( .*)$)/gm, '%c%c%cmdquote$1')
+}
+
+function revertMDBq(data) {
+  return data.replace(/(^%c%c%cmdquote( .*)$)/gm, '>$1')
+}
+
 export const Html = {
-
-  escapeHTML(html) {
-    escapeEl.textContent = html
-    return escapeEl.innerHTML
-  },
-
-  rawEditUnescapeHTML(text) {
-    var txt = document.createElement('textarea')
-    txt.innerHTML = text
-    return txt.value.replace(/<br *\/>/g, '\n')
-      .replace(/%%%(br *\/)%%%/g, '<$1>')
-  },
-
   whileListEscapeHTML(html) {
-    return Html.escapeHTML(
-        html.replace(/<br *\/>/g, '%br%')
-        .replace('<blockquote>', '%blockquote%')
-        .replace('</blockquote>', '%/blockquote%')
-      ).replace(/%br%/g, '<br />')
-      .replace('%blockquote%', '<blockquote>')
-      .replace('%/blockquote%', '</blockquote>')
+    return revertBqAndBr(Html.escapeHTML(convertBqAndBr(html)))
   },
-
   rawEscapeHTML(html) {
-    let data = html.replace(/<(br *\/)>/g, '%%%$1%%%').replace(/(?:\r\n|\r|\n)/g, '<br />')
-    escapeEl.textContent = data
-    return escapeEl.innerHTML
+    let data = convertNewlineToBr(convertBqAndBr(html))
+    return escapeHTML(data)
   },
   rawUnescapeHTML(data) {
     let doc = new DOMParser().parseFromString(data, 'text/html')
-    return Html.whileListEscapeHTML(doc.documentElement.textContent).replace(/%%%(br *\/)%%%/g, '&lt;$1&gt;')
+    return convertNewlineToBr(escapeHTML(revertBqAndBr(convertBrToNewline(doc.documentElement.textContent))))
+  },
+  rawEditUnescapeHTML(text) {
+    var txt = document.createElement('textarea')
+    txt.innerHTML = text
+    return revertBqAndBr(txt.value.replace(/<br *\/>/g, '\n'))
   },
   mdEscapeHTML(html) {
-
+    return revertBqAndBr(convertNewlineToBr(escapeHTML(convertBqAndBr(html))))
   },
   mdUnescapeHTML(md) {
-
+    console.log('escape', convertMDBq(md))
+    return revertMDBq(escapeHTML(convertMDBq(md)))
   }
 }
