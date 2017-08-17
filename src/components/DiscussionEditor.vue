@@ -204,7 +204,7 @@ export default {
       let quote = ''
       if (item.type === 'draft-created' || item.type === 'draft-edited') {
         quote += `<span>文档</span>
-                    <p>@${author.nickname}</p>`
+                    <p><a href="http://ilaixi.net/user/${author.id}/">@${author.nickname}</a></p>`
       } else {
         if (item.task) {
           let deadline
@@ -214,13 +214,12 @@ export default {
             `<span>任务</span>&nbsp;&nbsp;<a href="http://ilaixi.net/task/${item.task.id}/" class="task-link">${item.task.title}</a>&nbsp;&nbsp;&nbsp;&nbsp;<span class="emphasized-date">${deadline}</span>`
         }
         if (item.content) {
-          console.log('quote ', Html.unescapeHTML(item.content))
           let content = Html.unescapeHTML(item.content).replace(/(^> .*$)/gm, '').trim()
           quote += `${content.replace(/(?:\r\n|\r|\n)/g, '<br />')}`
         }
         quote += `<p><a href="http://ilaixi.net/user/${author.id}/">@${author.nickname}</a></p>`
-        console.log('quote', quote)
       }
+      console.log(quote)
       quote = '<blockquote>' + quote + '</blockquote>'
       this.showEditor(quote)
     },
@@ -252,7 +251,6 @@ export default {
           user: this.user,
           type: 'critique'
         }
-        console.log('actual content ', data)
         this.$store.dispatch('addPostToDraft', {
           post
         })

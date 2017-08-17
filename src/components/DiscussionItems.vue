@@ -21,8 +21,8 @@
 </template>
 
 <style>
-.discussion-items>ul {
-  padding-left: 0;
+.ui.grid.discussion-items>ul.column:not(.row) {
+  padding-right: 100px;
 }
 
 .discussion-items>ul>li {

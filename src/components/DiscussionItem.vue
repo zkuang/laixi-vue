@@ -44,6 +44,7 @@
 .discussion-item .ui.icon.buttons .button {
   background: transparent;
   padding: .5em;
+  padding-top: 0;
   color: lightgrey;
 }
 
@@ -137,10 +138,6 @@
 
 .discussion-item-content blockquote p {
   margin-bottom: 0;
-}
-
-.right.floated.ui.icon.buttons .button {
-  margin-top: .5em;
 }
 
 .discussion-item .ui.icon.buttons .ui.button.in-popup {

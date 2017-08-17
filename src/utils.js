@@ -82,7 +82,8 @@ export const Html = {
     return revertBqAndBr(txt.value.replace(/<br *\/>/g, '\n'))
   },
   mdEscapeHTML(html) {
-    return revertBqAndBr(convertNewlineToBr(Html.escapeHTML(convertBqAndBr(html))))
+    let res = revertBqAndBr(convertNewlineToBr(Html.escapeHTML(convertBqAndBr(html))))
+    return res
   },
   mdUnescapeHTML(html) {
     return revertBqAndBr(Html.escapeHTML(convertBqAndBr(html)))

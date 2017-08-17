@@ -63,7 +63,10 @@ export default {
   //    },
   methods: {
     save() {
-      let data = toMD(CKEDITOR.instances[this.id].getData())
+      console.log(CKEDITOR.instances[this.id].getData())
+      console.log(Html.mdEscapeHTML(CKEDITOR.instances[this.id].getData()))
+      console.log(toMD(Html.mdEscapeHTML(CKEDITOR.instances[this.id].getData())))
+      let data = Html.escapeHTML(toMD(Html.mdEscapeHTML(CKEDITOR.instances[this.id].getData())))
       const regex = />.*\(http:\/\/.*\/task\/(.*)\/\).*$/gm
       const draftId = this.draft.id
       let match = regex.exec(data)
@@ -72,6 +75,7 @@ export default {
         taskId = match[1]
         data = data.replace(regex, '').trim()
       }
+      console.log(data)
       let post = {
         id: this.item.id,
         draft_id: draftId,
@@ -98,11 +102,10 @@ export default {
       })
       let content
       if (this.content.indexOf('<') > -1) {
-        content = md.render(Html.mdUnescapeHTML(this.content))
+        content = Html.mdUnescapeHTML(md.render(this.content))
       } else {
-        content = md.render(this.content)
+        content = md.render(Html.unescapeHTML(this.content))
       }
-      console.log('render ', content)
       CKEDITOR.replace(this.id)
       setTimeout(() => {
         $(this.$el).find('.critique-content').hide()
@@ -164,7 +167,6 @@ export default {
         breaks: true
       })
       if (this.content.indexOf('<') > -1) {
-        console.log('html ', this.content)
         return Html.mdUnescapeHTML(md.render(this.content))
       } else {
         return md.render(Html.unescapeHTML(this.content))
