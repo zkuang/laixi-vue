@@ -152,9 +152,8 @@ export default {
         data = md.render(Html.unescapeHTML(this.item.content))
       }
       if (this.$route.name === 'TaskDiscussion') {
-        data = data.replace(/<blockquote>[\s\S]*?<\/blockquote>/g, '')
+        data = data.replace(/<blockquote>([\s\S]*?)任务.*?<p>/g, '<blockquote>$1<p>')
       }
-      console.log(data)
       return data
     },
     id() {

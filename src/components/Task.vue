@@ -12,7 +12,7 @@
           </button>
         </div>
         <span class="checkbox-wrapper" :class="{disabled: draft.removed}">
-          <input type="checkbox" :checked="task.checked" :id="taskId" :disabled="draft.removed">
+          <input type="checkbox" :checked="task.checked" :id="taskId" :disabled="draft.removed" @change="taskStateChange">
           <label class="disable-checkbox" :for="taskId"></label>
         </span>
         <span v-show="!editTaskTitle" class="task-title">{{task.title}}</span>
@@ -227,6 +227,16 @@ export default {
         }
       }).modal('show')
     },
+    taskStateChange() {
+      let isCheck = $(this.$el).find('.checkbox-wrapper>input[type=checkbox]').is(':checked')
+      if (isCheck !== this.task.checked) {
+        console.log('updating')
+        this.task.checked = isCheck
+        this.$store.dispatch('updateTask', this.task).then((task) => {
+          if (this.$route.name === 'TaskDiscussion') return this.$store.dispatch('getLatestTaskPost', task.id)
+        })
+      }
+    },
     setEdit() {
       this.editing = true
       Vue.nextTick(() => {
@@ -275,8 +285,6 @@ export default {
           return true
         },
         onHide() {
-          console.log('hide')
-
           function updateAssignment(task) {
             let dirty = false
             let assignment = self.$refs[self.assignmentEditorId].getData()
