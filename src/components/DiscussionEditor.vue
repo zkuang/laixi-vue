@@ -226,7 +226,7 @@ export default {
         }
         quote += `<p><a href="http://ilaixi.net/user/${author.id}/">@${author.nickname}</a></p>`
       }
-      quote = '<blockquote>' + quote + '</blockquote>'
+      quote = '<blockquote>' + quote + '</blockquote>' + '<p></p>'
       this.showEditor(quote)
     },
     cancel() {

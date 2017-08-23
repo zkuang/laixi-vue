@@ -1,17 +1,21 @@
 <template>
 <div class="doc-log">
   <span class="discussion-item-avatar">
-        <i v-if="isDraftCreate" class="grey add circle icon"></i>
-        <i v-else class="grey write square icon"></i>
-      </span>
-  <span class="time-span">{{createdDate}}</span>
-  <span class="username">{{item.user.nickname}}</span>
-  <span>{{content}}</span>
+    <i v-if="isDraftCreate" class="grey add circle icon"></i>
+    <i v-else class="grey write square icon"></i>
+  </span>
+  <div class="event-log-content-wrapper">
+    <div class="event-log-content">
+      <span class="time-span">{{createdDate}}</span>
+      <span class="username">{{item.user.nickname}}</span>
+      <span>{{content}}</span>
+    </div>
+  </div>
 </div>
 </template>
 
 <style>
-.doc-log span {
+.doc-log span.username {
   font-weight: bold;
 }
 </style>

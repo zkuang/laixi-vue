@@ -1,6 +1,6 @@
 <template>
 <li class="taskitem" :id="itemId" @mouseover="active" @mouseleave="deactive">
-  <div class="task-actions" :class="{checked: task.checked}">
+  <div v-if="notPhoneScreen" class="task-actions" :class="{checked: task.checked}">
     <button class="ui button" @click="edit" v-if="!task.checked">
         <i class="write icon"></i>
       </button>
@@ -13,13 +13,15 @@
         <input type="checkbox" :checked="task.checked" :id="inputId" :disabled="disabled" @change.once="taskStateChange">
         <label class="disable-checkbox" :for="inputId"></label>
     </span>
-    <label class="title-label"><a :href="`/task/${task.id}`">{{task.title}}</a></label>
-    <div class="task-content">
-      <div class="ui image label assignment">
-        <img v-if="task.assignee && task.assignee.headimgurl" :src="task.assignee.headimgurl" />
-        <span v-else>{{ assignee }}</span> {{ dueDate }}
+    <div class="task-item-content-wrapper">
+      <label class="title-label"><a :href="`/task/${task.id}`">{{task.title}}</a></label>
+      <div class="task-content">
+        <div class="ui image label assignment">
+          <img v-if="task.assignee && task.assignee.headimgurl" :src="task.assignee.headimgurl" />
+          <span v-else>{{ assignee }}</span> {{ dueDate }}
+        </div>
+        <assignment-editor :ref="assignmentEditorId" :name="assignmentEditorId" :task="task"></assignment-editor>
       </div>
-      <assignment-editor :ref="assignmentEditorId" :name="assignmentEditorId" :task="task"></assignment-editor>
     </div>
   </div>
   <div class="task-detail" v-if="editable">
@@ -64,6 +66,11 @@
   color: #ffdf05;
 }
 
+.taskitem .task-item-content-wrapper {
+  margin-left: 1.2em;
+  display: inline-block;
+}
+
 .taskitem .task-actions {
   display: inline-block;
   border: 1px solid lightgray;
@@ -74,6 +81,7 @@
   line-height: 2.2rem;
   margin-right: 1.2rem;
   visibility: hidden;
+  vertical-align: top;
 }
 
 .taskitem .task-actions.checked {
@@ -86,10 +94,40 @@
   width: 80%;
 }
 
-.taskitem .task-detail>label {
+.taskitem .task-detail .title-label {
   display: inline-block;
-  min-width: 14em;
-  margin-left: 1.2em;
+  margin-right: 1.2em;
+  max-width: 82%;
+}
+
+@media (max-width: 767px) {
+  .taskitem .task-detail .task-item-content-wrapper {
+    max-width: 33vw;
+  }
+}
+
+@media (min-width: 768px) {
+  .taskitem .task-detail .task-item-content-wrapper {
+    max-width: 46vw;
+  }
+}
+
+@media (min-width: 980px) {
+  .taskitem .task-detail .task-item-content-wrapper {
+    max-width: 40vw;
+  }
+}
+
+@media (min-width: 992px) {
+  .taskitem .task-detail .task-item-content-wrapper {
+    max-width: 48vw;
+  }
+}
+
+@media (min-width: 1200px) {
+  .taskitem .task-detail .task-item-content-wrapper {
+    max-width: 48vw;
+  }
 }
 
 .taskitem .task-edit-actions {
@@ -101,6 +139,7 @@
   border-bottom: dashed 1px #aeb3b9;
   min-width: 20em;
   padding-left: 16px;
+  line-height: 1.6em;
 }
 
 .taskitem .task-detail input:focus {
@@ -123,11 +162,15 @@
 
 .taskitem .checkbox-wrapper {
   margin-right: 1.2rem;
+  float: left;
+  width: 20px;
+  margin-top: 2px;
 }
 
 .taskitem .task-content {
   display: inline-block;
   height: 100%;
+  vertical-align: top;
 }
 
 .taskitem span>span {
@@ -216,6 +259,9 @@ export default {
     },
     assignmentEditorId() {
       return `taskitem-assignmenteditor-${this.task.id}`
+    },
+    notPhoneScreen() {
+      return $(document).width() >= 768
     }
   },
   updated() {

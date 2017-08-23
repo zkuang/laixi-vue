@@ -43,4 +43,11 @@ export default {
   margin-top: 2em;
   margin-left: -50px;
 }
+
+@media (max-width: 765px) {
+  .ui.grid>.column:not(.row).section,
+  .ui.grid>.row>.column.section {
+    width: 100%!important;
+  }
+}
 </style>

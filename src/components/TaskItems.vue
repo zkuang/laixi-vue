@@ -29,10 +29,17 @@
   margin-left: -8.5rem;
 }
 
+@media (max-width: 768px) {
+  .taskitem-list {
+    margin-left: 0;
+  }
+}
+
 .taskitem-list>li {
   list-style: none;
   padding-top: auto;
   padding-bottom: auto;
+  margin-bottom: 1em;
 }
 
 .taskitem-list-header {

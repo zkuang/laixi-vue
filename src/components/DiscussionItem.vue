@@ -56,13 +56,45 @@
   color: black;
 }
 
-.discussion-item>div.task-log .time-span,
-.discussion-item>div.doc-log .time-span {
+.discussion-item .task-log .assignment-label {
+  display: inline-block;
+  vertical-align: top;
+}
+
+.discussion-item .event-log-content {
   color: gray;
+  max-width: 35em;
+  display: inline-block;
+  padding-right: 2em;
+}
+
+.discussion-item .event-log-content-wrapper {
   margin-left: 4em;
 }
 
-.discussion-item>div.task-log .username {
+@media (min-width: 768px) {
+  .discussion-item .event-log-content {
+    max-width: 30vw;
+  }
+}
+
+@media (min-width: 992px) {
+  .discussion-item .event-log-content {
+    max-width: 38vw;
+  }
+}
+
+@media (min-width: 1200px) {
+  .discussion-item .event-log-content {
+    max-width: 40vw;
+  }
+}
+
+.discussion-item .event-log-content>span {
+  margin-right: .2em;
+}
+
+.discussion-item .event-log-content .username {
   font-weight: bold;
 }
 

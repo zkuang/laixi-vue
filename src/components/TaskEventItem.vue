@@ -1,18 +1,23 @@
 <template>
 <div class="task-log">
   <span class="discussion-item-avatar">
-        <i class="grey check circle icon"></i>
-      </span>
-  <span class="time-span">{{createdDate}}</span>
-  <span class="username">{{item.user.nickname}}</span>
-  <span v-if="hasBeenAssigned">为</span>
-  <span v-if="hasBeenAssigned" class="username">{{item.task.assignee.nickname}}</span>
-  <span>{{content}}</span>
-  <a class="task-link" v-show="notInTask" @click="navigateToTask">{{item.task.title}}</a>
-  <!-- <span class="emphasized-date">{{dueDate}}</span> -->
-  <div class="ui image label" v-show="notInTask">
-    <img v-if="hasBeenAssigned" :src="item.task.assignee.headimgurl" />
-    <span v-if="!hasBeenAssigned">未指派</span> {{ dueDate }}
+    <i class="grey check circle icon"></i>
+  </span>
+  <div class="event-log-content-wrapper">
+    <div class="event-log-content">
+      <span class="time-span">{{createdDate}}</span>
+      <span class="username">{{item.user.nickname}}</span>
+      <span v-if="hasBeenAssigned">为</span>
+      <span v-if="hasBeenAssigned" class="username">{{item.task.assignee.nickname}}</span>
+      <span>{{content}}</span>
+      <a class="task-link" v-show="notInTask" @click="navigateToTask">{{item.task.title}}</a>
+    </div>
+
+    <!-- <span class="emphasized-date">{{dueDate}}</span> -->
+    <div class="ui image label assignment-label" v-show="notInTask">
+      <img v-if="hasBeenAssigned" :src="item.task.assignee.headimgurl" />
+      <span v-if="!hasBeenAssigned">未指派</span> {{ dueDate }}
+    </div>
   </div>
 </div>
 </template>
@@ -40,7 +45,6 @@ export default {
           CKEDITOR.remove(instance)
         }
       }
-      console.log('pushing to task discussion')
       this.$router.push({
         name: 'TaskDiscussion',
         params: {
