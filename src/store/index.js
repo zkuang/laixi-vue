@@ -56,7 +56,7 @@ const store = new Vuex.Store({
     },
     delDraft({ commit }, draftId) {
       return Drafts.deleteById(draftId).then(res => {
-        console.log(res)
+        console.log(res.draft)
         return res
       })
     },

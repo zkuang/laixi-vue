@@ -11,7 +11,7 @@
       </div>
 
       <div class="editor-actions">
-        <div class="task-options">
+        <div class="task-options" v-show="showTaskAssignment">
           <i class="check circle large icon"></i>
           <a>分配任务</a>
         </div>
@@ -179,7 +179,7 @@ export default {
       return 'editor'
     },
     showTaskAssignment() {
-      return this.$route.name !== 'TaskDiscussion'
+      return this.$route.name === 'DraftDiscussion' || this.$route.name === 'TaskList'
     },
     ...mapGetters([
       'draft'

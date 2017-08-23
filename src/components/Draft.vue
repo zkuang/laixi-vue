@@ -6,7 +6,10 @@
   </div>
   <div v-if="draft.removed" class="three wide column ui secondary vertical menu buttons">
     <div class="item">
-      <a class="ui positive basic button" @click="undel">移除垃圾桶</a>
+      <a class="ui positive basic button" @click="undel">移出归档</a>
+    </div>
+    <div class="item">
+      <a class="ui secondary basic button" :href="historyLink">修改历史</a>
     </div>
   </div>
   <div v-else class="three wide column ui secondary vertical menu buttons">
@@ -26,11 +29,14 @@
   <iframe name="print-frame" width="0" height="0" frameborder="0" src="about:blank"></iframe>
   <div class="ui basic modal" id="draft-deletion-modal">
     <div class="content">
-      <p>你确定要{{modalAction}}这个文档吗？</p>
+      <p v-show="!draft.removed">
+        为保留完整工作记录，维护各方利益，删除的文档将会放在归档了。
+      </p>
+      <p>{{modalAction}}</p>
     </div>
     <div class="actions">
-      <div class="ui red inverted ok approve button">确定</div>
       <div class="ui inverted cancel button">取消</div>
+      <div class="ui red inverted ok approve button">确定</div>
     </div>
   </div>
 </section>
@@ -94,7 +100,7 @@ export default {
         closable: true,
         onApprove: function () {
           self.$store.dispatch('delDraft', self.draft.id)
-          window.location.replace(`/project/${self.project.id}/drafts`)
+          window.location.replace(`/project/${self.project.id}/archive/`)
         }
       }).modal('show')
     },
@@ -104,7 +110,7 @@ export default {
         closable: true,
         onApprove: function () {
           self.$store.dispatch('delDraft', self.draft.id)
-          window.location.replace(`/project/${self.project.id}/drafts`)
+          window.location.replace(`/draft/${self.draft.id}`)
         }
       }).modal('show')
     }
@@ -118,8 +124,8 @@ export default {
       'project'
     ]),
     modalAction() {
-      if (this.draft.removed) return '恢复'
-      else return '删除'
+      if (this.draft.removed) return '确定将文档移出归档?'
+      else return '确定将文档归档?'
     },
     content() {
       if (this.draft.content.indexOf('>') > -1 || this.draft.content.indexOf('<') > -1) {
@@ -127,7 +133,6 @@ export default {
         let b = Html.rawUnescapeHTML(a).replace(/&lt;(br *\/)&gt;/g, '<$1>')
         return b
       } else {
-        console.log(Html.rawUnescapeHTML(this.draft.content))
         return Html.rawUnescapeHTML(this.draft.content)
       }
     }

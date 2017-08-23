@@ -20,8 +20,8 @@
         <div class="task-content">
           <span class="ui assignment">
             <span v-if="isAssigned">{{task.assignee.nickname}}</span>
-            <span v-if="!isAssigned">未指派</span>
-            <span>{{dueDate}}</span>
+          <span v-if="!isAssigned">未指派</span>
+          <span>{{dueDate}}</span>
           </span>
           <assignment-editor :ref="assignmentEditorId" :name="assignmentEditorId" :task="task"></assignment-editor>
         </div>
@@ -136,15 +136,18 @@
   height: auto;
   overflow: hidden;
 }
-.task-description .task-msg-detail{
+
+.task-description .task-msg-detail {
   margin-left: -7rem;
   position: relative;
 }
-.task-description .task-msg-detail .detail{
+
+.task-description .task-msg-detail .detail {
   margin-left: 7rem;
   position: relative;
 }
-.task-description .task-msg-detail .detail .task-detail-ctrl{
+
+.task-description .task-msg-detail .detail .task-detail-ctrl {
   position: absolute;
   display: inline-flex;
   top: 0;
@@ -157,22 +160,26 @@
   border-bottom-left-radius: 10px;
   border-top-left-radius: 10px;
 }
-.task-description .task-msg-detail .detail .task-detail-ctrl .btn-style{
+
+.task-description .task-msg-detail .detail .task-detail-ctrl .btn-style {
   background-color: transparent;
   padding: 0;
-  padding-left:15px;
+  padding-left: 15px;
 }
-.task-description .task-msg-detail .task-title-input{
+
+.task-description .task-msg-detail .task-title-input {
   font-size: 1.2rem;
   border: none;
   border-bottom: 1px dashed black;
   padding: 0;
   margin: 0;
 }
-.task-description .task-msg-detail .task-title-input:focus{
+
+.task-description .task-msg-detail .task-title-input:focus {
   outline: none;
 }
-.break-word{
+
+.break-word {
   overflow-wrap: break-word;
 }
 </style>
@@ -199,10 +206,9 @@ export default {
     }
   },
   props: ['task'],
-  mounted () {
+  mounted() {
     this.$nextTick(() => {
       this.setupPopup()
-      console.log(this.task)
     })
   },
   methods: {
@@ -210,7 +216,7 @@ export default {
       let self = this
       $('#task-deletion-modal').modal({
         closable: true,
-        onApprove: function() {
+        onApprove: function () {
           self.$store.dispatch('delTask', self.task)
           self.$router.push({
             name: 'DraftDiscussion',
@@ -251,11 +257,11 @@ export default {
     cancel() {
       this.editing = false
     },
-    editTitle () {
+    editTitle() {
       this.editTaskTitle = true
       $(`.task-title-input`).val(this.task.title)
     },
-    setupPopup () {
+    setupPopup() {
       let self = this
       $(this.$el).find(`.assignment`).popup({
         lastResort: 'right center',
@@ -270,6 +276,7 @@ export default {
         },
         onHide() {
           console.log('hide')
+
           function updateAssignment(task) {
             let dirty = false
             let assignment = self.$refs[self.assignmentEditorId].getData()
@@ -323,7 +330,7 @@ export default {
       if (!this.task.deadline) return '未限期'
       else return DateTime.DateMonth(this.task.deadline)
     },
-    isAssigned () {
+    isAssigned() {
       if (this.task.assignee && this.task.assignee.id != null) return true
       return false
     },
@@ -333,7 +340,7 @@ export default {
     taskId() {
       return `task${this.task.id}`
     },
-    assignmentEditorId () {
+    assignmentEditorId() {
       return `task-asssignments-${this.task.id}`
     }
   }

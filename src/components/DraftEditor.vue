@@ -1,10 +1,10 @@
 <template>
 <form class="ui form draft-editor">
-  <input type="text" name="draft-title" maxlength="20" placeholder="文档标题" :value="title">
-  <textarea type="text" name="draft-content" maxlength="10000" placeholder="文档内容" :value="content"></textarea>
+  <input type="text" name="draft-title" maxlength="20" placeholder="标题" :value="title">
+  <textarea type="text" name="draft-content" maxlength="10000" placeholder="内容" :value="content"></textarea>
   <div class="draft-editor-toolbar">
-    <button class="ui positive button" @click.prevent="save">保存</button>
     <button class="ui basic button" @click.prevent="dismiss">取消</button>
+    <button class="ui positive button" @click.prevent="save">保存</button>
   </div>
 </form>
 </template>
@@ -42,7 +42,7 @@
   min-height: 600px;
   max-height: 600px;
   margin: 1em auto 0 auto;
-  padding: 0 50px 60px;
+  padding: 1em 60px;
   font-size: 16px;
   line-height: 1.6;
   border: none;
@@ -57,6 +57,11 @@
   z-index: 100;
   border-top: 1px solid #e3e3e3;
   padding: 1em 3em;
+  height: 4.8em;
+}
+
+.draft-editor-toolbar button {
+  float: right;
 }
 </style>
 

@@ -13,7 +13,7 @@
         <input type="checkbox" :checked="task.checked" :id="inputId" :disabled="disabled" @change.once="taskStateChange">
         <label class="disable-checkbox" :for="inputId"></label>
     </span>
-    <label class="title-label">{{task.title}}</label>
+    <label class="title-label"><a :href="`/task/${task.id}`">{{task.title}}</a></label>
     <div class="task-content">
       <div class="ui image label assignment">
         <img v-if="task.assignee && task.assignee.headimgurl" :src="task.assignee.headimgurl" />
@@ -48,19 +48,19 @@
   width: 100%;
 }
 
-.taskitem .checked-state .disable-checkbox{
+.taskitem .checked-state .disable-checkbox {
   background-color: #2cbe4e;
 }
 
-.taskitem .checked-state .disable-checkbox:after{
+.taskitem .checked-state .disable-checkbox:after {
   border-color: black;
 }
 
-.taskitem .checked-state .title-label{
+.taskitem .checked-state .title-label {
   color: grey;
 }
 
-.taskitem .over-deadline-state .title-label{
+.taskitem .over-deadline-state .title-label {
   color: #ffdf05;
 }
 
@@ -100,6 +100,7 @@
   border: none;
   border-bottom: dashed 1px #aeb3b9;
   min-width: 20em;
+  padding-left: 16px;
 }
 
 .taskitem .task-detail input:focus {
@@ -185,7 +186,7 @@ export default {
       overDeadline: false
     }
   },
-  mounted () {
+  mounted() {
     if (!this.disabled && !this.task.checked) {
       this.setupPopups()
     }

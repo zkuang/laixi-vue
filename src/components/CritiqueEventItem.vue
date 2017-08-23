@@ -13,7 +13,7 @@
       <div class="editor-actions">
         <div class="editor-buttons">
           <button class="ui secondary basic button" @click="dismiss">取消</button>
-          <button class="ui teal basic button" @click="save">发布</button>
+          <button class="ui teal basic button" @click="save">保存</button>
         </div>
       </div>
     </div>
@@ -101,10 +101,10 @@ export default {
         breaks: true
       })
       let content
-      if (this.content.indexOf('<') > -1) {
-        content = Html.mdUnescapeHTML(md.render(this.content))
+      if (this.item.content.indexOf('<') > -1) {
+        content = Html.mdUnescapeHTML(md.render(this.item.content))
       } else {
-        content = md.render(Html.unescapeHTML(this.content))
+        content = md.render(Html.unescapeHTML(this.item.content))
       }
       CKEDITOR.replace(this.id)
       setTimeout(() => {
@@ -145,11 +145,17 @@ export default {
         html: true,
         breaks: true
       })
+      let data
       if (this.item.content.indexOf('<') > -1) {
-        return Html.mdUnescapeHTML(md.render(this.item.content))
+        data = Html.mdUnescapeHTML(md.render(this.item.content))
       } else {
-        return md.render(Html.unescapeHTML(this.item.content))
+        data = md.render(Html.unescapeHTML(this.item.content))
       }
+      if (this.$route.name === 'TaskDiscussion') {
+        data = data.replace(/<blockquote>[\s\S]*?<\/blockquote>/g, '')
+      }
+      console.log(data)
+      return data
     },
     id() {
       return `critique-${this.item.id}`
