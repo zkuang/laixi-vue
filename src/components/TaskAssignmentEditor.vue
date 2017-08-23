@@ -65,6 +65,7 @@ export default {
     let assignment = this.assignment
     $(this.$el).find(`#date-picker-${this.name}`).calendar({
       type: 'date',
+      minDate: new Date(),
       onChange: function(date, text, mode) {
         if (date) {
           assignment.deadline = moment(date)

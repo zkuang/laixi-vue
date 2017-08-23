@@ -5,7 +5,7 @@
       <i class="comment icon icon-posts-style"></i>
       <span class="show-post-txt">显示更多的{{ moreNumber }}条评论</span>
     </div>
-    <discussion-item v-for="post in posts" key="post.id" :item="post" :disabled="draft.removed" :assignable="(post.type === 'critique' && (currentUser && currentUser.id === post.user.id))">
+    <discussion-item v-for="post in posts" :key="post.id" :item="post" :disabled="draft.removed" :assignable="(post.type === 'critique' && (currentUser && currentUser.id === post.user.id))">
     </discussion-item>
   </ul>
   <div class="ui small modal" id="post-deletion-modal">

@@ -1,24 +1,42 @@
 <template>
 <section class="ui stackable two column grid">
   <div class="thirteen wide column task-description section">
-    <span class="checkbox-wrapper" :class="{disabled: draft.removed}">
-        <input type="checkbox" :checked="task.checked" :id="taskId" :disabled="draft.removed">
-        <label class="disable-checkbox" :for="taskId"></label>
-      </span>
-    <span class="task-title">{{task.title}}</span>
-    <div class="task-content">
-      <span>
-        <span v-if="isAssigned">{{task.assignee.nickname}}</span>
-        <span v-if="!isAssigned">未指派</span>
-      <span>{{dueDate}}</span>
-      </span>
+    <div class="task-msg-detail">
+      <div class="detail" @mouseover="activeCtrl = true" @mouseout="activeCtrl = false">
+        <div v-show="activeCtrl" class="task-detail-ctrl">
+          <button class="ui button btn-style" @click="editTitle">
+            <i class="write icon"></i>
+          </button>
+          <button class="ui button btn-style" @click="delTask">
+            <i class="trash outline icon"></i>
+          </button>
+        </div>
+        <span class="checkbox-wrapper" :class="{disabled: draft.removed}">
+          <input type="checkbox" :checked="task.checked" :id="taskId" :disabled="draft.removed">
+          <label class="disable-checkbox" :for="taskId"></label>
+        </span>
+        <span v-show="!editTaskTitle" class="task-title">{{task.title}}</span>
+        <input v-show="editTaskTitle" class="task-title-input" type="text">
+        <div class="task-content">
+          <span class="ui assignment">
+            <span v-if="isAssigned">{{task.assignee.nickname}}</span>
+            <span v-if="!isAssigned">未指派</span>
+            <span>{{dueDate}}</span>
+          </span>
+          <assignment-editor :ref="assignmentEditorId" :name="assignmentEditorId" :task="task"></assignment-editor>
+        </div>
+      </div>
+    </div>
+    <div v-show="editTaskTitle" class="task-edit-actions">
+      <button class="ui positive button" @click="save">保存修改</button>
+      <button class="ui basic button" @click="editTaskTitle = false">取消</button>
     </div>
     <div class="task-detail">
       <div class="break-word" v-if="task.description && !editing" v-html="task.description.replace(/(?:\r\n|\r|\n)/g, '<br />')">
 
       </div>
       <div v-show="editing" class="task-description-editor">
-        <textarea @keyup="autoGrow" :value="task.description">
+        <textarea maxlength="5000" placeholder="任务描述" @keyup="autoGrow" :value="task.description">
         </textarea>
       </div>
     </div>
@@ -118,6 +136,42 @@
   height: auto;
   overflow: hidden;
 }
+.task-description .task-msg-detail{
+  margin-left: -7rem;
+  position: relative;
+}
+.task-description .task-msg-detail .detail{
+  margin-left: 7rem;
+  position: relative;
+}
+.task-description .task-msg-detail .detail .task-detail-ctrl{
+  position: absolute;
+  display: inline-flex;
+  top: 0;
+  right: 100%;
+  height: 100%;
+  padding-left: 5px;
+  background-color: transparent;
+  border: 1px solid lightgray;
+  border-right: none;
+  border-bottom-left-radius: 10px;
+  border-top-left-radius: 10px;
+}
+.task-description .task-msg-detail .detail .task-detail-ctrl .btn-style{
+  background-color: transparent;
+  padding: 0;
+  padding-left:15px;
+}
+.task-description .task-msg-detail .task-title-input{
+  font-size: 1.2rem;
+  border: none;
+  border-bottom: 1px dashed black;
+  padding: 0;
+  margin: 0;
+}
+.task-description .task-msg-detail .task-title-input:focus{
+  outline: none;
+}
 .break-word{
   overflow-wrap: break-word;
 }
@@ -131,16 +185,23 @@ import {
   DateTime
 } from '../utils'
 import Vue from 'vue'
+import TaskAssignmentEditor from './TaskAssignmentEditor'
 export default {
   name: 'Task',
+  components: {
+    'assignment-editor': TaskAssignmentEditor
+  },
   data() {
     return {
-      editing: false
+      editing: false,
+      activeCtrl: false,
+      editTaskTitle: false
     }
   },
   props: ['task'],
   mounted () {
     this.$nextTick(() => {
+      this.setupPopup()
       console.log(this.task)
     })
   },
@@ -175,20 +236,92 @@ export default {
     save() {
       let description = $(this.$el).find('.task-description-editor > textarea').val()
       let task = Object.assign({}, this.task)
+      if (this.editTaskTitle) {
+        let taskTitle = $(`.task-title-input`).val()
+        if (task.title !== taskTitle) task.title = taskTitle
+      }
       let self = this
       task.description = description
       this.$store.dispatch('updateTask', task).then(task => {
+        self.editTaskTitle = false
         self.editing = false
         this.$store.dispatch('getLatestTaskPost', task.id)
       })
     },
     cancel() {
       this.editing = false
+    },
+    editTitle () {
+      this.editTaskTitle = true
+      $(`.task-title-input`).val(this.task.title)
+    },
+    setupPopup () {
+      let self = this
+      $(this.$el).find(`.assignment`).popup({
+        lastResort: 'right center',
+        position: 'right center',
+        hoverable: true,
+        on: 'click',
+        onShow() {
+          if (self.task.assignee) {
+            self.$refs[self.assignmentEditorId].setSelection(self.task.assignee.id)
+          }
+          return true
+        },
+        onHide() {
+          console.log('hide')
+          function updateAssignment(task) {
+            let dirty = false
+            let assignment = self.$refs[self.assignmentEditorId].getData()
+            if (assignment.deadline === 'null') {
+              // deadline cleared
+              if (task.deadline) {
+                // origin task has deadline, this will not be null if it's from server
+                task.deadline = 'null'
+                dirty = true
+              }
+            } else if (assignment.deadline && assignment.deadline !== 'null') {
+              // deadline has value, update the task when task has no deadline or they are not the same
+              if (!task.deadline || DateTime.DateMonth(task.deadline) !== DateTime.DateMonth(assignment.deadline)) {
+                task.deadline = assignment.deadline.format()
+                dirty = true
+              }
+            } // else leave the deadline unchanged
+
+            // console.log(task.assignee)
+            // console.log(assignment.assignee)
+            if (assignment.assignee.id === 'null') {
+              // assignee cleared
+              if (task.assignee) {
+                // origin task has assignee, this will not be null if it's from server
+                task.assignee = assignment.assignee
+                dirty = true
+              }
+            } else if (assignment.assignee.id && assignment.assignee.id !== 'null') {
+              // assignee has value, update the task when task has no assignee or they not the same
+              if (!task.assignee || task.assignee.id !== assignment.assignee.id) {
+                task.assignee = assignment.assignee
+                dirty = true
+              }
+            } // else leave the assignee unchanged
+            return dirty
+          }
+          let selfTask = Object.assign({}, self.task)
+          if (updateAssignment(selfTask)) {
+            self.$store.dispatch('updateTask', selfTask).then(task => {
+              self.$store.dispatch('getLatestTaskPost', task.id)
+            })
+            self.dirty = true
+          }
+          return true
+        }
+      })
     }
   },
   computed: {
     dueDate() {
-      return DateTime.DateMonth(this.task.deadline)
+      if (!this.task.deadline) return '未限期'
+      else return DateTime.DateMonth(this.task.deadline)
     },
     isAssigned () {
       if (this.task.assignee && this.task.assignee.id != null) return true
@@ -199,6 +332,9 @@ export default {
     ]),
     taskId() {
       return `task${this.task.id}`
+    },
+    assignmentEditorId () {
+      return `task-asssignments-${this.task.id}`
     }
   }
 }

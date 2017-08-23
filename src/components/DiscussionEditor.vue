@@ -7,7 +7,7 @@
     <div class="editor-wrapper">
       <div class="fake-textarea">发表评论或者创建任务</div>
       <div class="real-textarea">
-        <textarea name="discussion-editor" id="discussion-editor" rows="10" cols="120"></textarea>
+        <textarea :maxlength="task?500:5000" name="discussion-editor" id="discussion-editor" rows="10" cols="120"></textarea>
       </div>
 
       <div class="editor-actions">
@@ -15,7 +15,7 @@
           <i class="check circle large icon"></i>
           <a>分配任务</a>
         </div>
-        <assignment-editor v-show="" :ref="assignmentEditorId" :name="assignmentEditorId"></assignment-editor>
+        <assignment-editor :ref="assignmentEditorId" :name="assignmentEditorId"></assignment-editor>
         <div class="editor-buttons">
           <button class="ui secondary basic button" @click="cancel">取消</button>
           <button class="ui teal basic button" @click="publish">发布</button>
@@ -163,7 +163,8 @@ export default {
       onHide() {
         let assignment = self.$refs[self.assignmentEditorId].getData()
         if ((assignment.assignee.id || assignment.deadline)) {
-          self.task = assignment
+          if ((assignment.assignee && assignment.assignee.id && assignment.assignee.id !== 'null') || (assignment.deadline && assignment.deadline !== 'null')) self.task = assignment
+          else self.task = undefined
         }
         return true
       }
@@ -229,6 +230,7 @@ export default {
     },
     publish() {
       const draftId = this.draft.id
+      console.log(this.task)
       if (!this.task) {
         // let data = toMD(CKEDITOR.instances['discussion-editor'].getData())
         let data = Html.escapeHTML(toMD(Html.mdEscapeHTML(CKEDITOR.instances['discussion-editor'].getData())))
