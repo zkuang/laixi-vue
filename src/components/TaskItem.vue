@@ -27,7 +27,7 @@
       <input type="checkbox" id="create-task-input" disabled="true">
       <label class="disable-checkbox" for="create-task-input"></label>
     </span>
-    <input type="text" maxlength="500" placeholder="任务名称">
+    <input @keyup.enter="save" type="text" maxlength="500" placeholder="任务名称">
     <div class="task-content">
       <div class="ui image label assignment">
         <img v-if="taskAssignee()" :src="newTask.assignee.headimgurl" />
