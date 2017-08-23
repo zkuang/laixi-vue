@@ -121,6 +121,12 @@ import toMD from 'to-markdown'
 import TaskAssignmentEditor from './TaskAssignmentEditor'
 import { mapGetters } from 'vuex'
 
+function stripHtml(html) {
+  var tmp = document.createElement('div')
+  tmp.innerHTML = html
+  return tmp.textContent || tmp.innerText || ''
+}
+
 export default {
   name: 'DiscussionEditor',
   props: ['user'],
@@ -229,7 +235,6 @@ export default {
     },
     publish() {
       const draftId = this.draft.id
-      console.log(this.task)
       if (!this.task) {
         // let data = toMD(CKEDITOR.instances['discussion-editor'].getData())
         let data = Html.escapeHTML(toMD(Html.mdEscapeHTML(CKEDITOR.instances['discussion-editor'].getData())))
@@ -256,7 +261,7 @@ export default {
           post
         })
       } else {
-        let data = Html.escapeHTML(toMD(Html.mdEscapeHTML(CKEDITOR.instances['discussion-editor'].getData())))
+        let data = stripHtml(CKEDITOR.instances['discussion-editor'].getData())
         let task = {
           title: data,
           assignee: this.task.assignee,
@@ -272,6 +277,8 @@ export default {
       this.$refs[this.assignmentEditorId].reset()
       this.task = undefined
       CKEDITOR.instances['discussion-editor'].setData('')
+      $(this.$el).find('.real-textarea').hide()
+      $(this.$el).find('.fake-textarea').show()
     }
   }
 }
