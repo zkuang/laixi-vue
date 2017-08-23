@@ -1,7 +1,7 @@
 <template>
-<div id="app">
+<div v-show="dataReady" id="app">
   <router-view></router-view>
-  <discussion-editor v-show="!draft.removed && !draftEditing" ref="editor" :user="getCurrentUser" class="discussion-editor"></discussion-editor>
+  <discussion-editor v-show="editorShouldShow" ref="editor" :user="getCurrentUser" class="discussion-editor"></discussion-editor>
   <div class="ui small modal" id="api-error-modal">
     <div class="content">
       <p>与服务器通信发生错误，请重试。</p>
@@ -25,6 +25,11 @@ export default {
   components: {
     'discussion-editor': DiscussionEditor
   },
+  data() {
+    return {
+      dataReady: false
+    }
+  },
   mounted() {
     EventBus.$on('reply', item => {
       this.$refs.editor.updateContent(item)
@@ -35,6 +40,12 @@ export default {
         closable: true
       }).modal('show')
     })
+    EventBus.$on('route:dataFetch', () => {
+      this.dataReady = false
+    })
+    EventBus.$on('route:dataReady', () => {
+      this.dataReady = true
+    })
   },
   computed: {
     ...mapGetters([
@@ -42,8 +53,9 @@ export default {
       'getCurrentUser',
       'posts'
     ]),
-    draftEditing() {
-      return this.$route.name === 'DraftEdit' || this.$route.name === 'DraftCreate'
+    editorShouldShow() {
+      return !this.draft.removed &&
+        (this.$route.name !== 'DraftEdit' && this.$route.name !== 'DraftCreate')
     }
   }
 }

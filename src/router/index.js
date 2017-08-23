@@ -5,6 +5,7 @@ import TaskDiscussion from '@/components/TaskDiscussion'
 import DraftEditor from '@/components/DraftEditor'
 import TaskList from '@/components/TaskList'
 import store from '../store'
+import Bus from '../EventBus'
 
 Vue.use(Router)
 const MY_ID = $('#api-auth-info>input[name="user_id"]').val()
@@ -31,6 +32,7 @@ export default new Router({
       name: 'DraftDiscussion',
       component: DocDiscussion,
       beforeEnter(to, from, next) {
+        Bus.$emit('route:dataFetch')
         store.commit('setPosts', [])
         console.log(to.params)
         Promise.all(
@@ -42,6 +44,7 @@ export default new Router({
         ).then((res) => {
           return fetchProjectUser(res[0].project_id)
         }).then(() => {
+          Bus.$emit('route:dataReady')
           next()
         })
       }
@@ -51,6 +54,7 @@ export default new Router({
       name: 'TaskDiscussion',
       component: TaskDiscussion,
       beforeEnter(to, from, next) {
+        Bus.$emit('route:dataFetch')
         store.commit('setPosts', [])
         Promise.all(
           [
@@ -62,6 +66,7 @@ export default new Router({
         }).then(draft => {
           return fetchProjectUser(draft.project_id)
         }).then(() => {
+          Bus.$emit('route:dataReady')
           next()
         })
       }
@@ -71,9 +76,11 @@ export default new Router({
       name: 'DraftEdit',
       component: DraftEditor,
       beforeEnter(to, from, next) {
+        Bus.$emit('route:dataFetch')
         store.dispatch('getDraftById', to.params.did).then(res => {
           return fetchProjectUser(res.project_id)
         }).then(() => {
+          Bus.$emit('route:dataReady')
           next()
         })
       }
@@ -83,8 +90,10 @@ export default new Router({
       name: 'DraftCreate',
       component: DraftEditor,
       beforeEnter(to, from, next) {
+        Bus.$emit('route:dataFetch')
         return fetchProjectUser(to.params.pid).then(() => {
           store.commit('setDraft', {})
+          Bus.$emit('route:dataReady')
           next()
         })
       }
@@ -94,6 +103,7 @@ export default new Router({
       name: 'TaskList',
       component: TaskList,
       beforeEnter(to, from, next) {
+        Bus.$emit('route:dataFetch')
         Promise.all(
           [
             store.dispatch('getDraftById', to.params.did),
@@ -103,6 +113,7 @@ export default new Router({
         ).then(res => {
           return fetchProjectUser(res[0].project_id)
         }).then(() => {
+          Bus.$emit('route:dataReady')
           next()
         })
       }
