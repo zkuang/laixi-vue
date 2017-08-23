@@ -57,13 +57,13 @@
       <div class="ui negative basic button" @click="cancel">取消</div>
     </div>
   </div>
-  <div class="ui small modal" id="task-deletion-modal">
+  <div class="ui basic modal" id="task-deletion-modal">
     <div class="content">
       <p>你确定要删除这个任务吗？</p>
     </div>
     <div class="actions">
-      <div class="ui approve button">确定</div>
-      <div class="ui cancel button">取消</div>
+      <div class="ui red inverted ok approve button">确定</div>
+      <div class="ui inverted cancel button">取消</div>
     </div>
   </div>
 </section>
