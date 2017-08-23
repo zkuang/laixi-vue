@@ -53,7 +53,7 @@
 }
 
 .taskitem .checked-state .disable-checkbox:after {
-  border-color: black;
+  border-color: lightgrey;
 }
 
 .taskitem .checked-state .title-label {
