@@ -140,36 +140,15 @@ export default {
     createdDate() {
       return DateTime.DateMonthYear(this.item.created)
     },
-    content() {
-      if (!this.item.task || !this.item.task.id) {
-        return this.item.content
-      } else {
-        let content
-        if (!this.$route.params.tid) {
-          let deadline
-          if (this.item.task.deadline) deadline = DateTime.DateMonth(this.item.task.deadline)
-          else deadline = '未限期'
-          content =
-            `> <span>任务 <a href="http://ilaixi.net/task/${this.item.task.id}/">${this.item.task.title}</a> <span class="emphasized-date">${deadline}</span></span>`
-          if (!this.item.content.startsWith('>')) {
-            content += `\n> [@creator](http://ilaixi.net/user/)\n`
-          }
-          content += `\n${this.item.content}`
-        } else {
-          content = this.item.content
-        }
-        return content
-      }
-    },
     markdownContent() {
       let md = markdownit({
         html: true,
         breaks: true
       })
-      if (this.content.indexOf('<') > -1) {
-        return Html.mdUnescapeHTML(md.render(this.content))
+      if (this.item.content.indexOf('<') > -1) {
+        return Html.mdUnescapeHTML(md.render(this.item.content))
       } else {
-        return md.render(Html.unescapeHTML(this.content))
+        return md.render(Html.unescapeHTML(this.item.content))
       }
     },
     id() {

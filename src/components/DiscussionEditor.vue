@@ -220,7 +220,6 @@ export default {
         }
         quote += `<p><a href="http://ilaixi.net/user/${author.id}/">@${author.nickname}</a></p>`
       }
-      console.log(quote)
       quote = '<blockquote>' + quote + '</blockquote>'
       this.showEditor(quote)
     },
@@ -239,7 +238,7 @@ export default {
           taskId = this.$route.params.tid
         }
         const regex = />.*\(http:\/\/.*\/task\/(.*)\/\).*$/gm
-        let match = regex.exec(data)
+        let match = regex.exec(toMD(CKEDITOR.instances['discussion-editor'].getData()))
         if (match !== null) {
           if (!taskId) {
             taskId = match[1]
