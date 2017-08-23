@@ -66,6 +66,11 @@ export default {
     $(this.$el).find(`#date-picker-${this.name}`).calendar({
       type: 'date',
       minDate: new Date(),
+      formatter: {
+        date: (date, settings) => {
+          return `${new Date(date).getFullYear()}年${DateTime.DateMonth(date)}`
+        }
+      },
       onChange: function(date, text, mode) {
         if (date) {
           assignment.deadline = moment(date)
