@@ -194,6 +194,10 @@
   color: red;
 }
 
+.ui.button.in-popup:first-child {
+  margin-bottom: 6px;
+}
+
 .ui.button.in-popup i.icon {
   font-size: 1.2em;
 }

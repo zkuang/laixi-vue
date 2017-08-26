@@ -206,6 +206,7 @@ export default {
         let iframe = $(self.$el).find('iframe')
         $('blockquote', iframe.contents()).css('font-style', 'normal').css('color', 'lightgrey')
           .css('font-family', 'Helvetica Neue,Helvetica,PingFang SC,Hiragino Sans GB,Microsoft YaHei,Noto Sans CJK SC,WenQuanYi Micro Hei,Arial,sans-serif')
+        $('blockquote > p', iframe.contents()).css('margin-top', '5px').css('margin-bottom', '5px')
       })
       this.task = undefined
       this.$refs[this.assignmentEditorId].reset()

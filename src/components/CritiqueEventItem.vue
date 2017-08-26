@@ -31,6 +31,10 @@ blockquote>p>span {
   width: 100%;
 }
 
+.comment .critique-editor .editor-actions {
+  margin-top: 1em;
+}
+
 .critique-content .critique-meta span {
   font-weight: bold;
   font-size: 14px;
