@@ -66,11 +66,9 @@
 </style>
 
 <script>
-import {
-  mapGetters
-} from 'vuex'
+import { mapGetters } from 'vuex'
 
-import { Html } from '../utils'
+// import { Html } from '../utils'
 
 export default {
   name: 'draft-editor',
@@ -82,7 +80,8 @@ export default {
     },
     content() {
       if (this.$route.name === 'DraftEdit') {
-        return Html.rawEditUnescapeHTML(this.draft.rawContent)
+        // return Html.rawEditUnescapeHTML(this.draft.rawContent)
+        return this.draft.content
       }
     },
     ...mapGetters(['draft', 'project'])
@@ -96,13 +95,14 @@ export default {
       if (!contentTxt || !titleTxt) {
         return
       }
-      if (contentTxt === this.draft.title && titleTxt === this.draft.title) {
+      if (contentTxt === this.draft.content && titleTxt === this.draft.title) {
         return
       }
       let draft = {}
       if (this.$route.name === 'DraftEdit') {
         draft = Object.assign({}, this.draft)
-        draft.content = Html.rawEscapeHTML(contentTxt)
+        // draft.content = Html.rawEscapeHTML(contentTxt)
+        draft.content = contentTxt
         draft.title = titleTxt
         this.$store.dispatch('updateDraft', draft).then(() => {
           this.$router.push({
@@ -113,7 +113,8 @@ export default {
           })
         })
       } else {
-        draft.content = Html.rawEscapeHTML(contentTxt)
+        // draft.content = Html.rawEscapeHTML(contentTxt)
+        draft.content = contentTxt
         draft.title = titleTxt
         draft.project_id = this.project.id
         this.$store.dispatch('createDraft', draft).then(res => {

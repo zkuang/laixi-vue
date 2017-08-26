@@ -109,8 +109,9 @@ export default {
       $('#draft-deletion-modal').modal({
         closable: true,
         onApprove: function () {
-          self.$store.dispatch('delDraft', self.draft.id)
-          window.location.replace(`/draft/${self.draft.id}`)
+          self.draft.removed = false
+          self.$store.dispatch('undelDraft', self.draft.id)
+          // window.location.replace(`/draft/${self.draft.id}`)
         }
       }).modal('show')
     }
@@ -129,11 +130,14 @@ export default {
     },
     content() {
       if (this.draft.content.indexOf('>') > -1 || this.draft.content.indexOf('<') > -1) {
-        let a = Html.rawEscapeHTML(this.draft.content)
-        let b = Html.rawUnescapeHTML(a).replace(/&lt;(br *\/)&gt;/g, '<$1>')
-        return b
+        console.log(this.draft.content)
+        // let a = Html.rawEscapeHTML(this.draft.content)
+        // let b = Html.rawUnescapeHTML(a).replace(/&lt;(br *\/)&gt;/g, '<$1>')
+        // return b
+        return Html.escapeHTML(this.draft.content).replace(/(?:\r\n|\r|\n)/g, '<br />')
       } else {
-        return Html.rawUnescapeHTML(this.draft.content)
+        // return Html.rawUnescapeHTML(this.draft.content)
+        return this.draft.content
       }
     }
   }

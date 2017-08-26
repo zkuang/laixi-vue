@@ -48,6 +48,10 @@ export const Drafts = {
     const URL = `${BASE_URL}drafts/${id}/`
     return makeAuthRequest(URL, 'PUT', draft)
   },
+  undeleteById(id) {
+    const URL = `${BASE_URL}drafts/${id}/`
+    return makeAuthRequest(URL, 'PUT', { removed: 'false' })
+  },
   deleteById(id) {
     const URL = `${BASE_URL}drafts/${id}/`
     return makeAuthRequest(URL, 'DELETE')

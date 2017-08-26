@@ -8,10 +8,10 @@ const getters = {
   authString: state => state.authString,
   draft: state => {
     let draft = Object.assign({}, state.draft)
-    if (draft.content) {
-      draft.rawContent = draft.content
-      draft.content = draft.content.replace(/(?:\r\n|\r|\n)/g, '<br />')
-    }
+    // if (draft.content) {
+    //   draft.rawContent = draft.content
+    //   draft.content = draft.content.replace(/(?:\r\n|\r|\n)/g, '<br />')
+    // }
     return draft
   },
   project: state => state.project,
@@ -56,8 +56,14 @@ const store = new Vuex.Store({
     },
     delDraft({ commit }, draftId) {
       return Drafts.deleteById(draftId).then(res => {
-        console.log(res.draft)
         return res
+      })
+    },
+    undelDraft({ commit }, draftId) {
+      Drafts.undeleteById(draftId).then(res => {
+        console.log(res.draft)
+        commit('setDraft', res.draft)
+        return res.draft
       })
     },
     updateDraft({ commit }, draft) {
@@ -111,7 +117,6 @@ const store = new Vuex.Store({
         }
       } else {
         return Tasks.updateById(task.id, task).then(res => {
-          console.log('here', res.task)
           commit('setTask', res.task)
           commit('setOneTask', res.task)
           return res.task
@@ -133,16 +138,7 @@ const store = new Vuex.Store({
     delTask({ dispatch, commit, state }, task) {
       return Tasks.deleteById(task.id)
         .then(() => {
-          // let posts = state.posts.filter(post => {
-          //   return post.task && post.task.id === task.id
-          // })
           return commit('removeOneTask', task)
-          // let promises = []
-          // posts.forEach(p => {
-          //   commit('removePost', p)
-          //   promises.push(dispatch('delPost', p))
-          // })
-          // return Promise.all(promises)
         })
     },
     delPost({ commit }, post) {
