@@ -197,11 +197,15 @@ export default {
       $(this.$el).find('.real-textarea').show()
       $(this.$el).find('.cke_top').hide()
       let editor = CKEDITOR.instances['discussion-editor']
+      let self = this
       editor.setData(content, () => {
         editor.focus()
         let range = editor.createRange()
         range.moveToElementEditEnd(range.root)
         editor.getSelection().selectRanges([range])
+        let iframe = $(self.$el).find('iframe')
+        $('blockquote', iframe.contents()).css('font-style', 'normal').css('color', 'lightgrey')
+          .css('font-family', 'Helvetica Neue,Helvetica,PingFang SC,Hiragino Sans GB,Microsoft YaHei,Noto Sans CJK SC,WenQuanYi Micro Hei,Arial,sans-serif')
       })
       this.task = undefined
       this.$refs[this.assignmentEditorId].reset()

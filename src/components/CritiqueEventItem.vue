@@ -39,6 +39,10 @@ blockquote>p>span {
 .critique-content .critique-detail {
   font-size: 14px;
 }
+
+.critique-content .critique-detail>p {
+  color: black;
+}
 </style>
 
 <script>
