@@ -222,7 +222,7 @@ export default {
         }
         if (item.content) {
           let content = Html.unescapeHTML(item.content).replace(/(^> .*$)/gm, '').trim()
-          quote += `${content.replace(/(?:\r\n|\r|\n)/g, '<br />')}`
+          quote += `<p>${content.replace(/(?:\r\n|\r|\n)/g, '</p>')}`
         }
         quote += `<p><a href="http://ilaixi.net/user/${author.id}/">@${author.nickname}</a></p>`
       }
@@ -236,20 +236,20 @@ export default {
     publish() {
       const draftId = this.draft.id
       if (!this.task) {
-        // let data = toMD(CKEDITOR.instances['discussion-editor'].getData())
-        let data = Html.escapeHTML(toMD(Html.mdEscapeHTML(CKEDITOR.instances['discussion-editor'].getData())))
+        let md = toMD(CKEDITOR.instances['discussion-editor'].getData())
         let taskId
         if (this.$route.params.tid) {
           taskId = this.$route.params.tid
         }
         const regex = />.*\(http:\/\/.*\/task\/(.*)\/\).*$/gm
-        let match = regex.exec(toMD(CKEDITOR.instances['discussion-editor'].getData()))
+        let match = regex.exec(md)
         if (match !== null) {
           if (!taskId) {
             taskId = match[1]
           }
-          data = data.replace(regex, '').trim()
+          md = md.replace(regex, '').trim()
         }
+        let data = Html.escapeHTML(md)
         let post = {
           draft_id: draftId,
           content: data,

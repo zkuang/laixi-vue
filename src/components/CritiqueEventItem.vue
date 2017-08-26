@@ -63,9 +63,6 @@ export default {
   //    },
   methods: {
     save() {
-      console.log(CKEDITOR.instances[this.id].getData())
-      console.log(Html.mdEscapeHTML(CKEDITOR.instances[this.id].getData()))
-      console.log(toMD(Html.mdEscapeHTML(CKEDITOR.instances[this.id].getData())))
       let data = Html.escapeHTML(toMD(Html.mdEscapeHTML(CKEDITOR.instances[this.id].getData())))
       const regex = />.*\(http:\/\/.*\/task\/(.*)\/\).*$/gm
       const draftId = this.draft.id
@@ -75,7 +72,6 @@ export default {
         taskId = match[1]
         data = data.replace(regex, '').trim()
       }
-      console.log(data)
       let post = {
         id: this.item.id,
         draft_id: draftId,
@@ -151,8 +147,17 @@ export default {
       } else {
         data = md.render(Html.unescapeHTML(this.item.content))
       }
+      if (this.item.task) {
+        if (data.match(/<blockquote>/g)) {
+          data = data.replace(/<blockquote>/g, `<blockquote><p>任务&nbsp;&nbsp;<a href="/task/${this.item.task.id}/">${this.item.task.title}</a>&nbsp;&nbsp;&nbsp;&nbsp;8月26日</p>`)
+          data = data.replace(/<blockquote>([\s\S]*?)任务.*?<p>/g, `<blockquote><p>任务&nbsp;&nbsp;<a href="/task/${this.item.task.id}/">${this.item.task.title}</a>&nbsp;&nbsp;&nbsp;&nbsp;8月26日</p>`)
+        } else {
+          data = `<blockquote><p>任务&nbsp;&nbsp;<a href="/task/${this.item.task.id}/">${this.item.task.title}</a>&nbsp;&nbsp;&nbsp;&nbsp;8月26日</p></blockquote>` + data
+        }
+      }
       if (this.$route.name === 'TaskDiscussion') {
-        data = data.replace(/<blockquote>([\s\S]*?)任务.*?<p>/g, '<blockquote>$1<p>')
+        console.log(data)
+        data = data.replace(/<blockquote>([\s\S]*?)任务.*?<\/p>/g, '<blockquote>')
       }
       return data
     },
