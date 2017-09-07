@@ -90,43 +90,42 @@
 
 .taskitem .task-detail {
   display: inline-block;
-  margin-right: 1.2rem;
-  width: 80%;
 }
 
 .taskitem .task-detail .title-label {
   display: inline-block;
   margin-right: 1.2em;
   max-width: 82%;
+  padding-top: 3px;
 }
 
 @media (max-width: 767px) {
   .taskitem .task-detail .task-item-content-wrapper {
-    max-width: 33vw;
+    max-width: 70%;
   }
 }
 
 @media (min-width: 768px) {
   .taskitem .task-detail .task-item-content-wrapper {
-    max-width: 46vw;
+    max-width: 100%;
   }
 }
 
 @media (min-width: 980px) {
   .taskitem .task-detail .task-item-content-wrapper {
-    max-width: 40vw;
+    max-width: 100%;
   }
 }
 
 @media (min-width: 992px) {
   .taskitem .task-detail .task-item-content-wrapper {
-    max-width: 48vw;
+    max-width: 100%;
   }
 }
 
 @media (min-width: 1200px) {
   .taskitem .task-detail .task-item-content-wrapper {
-    max-width: 48vw;
+    max-width: 100%;
   }
 }
 

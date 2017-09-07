@@ -72,21 +72,9 @@
   margin-left: 4em;
 }
 
-@media (min-width: 768px) {
-  .discussion-item .event-log-content {
-    max-width: 30vw;
-  }
-}
-
-@media (min-width: 992px) {
-  .discussion-item .event-log-content {
-    max-width: 38vw;
-  }
-}
-
-@media (min-width: 1200px) {
-  .discussion-item .event-log-content {
-    max-width: 40vw;
+@media (max-width: 992px) {
+  .discussion-item>div:first-child {
+    max-width: 80%;
   }
 }
 

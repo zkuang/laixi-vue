@@ -15,15 +15,17 @@
           <input type="checkbox" :checked="task.checked" :id="taskId" :disabled="draft.removed" @change="taskStateChange">
           <label class="disable-checkbox" :for="taskId"></label>
         </span>
-        <span v-show="!editTaskTitle" class="task-title">{{task.title}}</span>
-        <input v-show="editTaskTitle" class="task-title-input" type="text">
-        <div class="task-content">
-          <span class="ui assignment">
-            <span v-if="isAssigned">{{task.assignee.nickname}}</span>
-          <span v-if="!isAssigned">未指派</span>
-          <span>{{dueDate}}</span>
-          </span>
-          <assignment-editor :ref="assignmentEditorId" :name="assignmentEditorId" :task="task"></assignment-editor>
+        <div class="task-head">
+          <span v-show="!editTaskTitle" class="task-title">{{task.title}}</span>
+          <input v-show="editTaskTitle" class="task-title-input" type="text">
+          <div class="task-content">
+            <span class="ui assignment">
+              <span v-if="isAssigned">{{task.assignee.nickname}}</span>
+            <span v-if="!isAssigned">未指派</span>
+            <span>{{dueDate}}</span>
+            </span>
+            <assignment-editor :ref="assignmentEditorId" :name="assignmentEditorId" :task="task"></assignment-editor>
+          </div>
         </div>
       </div>
     </div>
@@ -70,9 +72,18 @@
 </template>
 
 <style>
+.task-head {
+  display: inline-block;
+  max-width: 70%;
+}
+
 .task-description {
   line-height: 2em;
   vertical-align: text-top;
+}
+
+.task-description.section .task-msg-detail .checkbox-wrapper {
+  vertical-align: top;
 }
 
 .task-description span.task-title {

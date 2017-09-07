@@ -22,7 +22,7 @@
 
 <style>
 .ui.grid.discussion-items>ul.column:not(.row) {
-  padding-right: 100px;
+  padding-right: 0;
 }
 
 .discussion-items>ul>li {
