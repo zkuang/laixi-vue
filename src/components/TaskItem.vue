@@ -39,7 +39,7 @@
     </div>
   </div>
   <div v-if="editable" class="task-edit-actions">
-    <button class="ui positive button" @click="save">保存修改</button>
+    <button class="ui positive button" @click="save">保存</button>
     <button class="ui basic button" @click="dismiss">取消</button>
   </div>
 </li>
@@ -79,7 +79,9 @@
   border-top-right-radius: 0;
   border-bottom-right-radius: 0;
   line-height: 2.2rem;
-  margin-right: 1.2rem;
+  margin-left: 2rem;
+  margin-right: -0.8rem;
+  margin-top: -0.3rem;
   visibility: hidden;
   vertical-align: top;
 }
@@ -90,13 +92,32 @@
 
 .taskitem .task-detail {
   display: inline-block;
+  width: calc(100% - 109px);
 }
 
 .taskitem .task-detail .title-label {
   display: inline-block;
-  margin-right: 1.2em;
-  max-width: 82%;
+  margin-right: .6em;
+  max-width: 60%;
   padding-top: 3px;
+  line-height: 1.2em;
+}
+
+.taskitem .task-detail .title-label>a::after {
+  display: block;
+  content: attr(title);
+  font-weight: bold;
+  height: 0;
+  overflow: hidden;
+  visibility: hidden;
+}
+
+.taskitem .task-detail .title-label>a {
+  color: black;
+}
+
+.taskitem .task-detail .title-label>a:hover {
+  color: #4183c4;
 }
 
 @media (max-width: 767px) {
@@ -107,38 +128,41 @@
 
 @media (min-width: 768px) {
   .taskitem .task-detail .task-item-content-wrapper {
-    max-width: 100%;
+    max-width: 80%;
   }
 }
 
 @media (min-width: 980px) {
   .taskitem .task-detail .task-item-content-wrapper {
-    max-width: 100%;
+    max-width: 80%;
   }
 }
 
 @media (min-width: 992px) {
   .taskitem .task-detail .task-item-content-wrapper {
-    max-width: 100%;
+    max-width: 80%;
   }
 }
 
 @media (min-width: 1200px) {
   .taskitem .task-detail .task-item-content-wrapper {
-    max-width: 100%;
+    max-width: 80%;
   }
 }
 
 .taskitem .task-edit-actions {
-  margin-left: 9em;
+  margin-left: 10.8em;
+  margin-top: 1em;
+  margin-bottom: 2em;
 }
 
 .taskitem .task-detail input {
   border: none;
   border-bottom: dashed 1px #aeb3b9;
-  min-width: 20em;
-  padding-left: 16px;
-  line-height: 1.6em;
+  min-width: 38em;
+  margin-left: .9em;
+  margin-right: .9em;
+  line-height: 1.8em;
 }
 
 .taskitem .task-detail input:focus {
@@ -181,27 +205,14 @@
   margin-right: .52rem;
 }
 
-.assignment {
-  display: inline-block;
-  margin-left: .4rem;
-  background: #e8e8e8;
-  border-radius: 1rem;
-  line-height: 1.8rem;
-  font-size: .9em;
+.ui.image.label.assignment {
   text-align: center;
-  vertical-align: middle;
-  padding-left: 1.2em;
-  padding-right: 1.2em;
-  color: gray;
   cursor: pointer;
+  font-weight: normal;
 }
 
 .assignment.diasbled {
   cursor: default;
-}
-
-.assignment:hover {
-  color: black;
 }
 </style>
 
@@ -243,7 +254,7 @@ export default {
   computed: {
     ...mapGetters(['tasks', 'draft']),
     dueDate() {
-      if (!this.task.deadline || this.task.deadline == null) return '未限期'
+      if (!this.task.deadline || this.task.deadline == null) return '无限期'
       else return DateTime.DateMonth(this.task.deadline)
     },
     assignee() {
@@ -291,8 +302,8 @@ export default {
       $(this.$el).addClass('active')
     },
     taskDueDate() {
-      if (!this.newTask.deadline) return '未限期'
-      if (this.newTask.deadline === 'null') return '未限期'
+      if (!this.newTask.deadline) return '无限期'
+      if (this.newTask.deadline === 'null') return '无限期'
       else return DateTime.DateMonth(this.newTask.deadline)
     },
     taskAssignee() {
@@ -304,6 +315,7 @@ export default {
       $(this.$el).removeClass('active')
     },
     save() {
+      this.$emit('editDone')
       let self = this
       let title = $(this.$el).find('.task-detail > input').val()
       if (!title) return
@@ -341,6 +353,7 @@ export default {
     },
     dismiss() {
       let self = this
+      this.$emit('editDone')
       this.editable = false
       this.switched = true
       const task = this.tasks.find(t => {

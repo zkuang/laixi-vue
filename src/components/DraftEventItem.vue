@@ -16,7 +16,7 @@
 
 <style>
 .doc-log span.username {
-  font-weight: bold;
+  font-weight: normal;
 }
 </style>
 

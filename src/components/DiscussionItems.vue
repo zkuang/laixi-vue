@@ -23,11 +23,13 @@
 <style>
 .ui.grid.discussion-items>ul.column:not(.row) {
   padding-right: 0;
+  padding-left: 0;
 }
 
 .discussion-items>ul>li {
   list-style: none;
   margin-bottom: 1rem;
+  padding-right: 100px;
 }
 
 .discussion-items>ul>.show-more-post {

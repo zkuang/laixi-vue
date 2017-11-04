@@ -1,8 +1,8 @@
 <template>
 <section class="ui stackable two column grid">
-  <div class="thirteen wide column draft-description section" id="draft">
-    <h2>{{draft.title}}</h2>
-    <pre v-html="content"></pre>
+  <div class="thirteen wide pc thirteen wide tablet column draft-description section" id="draft">
+    <h4>{{draft.title}}</h4>
+    <pre v-html="content" class="draft-content-pre"></pre>
   </div>
   <div v-if="draft.removed" class="three wide column ui secondary vertical menu buttons">
     <div class="item">
@@ -12,18 +12,18 @@
       <a class="ui secondary basic button" :href="historyLink">修改历史</a>
     </div>
   </div>
-  <div v-else class="three wide column ui secondary vertical menu buttons">
+  <div v-else class="three wide computer three wide tablet sixteen wide mobile column ui secondary vertical menu buttons">
     <div class="item">
-      <a class="ui positive basic button" @click="edit">修改</a>
+      <a class="ui positive basic button fluid" @click="edit">修改</a>
     </div>
     <div class="item">
-      <a class="ui secondary basic button" :href="historyLink">修改历史</a>
+      <a class="ui secondary basic button fluid" :href="historyLink">历史</a>
     </div>
     <div class="item">
-      <a class="ui secondary basic button" @click="print">打印</a>
+      <a class="ui secondary basic button fluid" @click="print">打印</a>
     </div>
     <div class="item">
-      <a class="ui negative basic button" @click="del">删除</a>
+      <a class="ui negative basic button fluid" @click="del">删除</a>
     </div>
   </div>
   <iframe name="print-frame" width="0" height="0" frameborder="0" src="about:blank"></iframe>
@@ -43,9 +43,24 @@
 </template>
 
 <style>
-.draft-description>h2 {
+.draft-description>h4 {
   font-weight: normal;
   margin-bottom: 1.15em;
+  font-size: 18px;
+}
+
+.draft-description>.draft-content-pre {
+  font-size: 16px;
+  white-space: pre-wrap;
+  white-space: -moz-pre-wrap;
+  white-space: -pre-wrap;
+  white-space: -o-pre-wrap;
+  word-wrap: break-word;
+  overflow-x: auto;
+  max-width: 720px;
+  font-family: Helvetica Neue, Helvetica, PingFang SC, Hiragino Sans GB, Microsoft YaHei, Noto Sans CJK SC, WenQuanYi Micro Hei, Arial, sans-serif;
+  line-height: 2;
+  min-height: 132px;
 }
 
 .draft-description>p {
@@ -56,7 +71,7 @@
 
 .ui.grid>.draft-description {
   padding-bottom: 2em !important;
-  padding-top: 2em !important;
+  padding-top: 1em !important;
 }
 
 .ui.secondary.vertical.menu.buttons {
@@ -64,13 +79,15 @@
 }
 
 .ui.secondary.vertical.menu.buttons .item {
-  padding: 0.78571429em 1.35em;
+  padding: 0.78571429em 0 0.78571429em 1.35em;
   margin-bottom: 0;
+  margin-right: 0;
+  margin-left: 28px;
 }
 
-.ui.secondary.vertical.menu.buttons .item .button {
+/*.ui.secondary.vertical.menu.buttons .item .button {
   padding: 0.75071429em 1.25em;
-}
+}*/
 </style>
 
 <script>

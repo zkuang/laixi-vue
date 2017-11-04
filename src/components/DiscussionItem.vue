@@ -65,7 +65,7 @@
   color: gray;
   max-width: 35em;
   display: inline-block;
-  padding-right: 2em;
+  padding-right: 1em;
 }
 
 .discussion-item .event-log-content-wrapper {
@@ -83,11 +83,11 @@
 }
 
 .discussion-item .event-log-content .username {
-  font-weight: bold;
+  font-weight: normal;
 }
 
 .discussion-item>div .task-link {
-  font-weight: bold;
+  font-weight: normal;
 }
 
 .discussion-item span {
@@ -99,7 +99,7 @@
 }
 
 .discussion-item>div>span.discussion-item-avatar>i {
-  margin: 0 .5rem 0 2rem;
+  margin: 0 .5rem 0 1.2rem;
   font-size: 1.2em;
 }
 
@@ -122,7 +122,6 @@
 }
 
 .discussion-item .comment {
-  font-size: medium;
   position: relative;
 }
 

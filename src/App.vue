@@ -65,12 +65,13 @@ export default {
 #app {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  padding: .9rem;
 
   max-width: 1150px;
   margin-left: auto;
   margin-right: auto;
-  padding-right: 3em;
+  padding-right: 0;
+  padding-left: 0;
+  padding-top: 0;
 }
 
 #app .ui.breadcrumb {

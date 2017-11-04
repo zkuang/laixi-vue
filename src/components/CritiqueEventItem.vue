@@ -35,7 +35,11 @@ blockquote>p>span {
   margin-top: 1em;
 }
 
-.critique-content .critique-meta span {
+.critique-content .critique-meta {
+  margin-bottom: 1em;
+}
+
+.critique-content .critique-meta span:first-child {
   font-weight: bold;
   font-size: 14px;
 }

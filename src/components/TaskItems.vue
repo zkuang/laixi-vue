@@ -3,10 +3,13 @@
   <div class="thirteen wide column section">
     <h3 class="taskitem-list-header">任务</h3>
     <ul class="taskitem-list">
+      <p v-show="showNoTask">
+        目前没有任务
+      </p>
       <task-item v-for="task in uncheckedTasks" :key="task.id" :task="Object.assign({}, task)" :disabled="draft.removed" :create="false"></task-item>
-      <task-item ref="task-create-form" v-for="task in placeholderTasks" :key="task.id" :task="Object.assign({}, task)" :create="true"></task-item>
+      <task-item ref="task-create-form" v-for="task in placeholderTasks" :key="task.id" :task="Object.assign({}, task)" :create="true" @editDone="this.editing = false"></task-item>
     </ul>
-    <p class="sixteen wide column task-actions"><a style="cursor:pointer;" disabled="true" @click="createTask">添加新任务</a><a v-show="!isAllTasks" style="cursor:pointer;" :disabled="draft.removed" @click="allTasks">查看所有任务</a></p>
+    <p class="sixteen wide column task-actions"><a style="cursor:pointer;" disabled="true" @click="createTask">添加新任务</a><a v-show="!isAllTasks" style="cursor:pointer;" :disabled="draft.removed" @click="allTasks">查看已完成任务</a></p>
     <ul class="taskitem-list">
       <task-item v-for="task in checkedTasks" :key="task.id" :task="Object.assign({}, task)" :disabled="draft.removed"></task-item>
     </ul>
@@ -29,6 +32,11 @@
   margin-left: -8.5rem;
 }
 
+.taskitem-list>p {
+  margin-left: 8.2rem;
+  color: #999999;
+}
+
 @media (max-width: 768px) {
   .taskitem-list {
     margin-left: 0;
@@ -42,6 +50,10 @@
   margin-bottom: 1em;
 }
 
+.taskitem-list>li:last-child {
+  margin-bottom: 0;
+}
+
 .taskitem-list-header {
   color: gray;
   font-weight: normal;
@@ -52,7 +64,10 @@
   float: right;
 }
 
-.task-items p {}
+.ui.grid.task-items {
+  margin-top: -2.5em;
+  margin-left: -18px;
+}
 
 .ui.grid.task-items>.section>.task-actions {
   padding-bottom: 0;
@@ -77,6 +92,9 @@ export default {
     'task-item': TaskItem,
     'assignment-editor': TaskAssignmentEditor
   },
+  data: {
+    editing: false
+  },
   computed: {
     ...mapGetters([
       'tasks',
@@ -99,6 +117,10 @@ export default {
     },
     isAllTasks() {
       return this.$route.name === 'TaskList'
+    },
+    showNoTask() {
+      console.log(this.tasks.length === 0, this.editing)
+      return (this.tasks.length === 0) && !this.editing
     }
   },
   methods: {

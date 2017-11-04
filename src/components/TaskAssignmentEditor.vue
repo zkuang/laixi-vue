@@ -1,12 +1,12 @@
 <template>
-<form class="task-assignment ui popup form">
+<form class="ui popup form task-assignment">
   <div class="field set-position-relative">
     <label>将任务指派给</label>
     <select name="assignment" @change="setAssignee">
       <option value="null" :selected="assignment.assignee == null || assignment.assignee == undefined">未指派</option>
       <option v-for="user in users" :value="user.id">{{user.nickname}}</option>
     </select>
-    <div class="clear-assignee">
+    <div class="clear">
       <i class="remove icon" @click="clearAssignee"></i>
     </div>
   </div>
@@ -17,7 +17,7 @@
         <i class="calendar icon"></i>
         <input type="text" :value="calendarTime" placeholder="Date">
       </div>
-      <div class="clear-deadline">
+      <div class="clear">
         <i class="remove icon" @click="clearDeadline"></i>
       </div>
     </div>
@@ -26,18 +26,19 @@
 </template>
 
 <style>
-.clear-assignee{
+.ui.popup.form.task-assignment select {
+  height: 40px;
+  background: none;
+}
+
+.clear {
   position: absolute;
-  bottom: 2px;
+  bottom: 10px;
   right: 10px;
 }
-.clear-deadline{
-  position: absolute;
-  bottom: 7px;
-  right: 12px;
-}
-.set-position-relative{
-  position:relative!important;
+
+.set-position-relative {
+  position: relative!important;
 }
 </style>
 
@@ -71,7 +72,7 @@ export default {
           return `${new Date(date).getFullYear()}年${DateTime.DateMonth(date)}`
         }
       },
-      onChange: function(date, text, mode) {
+      onChange: function (date, text, mode) {
         if (date) {
           assignment.deadline = moment(date)
         } else {
@@ -85,7 +86,7 @@ export default {
     datePickerId() {
       return `date-picker-${this.name}`
     },
-    calendarTime () {
+    calendarTime() {
       if (!this.task) return ''
       if (this.task.deadline) return DateTime.DateGetCalendarEn(this.task.deadline)
       else return ''
@@ -119,11 +120,11 @@ export default {
         $(this.$el).find(`#${this.datePickerId}`).calendar('set date', date.toDate(), true, false)
       }
     },
-    clearAssignee () {
+    clearAssignee() {
       this.setSelection('null')
       this.assignment.assignee.id = 'null'
     },
-    clearDeadline () {
+    clearDeadline() {
       this.setDate(false)
       this.assignment.deadline = 'null'
     }

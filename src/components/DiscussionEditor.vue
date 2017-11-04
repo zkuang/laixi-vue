@@ -5,20 +5,20 @@
       <img v-if="user" :src="user.headimgurl" class="ui avatar image" />
     </div>
     <div class="editor-wrapper">
-      <div class="fake-textarea">发表评论或者创建任务</div>
+      <div class="fake-textarea">发表评论</div>
       <div class="real-textarea">
-        <textarea :maxlength="task?500:5000" name="discussion-editor" id="discussion-editor" rows="10" cols="120"></textarea>
+        <textarea :maxlength="task?500:5000" name="discussion-editor" id="discussion-editor" rows="2" cols="120"></textarea>
       </div>
 
       <div class="editor-actions">
-        <div class="task-options" v-show="showTaskAssignment">
+        <!-- <div class="task-options" v-show="showTaskAssignment">
           <i class="check circle large icon"></i>
           <a>分配任务</a>
-        </div>
+        </div> -->
         <assignment-editor :ref="assignmentEditorId" :name="assignmentEditorId"></assignment-editor>
         <div class="editor-buttons">
-          <button class="ui secondary basic button" @click="cancel">取消</button>
           <button class="ui teal basic button" @click="publish">发布</button>
+          <button class="ui secondary basic button" @click="cancel">取消</button>
         </div>
       </div>
     </div>
@@ -27,9 +27,13 @@
 </template>
 
 <style>
+.discussion-editor>.column {
+  padding-left: 0 !important;
+}
+
 .discussion-editor .editor-actions {
-  width: 100%;
-  margin-top: 2rem;
+  width: 838px;
+  margin-top: 1rem;
 }
 
 .discussion-editor .editor-actions .task-options {
@@ -45,10 +49,18 @@
   float: right;
 }
 
+.discussion-editor .editor-actions .editor-buttons>button:first-child {
+  margin-right: .8em;
+}
+
+.discussion-editor .editor-actions .editor-buttons>button:last-child {
+  margin-right: 0em;
+}
+
 .discussion-editor .discussion-item-avatar .ui.avatar.image {
   margin-left: .8rem;
-  width: 35px;
-  height: 35px;
+  width: 28px;
+  height: 28px;
 }
 
 .discussion-editor .discussion-item-avatar {
@@ -58,8 +70,8 @@
 
 .discussion-editor .editor-wrapper {
   display: inline-block;
-  margin-left: 5rem;
-  width: 100%;
+  margin-left: 4rem;
+  width: 838px;
 }
 
 .discussion-editor .editor-wrapper div[contenteditable=true] {

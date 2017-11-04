@@ -23,6 +23,9 @@
 </template>
 
 <style>
+.task-link {
+  color: black;
+}
 </style>
 
 
