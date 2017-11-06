@@ -30,7 +30,6 @@
 
 .discussion-item>div:first-child {
   display: inline-block;
-  width: 90%;
 }
 
 .discussion-item>.ui.buttons {
@@ -63,7 +62,7 @@
 
 .discussion-item .event-log-content {
   color: gray;
-  max-width: calc(100% - 110px);
+  max-width: calc(100% - 98px);
   display: inline-block;
   padding-right: 1em;
 }
@@ -72,9 +71,21 @@
   margin-left: 4em;
 }
 
-@media (max-width: 992px) {
+@media (min-width: 769px) {
   .discussion-item>div:first-child {
-    max-width: 80%;
+    max-width: calc(100% - 120px);
+  }
+}
+
+@media (max-width: 768px) {
+  .discussion-item>div:first-child {
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 768px) {
+  .discussion-item>.right.floated.ui.icon.buttons {
+    display: none;
   }
 }
 

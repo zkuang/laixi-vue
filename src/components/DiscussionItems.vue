@@ -32,6 +32,12 @@
   padding-right: 100px;
 }
 
+@media (max-width: 767px) {
+  .discussion-items>ul>li {
+    padding-right: 0;
+  }
+}
+
 .discussion-items>ul>.show-more-post {
   display: flex;
   flex-direction: row;

@@ -86,13 +86,25 @@
   vertical-align: top;
 }
 
+@media (max-width: 768px) {
+  .taskitem .task-actions {
+    display: none;
+  }
+}
+
 .taskitem .task-actions.checked {
   margin-left: 2.2em;
 }
 
 .taskitem .task-detail {
   display: inline-block;
-  width: calc(100% - 109px);
+  max-width: calc(100% - 109px);
+}
+
+@media (max-width: 768px) {
+  .taskitem .task-detail {
+    max-width: 100%;
+  }
 }
 
 .taskitem .task-detail .title-label {
@@ -120,33 +132,13 @@
   color: #4183c4;
 }
 
-@media (max-width: 767px) {
-  .taskitem .task-detail .task-item-content-wrapper {
-    max-width: 70%;
-  }
+.taskitem .task-detail .task-item-content-wrapper {
+  max-width: calc(100% - 154px);
 }
 
-@media (min-width: 768px) {
+@media (max-width: 1024px) {
   .taskitem .task-detail .task-item-content-wrapper {
-    max-width: 80%;
-  }
-}
-
-@media (min-width: 980px) {
-  .taskitem .task-detail .task-item-content-wrapper {
-    max-width: 80%;
-  }
-}
-
-@media (min-width: 992px) {
-  .taskitem .task-detail .task-item-content-wrapper {
-    max-width: 80%;
-  }
-}
-
-@media (min-width: 1200px) {
-  .taskitem .task-detail .task-item-content-wrapper {
-    max-width: 80%;
+    max-width: calc(100% - 60px);
   }
 }
 

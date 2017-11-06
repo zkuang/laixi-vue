@@ -1,6 +1,6 @@
 <template>
 <section class="ui grid discussion-editor">
-  <div class="twelve wide column">
+  <div class="thirteen wide column">
     <div class="discussion-item-avatar">
       <img v-if="user" :src="user.headimgurl" class="ui avatar image" />
     </div>
@@ -32,7 +32,7 @@
 }
 
 .discussion-editor .editor-actions {
-  width: 838px;
+  width: 100%;
   margin-top: 1rem;
 }
 
@@ -71,7 +71,7 @@
 .discussion-editor .editor-wrapper {
   display: inline-block;
   margin-left: 4rem;
-  width: 838px;
+  width: calc(100% - 4rem - 18px);
 }
 
 .discussion-editor .editor-wrapper div[contenteditable=true] {
