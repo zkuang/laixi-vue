@@ -3,12 +3,14 @@
   <div v-show="draft.removed" class="ui red message"><i class="large trash icon"></i>当前文文档在垃圾箱，处于锁定状态，不可修改。如需修改，可将文档先移出垃圾箱。</div>
   <breadcrumb></breadcrumb>
   <task-items class="task-items"></task-items>
-  <discussion-items class="discussion-items"></discussion-items>
+  <!-- <discussion-items class="discussion-items"></discussion-items> -->
 </div>
 </template>
 
 <style>
-
+.doc-discussion .ui.grid.task-items {
+  margin-top: 0;
+}
 </style>
 
 <script>

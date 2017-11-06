@@ -72,9 +72,18 @@
 </template>
 
 <style>
+.task-detail-ctrl {
+  max-height: 2.5em;
+}
+
 .task-head {
   display: inline-block;
-  max-width: 70%;
+  max-width: calc(100% - 80px);
+  margin-left: 4em;
+}
+
+.task-head>* {
+  vertical-align: top;
 }
 
 .task-description {
@@ -88,7 +97,8 @@
 
 .task-description span.task-title {
   display: inline-block;
-  font-size: 1.5em;
+  font-size: 18px;
+  max-width: calc(100% - 150px);
 }
 
 .task-description .task-detail {
@@ -104,9 +114,7 @@
 }
 
 .task-description input {
-  margin-right: 1.2rem;
-  margin-left: 1.2rem;
-  font-size: 4em;
+  display: none;
 }
 
 .task-description .task-content>span {
@@ -154,7 +162,7 @@
 }
 
 .task-description .task-msg-detail .detail {
-  margin-left: 7rem;
+  margin-left: 6rem;
   position: relative;
 }
 

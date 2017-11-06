@@ -98,9 +98,9 @@
 .taskitem .task-detail .title-label {
   display: inline-block;
   margin-right: .6em;
-  max-width: 60%;
+  max-width: calc(100% - 110px);
   padding-top: 3px;
-  line-height: 1.2em;
+  line-height: 1.5em;
 }
 
 .taskitem .task-detail .title-label>a::after {

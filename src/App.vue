@@ -55,7 +55,7 @@ export default {
     ]),
     editorShouldShow() {
       return !this.draft.removed &&
-        (this.$route.name !== 'DraftEdit' && this.$route.name !== 'DraftCreate')
+        (this.$route.name !== 'TaskList' && this.$route.name !== 'DraftEdit' && this.$route.name !== 'DraftCreate')
     }
   }
 }

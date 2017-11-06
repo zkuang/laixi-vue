@@ -63,7 +63,7 @@
 
 .discussion-item .event-log-content {
   color: gray;
-  max-width: 35em;
+  max-width: calc(100% - 110px);
   display: inline-block;
   padding-right: 1em;
 }

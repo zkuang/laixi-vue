@@ -9,7 +9,7 @@
 
 <style>
 .task-discussion {
-  padding-top: 1.8em;
+  padding-top: 0em;
 }
 
 .discussion-items {

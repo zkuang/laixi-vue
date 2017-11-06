@@ -2,11 +2,20 @@
 <div class="ui breadcrumb">
   <a :href="projLink" class="section">{{project.name}}</a>
   <div class="divider"> / </div>
-  <router-link :to="draftLink" class="section">{{draft.title}}</router-link>
+  <router-link :to="draftLink" class="section ellipsis">{{draft.title}}</router-link>
   <div v-if="hasTask" class="divider"> / </div>
-  <div v-if="hasTask" class="section"> {{taskBreadCrumb}} </div>
+  <div v-if="hasTask" class="section ellipsis"> {{taskBreadCrumb}} </div>
 </div>
 </template>
+
+<style>
+.ui.breadcrumb .section.ellipsis {
+  max-width: 200px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+</style>
 
 <script>
 import {

@@ -50,6 +50,7 @@ blockquote>p>span {
 
 .critique-content .critique-detail>p {
   color: black;
+  word-break: break-all;
 }
 </style>
 

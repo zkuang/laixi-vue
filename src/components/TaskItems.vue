@@ -92,8 +92,10 @@ export default {
     'task-item': TaskItem,
     'assignment-editor': TaskAssignmentEditor
   },
-  data: {
-    editing: false
+  data() {
+    return {
+      editing: false
+    }
   },
   computed: {
     ...mapGetters([
